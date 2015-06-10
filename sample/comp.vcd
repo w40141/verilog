@@ -1,0 +1,170 @@
+$date
+	Mon Jun  8 15:59:13 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module COMP_TE $end
+$var wire 1 ! EQ $end
+$var wire 1 " LG $end
+$var wire 1 # RG $end
+$var reg 2 $ X [1:0] $end
+$var reg 2 % Y [1:0] $end
+$scope module COMP $end
+$var wire 1 ! EQ $end
+$var wire 1 " LG $end
+$var wire 1 # RL $end
+$var wire 2 & X [1:0] $end
+$var wire 2 ' Y [1:0] $end
+$scope function FUNC_COMP $end
+$var reg 3 ( FUNC_COMP [2:0] $end
+$var reg 2 ) X [1:0] $end
+$var reg 2 * Y [1:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 *
+b0 )
+b10 (
+b0 '
+b0 &
+b0 %
+b0 $
+0#
+0"
+1!
+$end
+#40
+0!
+1"
+b100 (
+b1 )
+b1 $
+b1 &
+#80
+b10 )
+b10 $
+b10 &
+#120
+b11 )
+b11 $
+b11 &
+#160
+1#
+0"
+b1 (
+b1 *
+b0 )
+b0 $
+b0 &
+b1 %
+b1 '
+#200
+0#
+1!
+b10 (
+b1 )
+b1 $
+b1 &
+#240
+0!
+1"
+b100 (
+b10 )
+b10 $
+b10 &
+#280
+b11 )
+b11 $
+b11 &
+#320
+1#
+0"
+b1 (
+b10 *
+b0 )
+b0 $
+b0 &
+b10 %
+b10 '
+#360
+b1 )
+b1 $
+b1 &
+#400
+0#
+1!
+b10 (
+b10 )
+b10 $
+b10 &
+#440
+0!
+1"
+b100 (
+b11 )
+b11 $
+b11 &
+#480
+1#
+0"
+b1 (
+b11 *
+b0 )
+b0 $
+b0 &
+b11 %
+b11 '
+#520
+b1 )
+b1 $
+b1 &
+#560
+b10 )
+b10 $
+b10 &
+#600
+0#
+1!
+b10 (
+b11 )
+b11 $
+b11 &
+#640
+b0 *
+b0 )
+b0 $
+b0 &
+b0 %
+b0 '
+#680
+0!
+1"
+b100 (
+b1 )
+b1 $
+b1 &
+#720
+b10 )
+b10 $
+b10 &
+#760
+b11 )
+b11 $
+b11 &
+#800
+1#
+0"
+b1 (
+b1 *
+b0 )
+b0 $
+b0 &
+b1 %
+b1 '

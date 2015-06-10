@@ -1,0 +1,130 @@
+$date
+	Mon Jun  8 02:31:02 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module gate_test $end
+$var wire 1 ! OUT_and $end
+$var wire 1 " OUT_buf $end
+$var wire 1 # OUT_nand $end
+$var wire 1 $ OUT_nor $end
+$var wire 1 % OUT_not $end
+$var wire 1 & OUT_or $end
+$var reg 1 ' IN1 $end
+$var reg 1 ( IN2 $end
+$var reg 1 ) IN3 $end
+$scope module gate $end
+$var wire 1 * IN1 $end
+$var wire 1 + IN2 $end
+$var wire 1 , IN3 $end
+$var wire 1 ! OUT_and $end
+$var wire 1 " OUT_buf $end
+$var wire 1 # OUT_nand $end
+$var wire 1 $ OUT_nor $end
+$var wire 1 % OUT_not $end
+$var wire 1 & OUT_or $end
+$scope module AND_2 $end
+$var wire 1 * IN1 $end
+$var wire 1 + IN2 $end
+$var wire 1 ! OUT $end
+$upscope $end
+$scope module OR_3 $end
+$var wire 1 * IN1 $end
+$var wire 1 + IN2 $end
+$var wire 1 , IN3 $end
+$var wire 1 & OUT $end
+$upscope $end
+$scope module NAND_2 $end
+$var wire 1 * IN1 $end
+$var wire 1 + IN2 $end
+$var wire 1 # OUT $end
+$upscope $end
+$scope module NOR_2 $end
+$var wire 1 * IN1 $end
+$var wire 1 + IN2 $end
+$var wire 1 $ OUT $end
+$upscope $end
+$scope module NOT $end
+$var wire 1 * IN $end
+$var wire 1 % OUT $end
+$upscope $end
+$scope module BUF $end
+$var wire 1 * IN $end
+$var wire 1 " OUT $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0,
+0+
+0*
+0)
+0(
+0'
+0&
+1%
+1$
+1#
+0"
+0!
+$end
+#100
+1&
+0$
+0%
+1'
+1*
+1"
+#200
+1%
+1(
+1+
+0'
+0*
+0"
+#300
+0#
+1!
+0%
+1'
+1*
+1"
+#400
+1#
+1$
+0!
+1%
+1)
+1,
+0(
+0+
+0'
+0*
+0"
+#500
+0$
+0%
+1'
+1*
+1"
+#600
+1%
+1(
+1+
+0'
+0*
+0"
+#700
+0#
+1!
+0%
+1'
+1*
+1"
+#800
