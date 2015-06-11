@@ -1,4 +1,4 @@
-module invsubbytes(x, y);
+module subBytes_inv(x, y);
 input [7:0]x;
 output [7:0] y;
 reg [7:0] y;
@@ -262,5 +262,3 @@ always @(x) begin
         8'b10111011:  y <= 8'b11111110;
         8'b00010110:  y <= 8'b11111111;
     endcase
-end
-endmodule

@@ -1,4 +1,4 @@
-module subbytes(x, y);
+module subBytes(x, y);
 input [7:0]x;
 output [7:0] y;
 reg [7:0] y;

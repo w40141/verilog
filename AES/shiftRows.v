@@ -1,4 +1,4 @@
-module shiftrows (i00, i01, i02, i03,
+module shiftRows (i00, i01, i02, i03,
                   i10, i11, i12, i13,
                   i20, i21, i22, i23,
                   i30, i31, i32, i33,

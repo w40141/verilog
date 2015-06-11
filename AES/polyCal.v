@@ -1,4 +1,4 @@
-module polycal (x, y, d);
+module polyCal (x, y, d);
     input [7:0] x, y;
     output [7:0] d;
     wire [7:0] f0, f1, f2, f3, f4, f5, f6, f7;
