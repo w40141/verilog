@@ -1,4 +1,4 @@
-// module polyCal (x, y, d);
+// kakuninn
 module polyCal (x, y, d);
     input [7:0] x, y;
     output [7:0] d;

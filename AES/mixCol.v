@@ -1,3 +1,4 @@
+// kakuninn
 module mixCol (x0, x1, x2, x3, y0, y1, y2, y3);
 input [7:0] x0, x1, x2, x3;
 output [7:0] y0, y1, y2, y3;
