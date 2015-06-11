@@ -17,21 +17,17 @@ module FULL_COMP(X, Y, LG_IN, EQ_IN, RG_IN, LG_OUT, EQ_OUT, RG_OUT);
     function [2:0]FUNC_COMP;
         input X, Y;
         input LG_IN, EQ_IN, RG_IN;
-        begin
-            if(X > Y) begin
+        if(X > Y)
+            FUNC_COMP = 3'b100;
+        else if(X < Y)
+            FUNC_COMP = 3'b001;
+        else
+            if(LG_IN)
                 FUNC_COMP = 3'b100;
-            end else if(X < Y) begin
+            else if(EQ_IN)
+                FUNC_COMP = 3'b010;
+            else
                 FUNC_COMP = 3'b001;
-            end else begin
-                if(LG_IN) begin
-                    FUNC_COMP = 3'b100;
-                end else if(EQ_IN) begin
-                    FUNC_COMP = 3'b010;
-                end else begin
-                    FUNC_COMP = 3'b001;
-                end
-            end
-        end
     endfunction
 
 endmodule
