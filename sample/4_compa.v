@@ -15,16 +15,16 @@ module FULL_COMP(X, Y, LG_IN, EQ_IN, RG_IN, LG_OUT, EQ_OUT, RG_OUT);
     assign {LG_OUT, EQ_OUT, RG_OUT} = FUNC_COMP(X, Y, LG_IN, EQ_IN, RG_IN);
 
     function [2:0]FUNC_COMP;
-        input X, Y;
-        input LG_IN, EQ_IN, RG_IN;
-        if(X > Y)
+        input x, y;
+        input lg_in, eq_in, rg_in;
+        if(x > y)
             FUNC_COMP = 3'b100;
-        else if(X < Y)
+        else if(x < y)
             FUNC_COMP = 3'b001;
         else
-            if(LG_IN)
+            if(lg_in)
                 FUNC_COMP = 3'b100;
-            else if(EQ_IN)
+            else if(eq_in)
                 FUNC_COMP = 3'b010;
             else
                 FUNC_COMP = 3'b001;

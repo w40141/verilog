@@ -4,310 +4,310 @@
 :vpi_module "system";
 :vpi_module "v2005_math";
 :vpi_module "va_math";
-S_0x272daf0 .scope module, "COMP_TEST" "COMP_TEST" 2 3;
+S_0x235eaf0 .scope module, "COMP_TEST" "COMP_TEST" 2 3;
  .timescale -9 -9;
-v0x275de40_0 .net "EQ", 0 0, L_0x27608d0; 1 drivers
-v0x275df30_0 .net "LG", 0 0, L_0x2760830; 1 drivers
-v0x275e000_0 .net "RG", 0 0, L_0x27609c0; 1 drivers
-v0x275e0d0_0 .var "X", 3 0;
-v0x275e150_0 .var "Y", 3 0;
-S_0x272d890 .scope module, "COMP" "COMP" 2 7, 3 1, S_0x272daf0;
+v0x238ee40_0 .net "EQ", 0 0, L_0x23918d0; 1 drivers
+v0x238ef30_0 .net "LG", 0 0, L_0x2391830; 1 drivers
+v0x238f000_0 .net "RG", 0 0, L_0x23919c0; 1 drivers
+v0x238f0d0_0 .var "X", 3 0;
+v0x238f150_0 .var "Y", 3 0;
+S_0x235e890 .scope module, "COMP" "COMP" 2 7, 3 1, S_0x235eaf0;
  .timescale 0 0;
-RS_0x7f3396a1eb58 .resolv tri, L_0x275ebb0, L_0x275f8a0, L_0x2760690, C4<zzz>;
-v0x275d950_0 .net8 "EQ", 2 0, RS_0x7f3396a1eb58; 3 drivers
-v0x275da10_0 .alias "EQ_OUT", 0 0, v0x275de40_0;
-RS_0x7f3396a1eb88 .resolv tri, L_0x275eac0, L_0x275f800, L_0x27605f0, C4<zzz>;
-v0x275da90_0 .net8 "LG", 2 0, RS_0x7f3396a1eb88; 3 drivers
-v0x275db10_0 .alias "LG_OUT", 0 0, v0x275df30_0;
-RS_0x7f3396a1ebb8 .resolv tri, L_0x275eca0, L_0x275fa00, L_0x2760550, C4<zzz>;
-v0x275dbf0_0 .net8 "RG", 2 0, RS_0x7f3396a1ebb8; 3 drivers
-v0x275dc70_0 .alias "RG_OUT", 0 0, v0x275e000_0;
-v0x275dcf0_0 .net "X", 3 0, v0x275e0d0_0; 1 drivers
-v0x275dd70_0 .net "Y", 3 0, v0x275e150_0; 1 drivers
-L_0x275e6e0 .part v0x275e0d0_0, 0, 1;
-L_0x275e7d0 .part v0x275e150_0, 0, 1;
-L_0x275eac0 .part/pv L_0x275e1d0, 0, 1, 3;
-L_0x275ebb0 .part/pv L_0x275e2d0, 0, 1, 3;
-L_0x275eca0 .part/pv L_0x275e3f0, 0, 1, 3;
-L_0x275f1c0 .part v0x275e0d0_0, 1, 1;
-L_0x275f2a0 .part v0x275e150_0, 1, 1;
-L_0x275f390 .part RS_0x7f3396a1eb88, 0, 1;
-L_0x275f520 .part RS_0x7f3396a1eb58, 0, 1;
-L_0x275f660 .part RS_0x7f3396a1ebb8, 0, 1;
-L_0x275f800 .part/pv L_0x275ed90, 1, 1, 3;
-L_0x275f8a0 .part/pv L_0x275ee30, 1, 1, 3;
-L_0x275fa00 .part/pv L_0x275ef20, 1, 1, 3;
-L_0x275fe50 .part v0x275e0d0_0, 2, 1;
-L_0x2760000 .part v0x275e150_0, 2, 1;
-L_0x2760130 .part RS_0x7f3396a1eb88, 1, 1;
-L_0x27602f0 .part RS_0x7f3396a1eb58, 1, 1;
-L_0x2760420 .part RS_0x7f3396a1ebb8, 1, 1;
-L_0x27605f0 .part/pv L_0x275faf0, 2, 1, 3;
-L_0x2760690 .part/pv L_0x275fb90, 2, 1, 3;
-L_0x2760550 .part/pv L_0x275fc80, 2, 1, 3;
-L_0x2760b90 .part v0x275e0d0_0, 3, 1;
-L_0x2760730 .part v0x275e150_0, 3, 1;
-L_0x2760d40 .part RS_0x7f3396a1eb88, 2, 1;
-L_0x2760c30 .part RS_0x7f3396a1eb58, 2, 1;
-L_0x2760f50 .part RS_0x7f3396a1ebb8, 2, 1;
-S_0x275cd80 .scope module, "COMP0" "FULL_COMP" 3 5, 3 11, S_0x272d890;
+RS_0x7fe6bab09b58 .resolv tri, L_0x238fbb0, L_0x23908a0, L_0x2391690, C4<zzz>;
+v0x238e950_0 .net8 "EQ", 2 0, RS_0x7fe6bab09b58; 3 drivers
+v0x238ea10_0 .alias "EQ_OUT", 0 0, v0x238ee40_0;
+RS_0x7fe6bab09b88 .resolv tri, L_0x238fac0, L_0x2390800, L_0x23915f0, C4<zzz>;
+v0x238ea90_0 .net8 "LG", 2 0, RS_0x7fe6bab09b88; 3 drivers
+v0x238eb10_0 .alias "LG_OUT", 0 0, v0x238ef30_0;
+RS_0x7fe6bab09bb8 .resolv tri, L_0x238fca0, L_0x2390a00, L_0x2391550, C4<zzz>;
+v0x238ebf0_0 .net8 "RG", 2 0, RS_0x7fe6bab09bb8; 3 drivers
+v0x238ec70_0 .alias "RG_OUT", 0 0, v0x238f000_0;
+v0x238ecf0_0 .net "X", 3 0, v0x238f0d0_0; 1 drivers
+v0x238ed70_0 .net "Y", 3 0, v0x238f150_0; 1 drivers
+L_0x238f6e0 .part v0x238f0d0_0, 0, 1;
+L_0x238f7d0 .part v0x238f150_0, 0, 1;
+L_0x238fac0 .part/pv L_0x238f1d0, 0, 1, 3;
+L_0x238fbb0 .part/pv L_0x238f2d0, 0, 1, 3;
+L_0x238fca0 .part/pv L_0x238f3f0, 0, 1, 3;
+L_0x23901c0 .part v0x238f0d0_0, 1, 1;
+L_0x23902a0 .part v0x238f150_0, 1, 1;
+L_0x2390390 .part RS_0x7fe6bab09b88, 0, 1;
+L_0x2390520 .part RS_0x7fe6bab09b58, 0, 1;
+L_0x2390660 .part RS_0x7fe6bab09bb8, 0, 1;
+L_0x2390800 .part/pv L_0x238fd90, 1, 1, 3;
+L_0x23908a0 .part/pv L_0x238fe30, 1, 1, 3;
+L_0x2390a00 .part/pv L_0x238ff20, 1, 1, 3;
+L_0x2390e50 .part v0x238f0d0_0, 2, 1;
+L_0x2391000 .part v0x238f150_0, 2, 1;
+L_0x2391130 .part RS_0x7fe6bab09b88, 1, 1;
+L_0x23912f0 .part RS_0x7fe6bab09b58, 1, 1;
+L_0x2391420 .part RS_0x7fe6bab09bb8, 1, 1;
+L_0x23915f0 .part/pv L_0x2390af0, 2, 1, 3;
+L_0x2391690 .part/pv L_0x2390b90, 2, 1, 3;
+L_0x2391550 .part/pv L_0x2390c80, 2, 1, 3;
+L_0x2391b90 .part v0x238f0d0_0, 3, 1;
+L_0x2391730 .part v0x238f150_0, 3, 1;
+L_0x2391d40 .part RS_0x7fe6bab09b88, 2, 1;
+L_0x2391c30 .part RS_0x7fe6bab09b58, 2, 1;
+L_0x2391f50 .part RS_0x7fe6bab09bb8, 2, 1;
+S_0x238dd80 .scope module, "COMP0" "FULL_COMP" 3 5, 3 11, S_0x235e890;
  .timescale 0 0;
-v0x275d320_0 .net "EQ_IN", 0 0, C4<1>; 1 drivers
-v0x275d3e0_0 .net "EQ_OUT", 0 0, L_0x275e2d0; 1 drivers
-v0x275d480_0 .net "LG_IN", 0 0, C4<0>; 1 drivers
-v0x275d520_0 .net "LG_OUT", 0 0, L_0x275e1d0; 1 drivers
-v0x275d5a0_0 .net "RG_IN", 0 0, C4<0>; 1 drivers
-v0x275d640_0 .net "RG_OUT", 0 0, L_0x275e3f0; 1 drivers
-v0x275d720_0 .net "X", 0 0, L_0x275e6e0; 1 drivers
-v0x275d7c0_0 .net "Y", 0 0, L_0x275e7d0; 1 drivers
-v0x275d8b0_0 .net *"_s5", 2 0, L_0x275e490; 1 drivers
-L_0x275e1d0 .part L_0x275e490, 2, 1;
-L_0x275e2d0 .part L_0x275e490, 1, 1;
-L_0x275e3f0 .part L_0x275e490, 0, 1;
-L_0x275e490 .ufunc TD_COMP_TEST.COMP.COMP0.FUNC_COMP, 3, L_0x275e6e0, L_0x275e7d0, C4<0>, C4<1>, C4<0> (v0x275d1e0_0, v0x275d280_0, v0x275d0c0_0, v0x275cf60_0, v0x275d160_0) v0x275d020_0 S_0x275ce70;
-S_0x275ce70 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x275cd80;
+v0x238e320_0 .net "EQ_IN", 0 0, C4<1>; 1 drivers
+v0x238e3e0_0 .net "EQ_OUT", 0 0, L_0x238f2d0; 1 drivers
+v0x238e480_0 .net "LG_IN", 0 0, C4<0>; 1 drivers
+v0x238e520_0 .net "LG_OUT", 0 0, L_0x238f1d0; 1 drivers
+v0x238e5a0_0 .net "RG_IN", 0 0, C4<0>; 1 drivers
+v0x238e640_0 .net "RG_OUT", 0 0, L_0x238f3f0; 1 drivers
+v0x238e720_0 .net "X", 0 0, L_0x238f6e0; 1 drivers
+v0x238e7c0_0 .net "Y", 0 0, L_0x238f7d0; 1 drivers
+v0x238e8b0_0 .net *"_s5", 2 0, L_0x238f490; 1 drivers
+L_0x238f1d0 .part L_0x238f490, 2, 1;
+L_0x238f2d0 .part L_0x238f490, 1, 1;
+L_0x238f3f0 .part L_0x238f490, 0, 1;
+L_0x238f490 .ufunc TD_COMP_TEST.COMP.COMP0.FUNC_COMP, 3, L_0x238f6e0, L_0x238f7d0, C4<0>, C4<1>, C4<0> (v0x238e1e0_0, v0x238e280_0, v0x238e0c0_0, v0x238e020_0, v0x238e160_0) v0x238df60_0 S_0x238de70;
+S_0x238de70 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x238dd80;
  .timescale 0 0;
-v0x275cf60_0 .var "EQ_IN", 0 0;
-v0x275d020_0 .var "FUNC_COMP", 2 0;
-v0x275d0c0_0 .var "LG_IN", 0 0;
-v0x275d160_0 .var "RG_IN", 0 0;
-v0x275d1e0_0 .var "X", 0 0;
-v0x275d280_0 .var "Y", 0 0;
+v0x238df60_0 .var "FUNC_COMP", 2 0;
+v0x238e020_0 .var "eq_in", 0 0;
+v0x238e0c0_0 .var "lg_in", 0 0;
+v0x238e160_0 .var "rg_in", 0 0;
+v0x238e1e0_0 .var "x", 0 0;
+v0x238e280_0 .var "y", 0 0;
 TD_COMP_TEST.COMP.COMP0.FUNC_COMP ;
-    %load/v 8, v0x275d280_0, 1;
-    %load/v 9, v0x275d1e0_0, 1;
+    %load/v 8, v0x238e280_0, 1;
+    %load/v 9, v0x238e1e0_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_0.0, 5;
     %movi 8, 4, 3;
-    %set/v v0x275d020_0, 8, 3;
+    %set/v v0x238df60_0, 8, 3;
     %jmp T_0.1;
 T_0.0 ;
-    %load/v 8, v0x275d1e0_0, 1;
-    %load/v 9, v0x275d280_0, 1;
+    %load/v 8, v0x238e1e0_0, 1;
+    %load/v 9, v0x238e280_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_0.2, 5;
     %movi 8, 1, 3;
-    %set/v v0x275d020_0, 8, 3;
+    %set/v v0x238df60_0, 8, 3;
     %jmp T_0.3;
 T_0.2 ;
-    %load/v 8, v0x275d0c0_0, 1;
+    %load/v 8, v0x238e0c0_0, 1;
     %jmp/0xz  T_0.4, 8;
     %movi 8, 4, 3;
-    %set/v v0x275d020_0, 8, 3;
+    %set/v v0x238df60_0, 8, 3;
     %jmp T_0.5;
 T_0.4 ;
-    %load/v 8, v0x275cf60_0, 1;
+    %load/v 8, v0x238e020_0, 1;
     %jmp/0xz  T_0.6, 8;
     %movi 8, 2, 3;
-    %set/v v0x275d020_0, 8, 3;
+    %set/v v0x238df60_0, 8, 3;
     %jmp T_0.7;
 T_0.6 ;
     %movi 8, 1, 3;
-    %set/v v0x275d020_0, 8, 3;
+    %set/v v0x238df60_0, 8, 3;
 T_0.7 ;
 T_0.5 ;
 T_0.3 ;
 T_0.1 ;
     %end;
-S_0x275c1b0 .scope module, "COMP1" "FULL_COMP" 3 6, 3 11, S_0x272d890;
+S_0x238d1b0 .scope module, "COMP1" "FULL_COMP" 3 6, 3 11, S_0x235e890;
  .timescale 0 0;
-v0x275c750_0 .net "EQ_IN", 0 0, L_0x275f520; 1 drivers
-v0x275c810_0 .net "EQ_OUT", 0 0, L_0x275ee30; 1 drivers
-v0x275c8b0_0 .net "LG_IN", 0 0, L_0x275f390; 1 drivers
-v0x275c950_0 .net "LG_OUT", 0 0, L_0x275ed90; 1 drivers
-v0x275c9d0_0 .net "RG_IN", 0 0, L_0x275f660; 1 drivers
-v0x275ca70_0 .net "RG_OUT", 0 0, L_0x275ef20; 1 drivers
-v0x275cb50_0 .net "X", 0 0, L_0x275f1c0; 1 drivers
-v0x275cbf0_0 .net "Y", 0 0, L_0x275f2a0; 1 drivers
-v0x275cce0_0 .net *"_s5", 2 0, L_0x275efc0; 1 drivers
-L_0x275ed90 .part L_0x275efc0, 2, 1;
-L_0x275ee30 .part L_0x275efc0, 1, 1;
-L_0x275ef20 .part L_0x275efc0, 0, 1;
-L_0x275efc0 .ufunc TD_COMP_TEST.COMP.COMP1.FUNC_COMP, 3, L_0x275f1c0, L_0x275f2a0, L_0x275f390, L_0x275f520, L_0x275f660 (v0x275c610_0, v0x275c6b0_0, v0x275c4f0_0, v0x275c390_0, v0x275c590_0) v0x275c450_0 S_0x275c2a0;
-S_0x275c2a0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x275c1b0;
+v0x238d750_0 .net "EQ_IN", 0 0, L_0x2390520; 1 drivers
+v0x238d810_0 .net "EQ_OUT", 0 0, L_0x238fe30; 1 drivers
+v0x238d8b0_0 .net "LG_IN", 0 0, L_0x2390390; 1 drivers
+v0x238d950_0 .net "LG_OUT", 0 0, L_0x238fd90; 1 drivers
+v0x238d9d0_0 .net "RG_IN", 0 0, L_0x2390660; 1 drivers
+v0x238da70_0 .net "RG_OUT", 0 0, L_0x238ff20; 1 drivers
+v0x238db50_0 .net "X", 0 0, L_0x23901c0; 1 drivers
+v0x238dbf0_0 .net "Y", 0 0, L_0x23902a0; 1 drivers
+v0x238dce0_0 .net *"_s5", 2 0, L_0x238ffc0; 1 drivers
+L_0x238fd90 .part L_0x238ffc0, 2, 1;
+L_0x238fe30 .part L_0x238ffc0, 1, 1;
+L_0x238ff20 .part L_0x238ffc0, 0, 1;
+L_0x238ffc0 .ufunc TD_COMP_TEST.COMP.COMP1.FUNC_COMP, 3, L_0x23901c0, L_0x23902a0, L_0x2390390, L_0x2390520, L_0x2390660 (v0x238d610_0, v0x238d6b0_0, v0x238d4f0_0, v0x238d450_0, v0x238d590_0) v0x238d390_0 S_0x238d2a0;
+S_0x238d2a0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x238d1b0;
  .timescale 0 0;
-v0x275c390_0 .var "EQ_IN", 0 0;
-v0x275c450_0 .var "FUNC_COMP", 2 0;
-v0x275c4f0_0 .var "LG_IN", 0 0;
-v0x275c590_0 .var "RG_IN", 0 0;
-v0x275c610_0 .var "X", 0 0;
-v0x275c6b0_0 .var "Y", 0 0;
+v0x238d390_0 .var "FUNC_COMP", 2 0;
+v0x238d450_0 .var "eq_in", 0 0;
+v0x238d4f0_0 .var "lg_in", 0 0;
+v0x238d590_0 .var "rg_in", 0 0;
+v0x238d610_0 .var "x", 0 0;
+v0x238d6b0_0 .var "y", 0 0;
 TD_COMP_TEST.COMP.COMP1.FUNC_COMP ;
-    %load/v 8, v0x275c6b0_0, 1;
-    %load/v 9, v0x275c610_0, 1;
+    %load/v 8, v0x238d6b0_0, 1;
+    %load/v 9, v0x238d610_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_1.8, 5;
     %movi 8, 4, 3;
-    %set/v v0x275c450_0, 8, 3;
+    %set/v v0x238d390_0, 8, 3;
     %jmp T_1.9;
 T_1.8 ;
-    %load/v 8, v0x275c610_0, 1;
-    %load/v 9, v0x275c6b0_0, 1;
+    %load/v 8, v0x238d610_0, 1;
+    %load/v 9, v0x238d6b0_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_1.10, 5;
     %movi 8, 1, 3;
-    %set/v v0x275c450_0, 8, 3;
+    %set/v v0x238d390_0, 8, 3;
     %jmp T_1.11;
 T_1.10 ;
-    %load/v 8, v0x275c4f0_0, 1;
+    %load/v 8, v0x238d4f0_0, 1;
     %jmp/0xz  T_1.12, 8;
     %movi 8, 4, 3;
-    %set/v v0x275c450_0, 8, 3;
+    %set/v v0x238d390_0, 8, 3;
     %jmp T_1.13;
 T_1.12 ;
-    %load/v 8, v0x275c390_0, 1;
+    %load/v 8, v0x238d450_0, 1;
     %jmp/0xz  T_1.14, 8;
     %movi 8, 2, 3;
-    %set/v v0x275c450_0, 8, 3;
+    %set/v v0x238d390_0, 8, 3;
     %jmp T_1.15;
 T_1.14 ;
     %movi 8, 1, 3;
-    %set/v v0x275c450_0, 8, 3;
+    %set/v v0x238d390_0, 8, 3;
 T_1.15 ;
 T_1.13 ;
 T_1.11 ;
 T_1.9 ;
     %end;
-S_0x275b5e0 .scope module, "COMP2" "FULL_COMP" 3 7, 3 11, S_0x272d890;
+S_0x238c5e0 .scope module, "COMP2" "FULL_COMP" 3 7, 3 11, S_0x235e890;
  .timescale 0 0;
-v0x275bb80_0 .net "EQ_IN", 0 0, L_0x27602f0; 1 drivers
-v0x275bc40_0 .net "EQ_OUT", 0 0, L_0x275fb90; 1 drivers
-v0x275bce0_0 .net "LG_IN", 0 0, L_0x2760130; 1 drivers
-v0x275bd80_0 .net "LG_OUT", 0 0, L_0x275faf0; 1 drivers
-v0x275be00_0 .net "RG_IN", 0 0, L_0x2760420; 1 drivers
-v0x275bea0_0 .net "RG_OUT", 0 0, L_0x275fc80; 1 drivers
-v0x275bf80_0 .net "X", 0 0, L_0x275fe50; 1 drivers
-v0x275c020_0 .net "Y", 0 0, L_0x2760000; 1 drivers
-v0x275c110_0 .net *"_s5", 2 0, L_0x275fd20; 1 drivers
-L_0x275faf0 .part L_0x275fd20, 2, 1;
-L_0x275fb90 .part L_0x275fd20, 1, 1;
-L_0x275fc80 .part L_0x275fd20, 0, 1;
-L_0x275fd20 .ufunc TD_COMP_TEST.COMP.COMP2.FUNC_COMP, 3, L_0x275fe50, L_0x2760000, L_0x2760130, L_0x27602f0, L_0x2760420 (v0x275ba40_0, v0x275bae0_0, v0x275b920_0, v0x275b7c0_0, v0x275b9c0_0) v0x275b880_0 S_0x275b6d0;
-S_0x275b6d0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x275b5e0;
+v0x238cb80_0 .net "EQ_IN", 0 0, L_0x23912f0; 1 drivers
+v0x238cc40_0 .net "EQ_OUT", 0 0, L_0x2390b90; 1 drivers
+v0x238cce0_0 .net "LG_IN", 0 0, L_0x2391130; 1 drivers
+v0x238cd80_0 .net "LG_OUT", 0 0, L_0x2390af0; 1 drivers
+v0x238ce00_0 .net "RG_IN", 0 0, L_0x2391420; 1 drivers
+v0x238cea0_0 .net "RG_OUT", 0 0, L_0x2390c80; 1 drivers
+v0x238cf80_0 .net "X", 0 0, L_0x2390e50; 1 drivers
+v0x238d020_0 .net "Y", 0 0, L_0x2391000; 1 drivers
+v0x238d110_0 .net *"_s5", 2 0, L_0x2390d20; 1 drivers
+L_0x2390af0 .part L_0x2390d20, 2, 1;
+L_0x2390b90 .part L_0x2390d20, 1, 1;
+L_0x2390c80 .part L_0x2390d20, 0, 1;
+L_0x2390d20 .ufunc TD_COMP_TEST.COMP.COMP2.FUNC_COMP, 3, L_0x2390e50, L_0x2391000, L_0x2391130, L_0x23912f0, L_0x2391420 (v0x238ca40_0, v0x238cae0_0, v0x238c920_0, v0x238c880_0, v0x238c9c0_0) v0x238c7c0_0 S_0x238c6d0;
+S_0x238c6d0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x238c5e0;
  .timescale 0 0;
-v0x275b7c0_0 .var "EQ_IN", 0 0;
-v0x275b880_0 .var "FUNC_COMP", 2 0;
-v0x275b920_0 .var "LG_IN", 0 0;
-v0x275b9c0_0 .var "RG_IN", 0 0;
-v0x275ba40_0 .var "X", 0 0;
-v0x275bae0_0 .var "Y", 0 0;
+v0x238c7c0_0 .var "FUNC_COMP", 2 0;
+v0x238c880_0 .var "eq_in", 0 0;
+v0x238c920_0 .var "lg_in", 0 0;
+v0x238c9c0_0 .var "rg_in", 0 0;
+v0x238ca40_0 .var "x", 0 0;
+v0x238cae0_0 .var "y", 0 0;
 TD_COMP_TEST.COMP.COMP2.FUNC_COMP ;
-    %load/v 8, v0x275bae0_0, 1;
-    %load/v 9, v0x275ba40_0, 1;
+    %load/v 8, v0x238cae0_0, 1;
+    %load/v 9, v0x238ca40_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_2.16, 5;
     %movi 8, 4, 3;
-    %set/v v0x275b880_0, 8, 3;
+    %set/v v0x238c7c0_0, 8, 3;
     %jmp T_2.17;
 T_2.16 ;
-    %load/v 8, v0x275ba40_0, 1;
-    %load/v 9, v0x275bae0_0, 1;
+    %load/v 8, v0x238ca40_0, 1;
+    %load/v 9, v0x238cae0_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_2.18, 5;
     %movi 8, 1, 3;
-    %set/v v0x275b880_0, 8, 3;
+    %set/v v0x238c7c0_0, 8, 3;
     %jmp T_2.19;
 T_2.18 ;
-    %load/v 8, v0x275b920_0, 1;
+    %load/v 8, v0x238c920_0, 1;
     %jmp/0xz  T_2.20, 8;
     %movi 8, 4, 3;
-    %set/v v0x275b880_0, 8, 3;
+    %set/v v0x238c7c0_0, 8, 3;
     %jmp T_2.21;
 T_2.20 ;
-    %load/v 8, v0x275b7c0_0, 1;
+    %load/v 8, v0x238c880_0, 1;
     %jmp/0xz  T_2.22, 8;
     %movi 8, 2, 3;
-    %set/v v0x275b880_0, 8, 3;
+    %set/v v0x238c7c0_0, 8, 3;
     %jmp T_2.23;
 T_2.22 ;
     %movi 8, 1, 3;
-    %set/v v0x275b880_0, 8, 3;
+    %set/v v0x238c7c0_0, 8, 3;
 T_2.23 ;
 T_2.21 ;
 T_2.19 ;
 T_2.17 ;
     %end;
-S_0x2734e60 .scope module, "COMP3" "FULL_COMP" 3 8, 3 11, S_0x272d890;
+S_0x2365e60 .scope module, "COMP3" "FULL_COMP" 3 8, 3 11, S_0x235e890;
  .timescale 0 0;
-v0x275afb0_0 .net "EQ_IN", 0 0, L_0x2760c30; 1 drivers
-v0x275b070_0 .alias "EQ_OUT", 0 0, v0x275de40_0;
-v0x275b110_0 .net "LG_IN", 0 0, L_0x2760d40; 1 drivers
-v0x275b1b0_0 .alias "LG_OUT", 0 0, v0x275df30_0;
-v0x275b230_0 .net "RG_IN", 0 0, L_0x2760f50; 1 drivers
-v0x275b2d0_0 .alias "RG_OUT", 0 0, v0x275e000_0;
-v0x275b3b0_0 .net "X", 0 0, L_0x2760b90; 1 drivers
-v0x275b450_0 .net "Y", 0 0, L_0x2760730; 1 drivers
-v0x275b540_0 .net *"_s5", 2 0, L_0x2760a60; 1 drivers
-L_0x2760830 .part L_0x2760a60, 2, 1;
-L_0x27608d0 .part L_0x2760a60, 1, 1;
-L_0x27609c0 .part L_0x2760a60, 0, 1;
-L_0x2760a60 .ufunc TD_COMP_TEST.COMP.COMP3.FUNC_COMP, 3, L_0x2760b90, L_0x2760730, L_0x2760d40, L_0x2760c30, L_0x2760f50 (v0x275ae30_0, v0x275aed0_0, v0x275ace0_0, v0x2730650_0, v0x275ad80_0) v0x275ac40_0 S_0x2734bc0;
-S_0x2734bc0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x2734e60;
+v0x238bfb0_0 .net "EQ_IN", 0 0, L_0x2391c30; 1 drivers
+v0x238c070_0 .alias "EQ_OUT", 0 0, v0x238ee40_0;
+v0x238c110_0 .net "LG_IN", 0 0, L_0x2391d40; 1 drivers
+v0x238c1b0_0 .alias "LG_OUT", 0 0, v0x238ef30_0;
+v0x238c230_0 .net "RG_IN", 0 0, L_0x2391f50; 1 drivers
+v0x238c2d0_0 .alias "RG_OUT", 0 0, v0x238f000_0;
+v0x238c3b0_0 .net "X", 0 0, L_0x2391b90; 1 drivers
+v0x238c450_0 .net "Y", 0 0, L_0x2391730; 1 drivers
+v0x238c540_0 .net *"_s5", 2 0, L_0x2391a60; 1 drivers
+L_0x2391830 .part L_0x2391a60, 2, 1;
+L_0x23918d0 .part L_0x2391a60, 1, 1;
+L_0x23919c0 .part L_0x2391a60, 0, 1;
+L_0x2391a60 .ufunc TD_COMP_TEST.COMP.COMP3.FUNC_COMP, 3, L_0x2391b90, L_0x2391730, L_0x2391d40, L_0x2391c30, L_0x2391f50 (v0x238be30_0, v0x238bed0_0, v0x238bce0_0, v0x238bc40_0, v0x238bd80_0) v0x2361650_0 S_0x2365bc0;
+S_0x2365bc0 .scope function, "FUNC_COMP" "FUNC_COMP" 3 17, 3 17, S_0x2365e60;
  .timescale 0 0;
-v0x2730650_0 .var "EQ_IN", 0 0;
-v0x275ac40_0 .var "FUNC_COMP", 2 0;
-v0x275ace0_0 .var "LG_IN", 0 0;
-v0x275ad80_0 .var "RG_IN", 0 0;
-v0x275ae30_0 .var "X", 0 0;
-v0x275aed0_0 .var "Y", 0 0;
+v0x2361650_0 .var "FUNC_COMP", 2 0;
+v0x238bc40_0 .var "eq_in", 0 0;
+v0x238bce0_0 .var "lg_in", 0 0;
+v0x238bd80_0 .var "rg_in", 0 0;
+v0x238be30_0 .var "x", 0 0;
+v0x238bed0_0 .var "y", 0 0;
 TD_COMP_TEST.COMP.COMP3.FUNC_COMP ;
-    %load/v 8, v0x275aed0_0, 1;
-    %load/v 9, v0x275ae30_0, 1;
+    %load/v 8, v0x238bed0_0, 1;
+    %load/v 9, v0x238be30_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_3.24, 5;
     %movi 8, 4, 3;
-    %set/v v0x275ac40_0, 8, 3;
+    %set/v v0x2361650_0, 8, 3;
     %jmp T_3.25;
 T_3.24 ;
-    %load/v 8, v0x275ae30_0, 1;
-    %load/v 9, v0x275aed0_0, 1;
+    %load/v 8, v0x238be30_0, 1;
+    %load/v 9, v0x238bed0_0, 1;
     %cmp/u 8, 9, 1;
     %jmp/0xz  T_3.26, 5;
     %movi 8, 1, 3;
-    %set/v v0x275ac40_0, 8, 3;
+    %set/v v0x2361650_0, 8, 3;
     %jmp T_3.27;
 T_3.26 ;
-    %load/v 8, v0x275ace0_0, 1;
+    %load/v 8, v0x238bce0_0, 1;
     %jmp/0xz  T_3.28, 8;
     %movi 8, 4, 3;
-    %set/v v0x275ac40_0, 8, 3;
+    %set/v v0x2361650_0, 8, 3;
     %jmp T_3.29;
 T_3.28 ;
-    %load/v 8, v0x2730650_0, 1;
+    %load/v 8, v0x238bc40_0, 1;
     %jmp/0xz  T_3.30, 8;
     %movi 8, 2, 3;
-    %set/v v0x275ac40_0, 8, 3;
+    %set/v v0x2361650_0, 8, 3;
     %jmp T_3.31;
 T_3.30 ;
     %movi 8, 1, 3;
-    %set/v v0x275ac40_0, 8, 3;
+    %set/v v0x2361650_0, 8, 3;
 T_3.31 ;
 T_3.29 ;
 T_3.27 ;
 T_3.25 ;
     %end;
-    .scope S_0x272daf0;
+    .scope S_0x235eaf0;
 T_4 ;
     %delay 50, 0;
-    %load/v 8, v0x275e0d0_0, 4;
+    %load/v 8, v0x238f0d0_0, 4;
     %mov 12, 0, 28;
     %addi 8, 1, 32;
-    %set/v v0x275e0d0_0, 8, 4;
+    %set/v v0x238f0d0_0, 8, 4;
     %jmp T_4;
     .thread T_4;
-    .scope S_0x272daf0;
+    .scope S_0x235eaf0;
 T_5 ;
-    %set/v v0x275e0d0_0, 0, 4;
+    %set/v v0x238f0d0_0, 0, 4;
     %movi 8, 8, 4;
-    %set/v v0x275e150_0, 8, 4;
+    %set/v v0x238f150_0, 8, 4;
     %delay 800, 0;
     %vpi_call 2 11 "$finish";
     %end;
     .thread T_5;
-    .scope S_0x272daf0;
+    .scope S_0x235eaf0;
 T_6 ;
     %vpi_call 2 15 "$dumpfile", "compa.vcd";
-    %vpi_call 2 16 "$dumpvars", 1'sb0, S_0x272daf0;
+    %vpi_call 2 16 "$dumpvars", 1'sb0, S_0x235eaf0;
     %end;
     .thread T_6;
 # The file index is used to find the file name in the following table.
