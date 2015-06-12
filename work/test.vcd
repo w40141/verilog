@@ -1,0 +1,67 @@
+$date
+	Fri Jun 12 00:46:50 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module test $end
+$var wire 1 ! d $end
+$var reg 1 " s $end
+$var reg 1 # x $end
+$var reg 1 $ y $end
+$scope module sel $end
+$var wire 1 ! d $end
+$var wire 1 % s $end
+$var wire 1 & x $end
+$var wire 1 ' y $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0'
+0&
+1%
+0$
+0#
+1"
+0!
+$end
+#100
+1!
+1#
+1&
+#200
+0!
+1$
+1'
+0#
+0&
+#300
+1!
+1#
+1&
+#400
+0!
+0"
+0%
+0$
+0'
+0#
+0&
+#500
+1#
+1&
+#600
+1!
+1$
+1'
+0#
+0&
+#700
+1#
+1&
+#800
