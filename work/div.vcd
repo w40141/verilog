@@ -1,0 +1,38 @@
+$date
+	Fri Jun 12 21:54:17 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module test $end
+$var wire 8 ! s0 [7:0] $end
+$var wire 8 " s1 [7:0] $end
+$var wire 8 # s2 [7:0] $end
+$var wire 8 $ s3 [7:0] $end
+$var reg 32 % word [31:0] $end
+$scope module div $end
+$var wire 8 & w0 [7:0] $end
+$var wire 8 ' w1 [7:0] $end
+$var wire 8 ( w2 [7:0] $end
+$var wire 8 ) w3 [7:0] $end
+$var wire 32 * word [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b10001001000010101011110011011111 *
+b10001001 )
+b1010 (
+b10111100 '
+b11011111 &
+b10001001000010101011110011011111 %
+b10001001 $
+b1010 #
+b10111100 "
+b11011111 !
+$end
+#100
