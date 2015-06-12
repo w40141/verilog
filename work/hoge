@@ -1,0 +1,170 @@
+#! /usr/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 9;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0xce0a90 .scope module, "test" "test" 2 3;
+ .timescale -9 -9;
+v0xd0eed0_0 .var "x0", 7 0;
+v0xd0f100_0 .var "x1", 7 0;
+v0xd0f1b0_0 .var "x2", 7 0;
+v0xd0f230_0 .var "x3", 7 0;
+v0xd0f2b0_0 .net "y0", 7 0, L_0xd0f9a0; 1 drivers
+v0xd0f360_0 .net "y1", 7 0, L_0xd0ff60; 1 drivers
+v0xd0f410_0 .net "y2", 7 0, L_0xd10490; 1 drivers
+v0xd0f4c0_0 .net "y3", 7 0, L_0xd10950; 1 drivers
+S_0xcdf860 .scope module, "mixCol" "mixCol" 2 7, 3 1, S_0xce0a90;
+ .timescale 0 0;
+L_0xd0e2f0 .functor XOR 8, L_0xd0f540, L_0xd0f660, C4<00000000>, C4<00000000>;
+L_0xd0f7f0 .functor XOR 8, L_0xd0e2f0, v0xd0f100_0, C4<00000000>, C4<00000000>;
+L_0xd0f8a0 .functor XOR 8, L_0xd0f7f0, v0xd0f1b0_0, C4<00000000>, C4<00000000>;
+L_0xd0f9a0 .functor XOR 8, L_0xd0f8a0, v0xd0f230_0, C4<00000000>, C4<00000000>;
+L_0xd0fc20 .functor XOR 8, v0xd0eed0_0, L_0xd0faf0, C4<00000000>, C4<00000000>;
+L_0xd0fd20 .functor XOR 8, L_0xd0fc20, L_0xd0fc80, C4<00000000>, C4<00000000>;
+L_0xd0fe20 .functor XOR 8, L_0xd0fd20, v0xd0f1b0_0, C4<00000000>, C4<00000000>;
+L_0xd0ff60 .functor XOR 8, L_0xd0fe20, v0xd0f230_0, C4<00000000>, C4<00000000>;
+L_0xd10060 .functor XOR 8, v0xd0eed0_0, v0xd0f100_0, C4<00000000>, C4<00000000>;
+L_0xd101f0 .functor XOR 8, L_0xd10060, L_0xd10150, C4<00000000>, C4<00000000>;
+L_0xd10430 .functor XOR 8, L_0xd101f0, L_0xd10300, C4<00000000>, C4<00000000>;
+L_0xd10490 .functor XOR 8, L_0xd10430, v0xd0f230_0, C4<00000000>, C4<00000000>;
+L_0xd102a0 .functor XOR 8, L_0xd10590, v0xd0eed0_0, C4<00000000>, C4<00000000>;
+L_0xd10680 .functor XOR 8, L_0xd102a0, v0xd0f100_0, C4<00000000>, C4<00000000>;
+L_0xd107b0 .functor XOR 8, L_0xd10680, v0xd0f1b0_0, C4<00000000>, C4<00000000>;
+L_0xd10950 .functor XOR 8, L_0xd107b0, L_0xd10860, C4<00000000>, C4<00000000>;
+v0xd0dc10_0 .net *"_s1", 7 0, L_0xd0f540; 1 drivers
+v0xd0dcd0_0 .net *"_s13", 7 0, L_0xd0faf0; 1 drivers
+v0xd0dd70_0 .net *"_s14", 7 0, L_0xd0fc20; 1 drivers
+v0xd0de10_0 .net *"_s17", 7 0, L_0xd0fc80; 1 drivers
+v0xd0dec0_0 .net *"_s18", 7 0, L_0xd0fd20; 1 drivers
+v0xd0df60_0 .net *"_s20", 7 0, L_0xd0fe20; 1 drivers
+v0xd0e040_0 .net *"_s24", 7 0, L_0xd10060; 1 drivers
+v0xd0e0e0_0 .net *"_s27", 7 0, L_0xd10150; 1 drivers
+v0xd0e1d0_0 .net *"_s28", 7 0, L_0xd101f0; 1 drivers
+v0xd0e270_0 .net *"_s3", 7 0, L_0xd0f660; 1 drivers
+v0xd0e370_0 .net *"_s31", 7 0, L_0xd10300; 1 drivers
+v0xd0e410_0 .net *"_s32", 7 0, L_0xd10430; 1 drivers
+v0xd0e520_0 .net *"_s37", 7 0, L_0xd10590; 1 drivers
+v0xd0e5c0_0 .net *"_s38", 7 0, L_0xd102a0; 1 drivers
+v0xd0e6e0_0 .net *"_s4", 7 0, L_0xd0e2f0; 1 drivers
+v0xd0e780_0 .net *"_s40", 7 0, L_0xd10680; 1 drivers
+v0xd0e640_0 .net *"_s42", 7 0, L_0xd107b0; 1 drivers
+v0xd0e8d0_0 .net *"_s45", 7 0, L_0xd10860; 1 drivers
+v0xd0e9f0_0 .net *"_s6", 7 0, L_0xd0f7f0; 1 drivers
+v0xd0ea70_0 .net *"_s8", 7 0, L_0xd0f8a0; 1 drivers
+v0xd0e950_0 .net "x0", 7 0, v0xd0eed0_0; 1 drivers
+v0xd0eba0_0 .net "x1", 7 0, v0xd0f100_0; 1 drivers
+v0xd0eaf0_0 .net "x2", 7 0, v0xd0f1b0_0; 1 drivers
+v0xd0ece0_0 .net "x3", 7 0, v0xd0f230_0; 1 drivers
+v0xd0ec40_0 .alias "y0", 7 0, v0xd0f2b0_0;
+v0xd0ee30_0 .alias "y1", 7 0, v0xd0f360_0;
+v0xd0ed80_0 .alias "y2", 7 0, v0xd0f410_0;
+v0xd0ef90_0 .alias "y3", 7 0, v0xd0f4c0_0;
+L_0xd0f540 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0eed0_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd0f660 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f100_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd0faf0 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f100_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd0fc80 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f1b0_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd10150 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f1b0_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd10300 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f230_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd10590 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0eed0_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+L_0xd10860 .ufunc TD_test.mixCol.FUNC_2, 8, v0xd0f230_0 (v0xd0db70_0) v0xce1e00_0 S_0xcce480;
+S_0xcce480 .scope function, "FUNC_2" "FUNC_2" 3 10, 3 10, S_0xcdf860;
+ .timescale 0 0;
+v0xce1e00_0 .var "FUNC_2", 7 0;
+v0xd0db70_0 .var "x", 7 0;
+TD_test.mixCol.FUNC_2 ;
+    %ix/load 1, 7, 0;
+    %mov 4, 0, 1;
+    %jmp/1 T_0.0, 4;
+    %load/x1p 11, v0xd0db70_0, 1;
+    %jmp T_0.1;
+T_0.0 ;
+    %mov 11, 2, 1;
+T_0.1 ;
+    %mov 8, 11, 1; Move signal select into place
+    %mov 9, 0, 2;
+    %cmpi/u 8, 1, 3;
+    %jmp/0xz  T_0.2, 4;
+    %load/v 8, v0xd0db70_0, 8;
+    %ix/load 0, 1, 0;
+    %mov 4, 0, 1;
+    %shiftl/i0  8, 8;
+    %movi 16, 27, 8;
+    %xor 8, 16, 8;
+    %set/v v0xce1e00_0, 8, 8;
+    %jmp T_0.3;
+T_0.2 ;
+    %load/v 8, v0xd0db70_0, 8;
+    %ix/load 0, 1, 0;
+    %mov 4, 0, 1;
+    %shiftl/i0  8, 8;
+    %set/v v0xce1e00_0, 8, 8;
+T_0.3 ;
+    %end;
+    .scope S_0xce0a90;
+T_1 ;
+    %movi 8, 135, 8;
+    %set/v v0xd0eed0_0, 8, 8;
+    %movi 8, 110, 8;
+    %set/v v0xd0f100_0, 8, 8;
+    %movi 8, 70, 8;
+    %set/v v0xd0f1b0_0, 8, 8;
+    %movi 8, 166, 8;
+    %set/v v0xd0f230_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 242, 8;
+    %set/v v0xd0eed0_0, 8, 8;
+    %movi 8, 76, 8;
+    %set/v v0xd0f100_0, 8, 8;
+    %movi 8, 231, 8;
+    %set/v v0xd0f1b0_0, 8, 8;
+    %movi 8, 140, 8;
+    %set/v v0xd0f230_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 77, 8;
+    %set/v v0xd0eed0_0, 8, 8;
+    %movi 8, 144, 8;
+    %set/v v0xd0f100_0, 8, 8;
+    %movi 8, 74, 8;
+    %set/v v0xd0f1b0_0, 8, 8;
+    %movi 8, 216, 8;
+    %set/v v0xd0f230_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 151, 8;
+    %set/v v0xd0eed0_0, 8, 8;
+    %movi 8, 236, 8;
+    %set/v v0xd0f100_0, 8, 8;
+    %movi 8, 195, 8;
+    %set/v v0xd0f1b0_0, 8, 8;
+    %movi 8, 149, 8;
+    %set/v v0xd0f230_0, 8, 8;
+    %delay 100, 0;
+    %vpi_call 2 21 "$finish";
+    %end;
+    .thread T_1;
+    .scope S_0xce0a90;
+T_2 ;
+    %delay 0, 0;
+    %vpi_call 2 25 "$display", $time, "y0=%h, y1=%h, y2=%h, y3=%h", v0xd0f2b0_0, v0xd0f360_0, v0xd0f410_0, v0xd0f4c0_0;
+    %delay 100, 0;
+    %vpi_call 2 26 "$display", $time, "y0=%h, y1=%h, y2=%h, y3=%h", v0xd0f2b0_0, v0xd0f360_0, v0xd0f410_0, v0xd0f4c0_0;
+    %delay 100, 0;
+    %vpi_call 2 27 "$display", $time, "y0=%h, y1=%h, y2=%h, y3=%h", v0xd0f2b0_0, v0xd0f360_0, v0xd0f410_0, v0xd0f4c0_0;
+    %delay 100, 0;
+    %vpi_call 2 28 "$display", $time, "y0=%h, y1=%h, y2=%h, y3=%h", v0xd0f2b0_0, v0xd0f360_0, v0xd0f410_0, v0xd0f4c0_0;
+    %delay 100, 0;
+    %vpi_call 2 29 "$display", $time, "y0=%h, y1=%h, y2=%h, y3=%h", v0xd0f2b0_0, v0xd0f360_0, v0xd0f410_0, v0xd0f4c0_0;
+    %end;
+    .thread T_2;
+    .scope S_0xce0a90;
+T_3 ;
+    %vpi_call 2 33 "$dumpfile", "test.vcd";
+    %vpi_call 2 34 "$dumpvars", 1'sb0, S_0xce0a90;
+    %end;
+    .thread T_3;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "test.v";
+    "mixCol.v";
