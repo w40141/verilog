@@ -1,3 +1,4 @@
+// kakuninn
 module affine (x, y);
     input [7:0] x;
     output [7:0] y;
