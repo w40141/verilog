@@ -1,0 +1,310 @@
+$date
+	Fri Jun 12 21:18:02 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module test $end
+$var wire 128 ! str [127:0] $end
+$var reg 128 " key [127:0] $end
+$var reg 128 # word [127:0] $end
+$scope module add $end
+$var wire 32 $ k0 [31:0] $end
+$var wire 32 % k1 [31:0] $end
+$var wire 32 & k2 [31:0] $end
+$var wire 32 ' k3 [31:0] $end
+$var wire 128 ( key [127:0] $end
+$var wire 32 ) s0 [31:0] $end
+$var wire 32 * s1 [31:0] $end
+$var wire 32 + s2 [31:0] $end
+$var wire 32 , s3 [31:0] $end
+$var wire 128 - str [127:0] $end
+$var wire 32 . w0 [31:0] $end
+$var wire 32 / w1 [31:0] $end
+$var wire 32 0 w2 [31:0] $end
+$var wire 32 1 w3 [31:0] $end
+$var wire 128 2 word [127:0] $end
+$scope module add0 $end
+$var wire 8 3 k0 [7:0] $end
+$var wire 8 4 k1 [7:0] $end
+$var wire 8 5 k2 [7:0] $end
+$var wire 8 6 k3 [7:0] $end
+$var wire 32 7 key [31:0] $end
+$var wire 8 8 s0 [7:0] $end
+$var wire 8 9 s1 [7:0] $end
+$var wire 8 : s2 [7:0] $end
+$var wire 8 ; s3 [7:0] $end
+$var wire 32 < str [31:0] $end
+$var wire 8 = w0 [7:0] $end
+$var wire 8 > w1 [7:0] $end
+$var wire 8 ? w2 [7:0] $end
+$var wire 8 @ w3 [7:0] $end
+$var wire 32 A word [31:0] $end
+$scope module add0 $end
+$var wire 8 B key [7:0] $end
+$var wire 8 C str [7:0] $end
+$var wire 8 D word [7:0] $end
+$upscope $end
+$scope module add1 $end
+$var wire 8 E key [7:0] $end
+$var wire 8 F str [7:0] $end
+$var wire 8 G word [7:0] $end
+$upscope $end
+$scope module add2 $end
+$var wire 8 H key [7:0] $end
+$var wire 8 I str [7:0] $end
+$var wire 8 J word [7:0] $end
+$upscope $end
+$scope module add3 $end
+$var wire 8 K key [7:0] $end
+$var wire 8 L str [7:0] $end
+$var wire 8 M word [7:0] $end
+$upscope $end
+$upscope $end
+$scope module add1 $end
+$var wire 8 N k0 [7:0] $end
+$var wire 8 O k1 [7:0] $end
+$var wire 8 P k2 [7:0] $end
+$var wire 8 Q k3 [7:0] $end
+$var wire 32 R key [31:0] $end
+$var wire 8 S s0 [7:0] $end
+$var wire 8 T s1 [7:0] $end
+$var wire 8 U s2 [7:0] $end
+$var wire 8 V s3 [7:0] $end
+$var wire 32 W str [31:0] $end
+$var wire 8 X w0 [7:0] $end
+$var wire 8 Y w1 [7:0] $end
+$var wire 8 Z w2 [7:0] $end
+$var wire 8 [ w3 [7:0] $end
+$var wire 32 \ word [31:0] $end
+$scope module add0 $end
+$var wire 8 ] key [7:0] $end
+$var wire 8 ^ str [7:0] $end
+$var wire 8 _ word [7:0] $end
+$upscope $end
+$scope module add1 $end
+$var wire 8 ` key [7:0] $end
+$var wire 8 a str [7:0] $end
+$var wire 8 b word [7:0] $end
+$upscope $end
+$scope module add2 $end
+$var wire 8 c key [7:0] $end
+$var wire 8 d str [7:0] $end
+$var wire 8 e word [7:0] $end
+$upscope $end
+$scope module add3 $end
+$var wire 8 f key [7:0] $end
+$var wire 8 g str [7:0] $end
+$var wire 8 h word [7:0] $end
+$upscope $end
+$upscope $end
+$scope module add2 $end
+$var wire 8 i k0 [7:0] $end
+$var wire 8 j k1 [7:0] $end
+$var wire 8 k k2 [7:0] $end
+$var wire 8 l k3 [7:0] $end
+$var wire 32 m key [31:0] $end
+$var wire 8 n s0 [7:0] $end
+$var wire 8 o s1 [7:0] $end
+$var wire 8 p s2 [7:0] $end
+$var wire 8 q s3 [7:0] $end
+$var wire 32 r str [31:0] $end
+$var wire 8 s w0 [7:0] $end
+$var wire 8 t w1 [7:0] $end
+$var wire 8 u w2 [7:0] $end
+$var wire 8 v w3 [7:0] $end
+$var wire 32 w word [31:0] $end
+$scope module add0 $end
+$var wire 8 x key [7:0] $end
+$var wire 8 y str [7:0] $end
+$var wire 8 z word [7:0] $end
+$upscope $end
+$scope module add1 $end
+$var wire 8 { key [7:0] $end
+$var wire 8 | str [7:0] $end
+$var wire 8 } word [7:0] $end
+$upscope $end
+$scope module add2 $end
+$var wire 8 ~ key [7:0] $end
+$var wire 8 !" str [7:0] $end
+$var wire 8 "" word [7:0] $end
+$upscope $end
+$scope module add3 $end
+$var wire 8 #" key [7:0] $end
+$var wire 8 $" str [7:0] $end
+$var wire 8 %" word [7:0] $end
+$upscope $end
+$upscope $end
+$scope module add3 $end
+$var wire 8 &" k0 [7:0] $end
+$var wire 8 '" k1 [7:0] $end
+$var wire 8 (" k2 [7:0] $end
+$var wire 8 )" k3 [7:0] $end
+$var wire 32 *" key [31:0] $end
+$var wire 8 +" s0 [7:0] $end
+$var wire 8 ," s1 [7:0] $end
+$var wire 8 -" s2 [7:0] $end
+$var wire 8 ." s3 [7:0] $end
+$var wire 32 /" str [31:0] $end
+$var wire 8 0" w0 [7:0] $end
+$var wire 8 1" w1 [7:0] $end
+$var wire 8 2" w2 [7:0] $end
+$var wire 8 3" w3 [7:0] $end
+$var wire 32 4" word [31:0] $end
+$scope module add0 $end
+$var wire 8 5" key [7:0] $end
+$var wire 8 6" str [7:0] $end
+$var wire 8 7" word [7:0] $end
+$upscope $end
+$scope module add1 $end
+$var wire 8 8" key [7:0] $end
+$var wire 8 9" str [7:0] $end
+$var wire 8 :" word [7:0] $end
+$upscope $end
+$scope module add2 $end
+$var wire 8 ;" key [7:0] $end
+$var wire 8 <" str [7:0] $end
+$var wire 8 =" word [7:0] $end
+$upscope $end
+$scope module add3 $end
+$var wire 8 >" key [7:0] $end
+$var wire 8 ?" str [7:0] $end
+$var wire 8 @" word [7:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 @"
+b0 ?"
+b0 >"
+b0 ="
+b0 <"
+b0 ;"
+b0 :"
+b0 9"
+b0 8"
+b0 7"
+b0 6"
+b0 5"
+b0 4"
+b0 3"
+b0 2"
+b0 1"
+b0 0"
+b0 /"
+b0 ."
+b0 -"
+b0 ,"
+b0 +"
+b0 *"
+b0 )"
+b0 ("
+b0 '"
+b0 &"
+b0 %"
+b0 $"
+b0 #"
+b0 ""
+b0 !"
+b0 ~
+b0 }
+b0 |
+b0 {
+b0 z
+b0 y
+b0 x
+b0 w
+b0 v
+b0 u
+b0 t
+b0 s
+b0 r
+b0 q
+b0 p
+b0 o
+b0 n
+b0 m
+b0 l
+b0 k
+b0 j
+b0 i
+b10100011 h
+b110111 g
+b10010100 f
+b10010 e
+b10010111 d
+b10000101 c
+b110100 b
+b1110101 a
+b1000001 `
+b1010110 _
+b1100010 ^
+b110100 ]
+b10100011000100100011010001010110 \
+b10100011 [
+b10010 Z
+b110100 Y
+b1010110 X
+b110111100101110111010101100010 W
+b110111 V
+b10010111 U
+b1110101 T
+b1100010 S
+b10010100100001010100000100110100 R
+b10010100 Q
+b10000101 P
+b1000001 O
+b110100 N
+b10001001 M
+b11101000 L
+b1100001 K
+b1 J
+b100010 I
+b100011 H
+b100011 G
+b1100110 F
+b1000101 E
+b10010100 D
+b10000000 C
+b10100 B
+b10001001000000010010001110010100 A
+b10001001 @
+b1 ?
+b100011 >
+b10010100 =
+b11101000001000100110011010000000 <
+b11101000 ;
+b100010 :
+b1100110 9
+b10000000 8
+b1100001001000110100010100010100 7
+b1100001 6
+b100011 5
+b1000101 4
+b10100 3
+b1010001100010010001101000101011010001001000000010010001110010100 2
+b0 1
+b0 0
+b10100011000100100011010001010110 /
+b10001001000000010010001110010100 .
+b11011110010111011101010110001011101000001000100110011010000000 -
+b0 ,
+b0 +
+b110111100101110111010101100010 *
+b11101000001000100110011010000000 )
+b1001010010000101010000010011010001100001001000110100010100010100 (
+b0 '
+b0 &
+b10010100100001010100000100110100 %
+b1100001001000110100010100010100 $
+b1010001100010010001101000101011010001001000000010010001110010100 #
+b1001010010000101010000010011010001100001001000110100010100010100 "
+b11011110010111011101010110001011101000001000100110011010000000 !
+$end
+#100
