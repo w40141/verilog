@@ -25,17 +25,17 @@ endmodule
 
 
 module mixCol128 (in, out);
-    input [127:0] in;
-    output [127:0] out;
-    wire [31:0] in0, in1, in2, in3;
-    wire [31:0] out0, out1, out2, out3;
+input [127:0] in;
+output [127:0] out;
+wire [31:0] x0, x1, x2, x3;
+wire [31:0] y0, y1, y2, y3;
 
-    divid128to32 div(in, in0, in1, in2, in3);
-    mixCol32     mix0(in0, out0);
-    mixCol32     mix1(in1, out1);
-    mixCol32     mix2(in2, out2);
-    mixCol32     mix3(in3, out3);
+divid128to32 div(in, x0, x1, x2, x3);
+mixCol32     mix0(in0, y0);
+mixCol32     mix1(in1, y1);
+mixCol32     mix2(in2, y2);
+mixCol32     mix3(in3, y3);
 
-    assign out = {out3, out2, out1, out0}<`2`>;
+assign out = {y3, y2, y1, y0};
 
 endmodule
