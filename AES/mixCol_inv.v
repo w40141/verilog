@@ -35,7 +35,7 @@ assign y1 = d10 ^ d11 ^ d12 ^ d13;
 assign y2 = d20 ^ d21 ^ d22 ^ d23;
 assign y3 = d30 ^ d31 ^ d32 ^ d33;
 
-assign out = {y3, y2, y1, y0};
+assign out = {y0, y1, y2, y3};
 
 endmodule
 
@@ -52,5 +52,5 @@ mixCol_inv128 mix1(x1, y1);
 mixCol_inv128 mix2(x2, y2);
 mixCol_inv128 mix3(x3, y3);
 
-assign out = {y3, y2, y1, y0};
+assign out = {y0, y1, y2, y3};
 endmodule

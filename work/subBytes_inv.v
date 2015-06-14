@@ -1,35 +1,3 @@
-module subBytes_inv128 (x, y);
-input [127:0] x;
-output [127:0] y;
-wire [31:0] x0, x1, x2, x3;
-wire [31:0] y0, y1, y2, y3;
-
-divid128to32 div (x, x0, x1, x2, x3);
-subBytes_inv32 sub0 (x0, y0);
-subBytes_inv32 sub1 (x1, y1);
-subBytes_inv32 sub2 (x2, y2);
-subBytes_inv32 sub3 (x3, y3);
-
-assign y = {y0, y1, y2, y3};
-endmodule
-
-
-module subBytes_inv32 (x, y);
-input [31:0] x;
-output [31:0] y;
-wire [7:0] x0, x1, x2, x3;
-wire [7:0] y0, y1, y2, y3;
-
-divid32to8 div (x, x0, x1, x2, x3);
-subBytes_inv sub0 (x0, y0);
-subBytes_inv sub0 (x1, y1);
-subBytes_inv sub0 (x2, y2);
-subBytes_inv sub0 (x3, y3);
-
-assign y = {y0, y1, y2, y3};
-endmodule
-
-
 module subBytes_inv(x, y);
 input [7:0]x;
 output [7:0] y;

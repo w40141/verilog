@@ -11,7 +11,7 @@ assign y1 = x0 ^ FUNC_2(x1) ^ FUNC_2(x2) ^ x2 ^ x3;
 assign y2 = x0 ^ x1 ^ FUNC_2(x2) ^ FUNC_2(x3) ^ x3;
 assign y3 = FUNC_2(x0) ^ x0 ^ x1 ^ x2 ^ FUNC_2(x3);
 
-assign out = {y3, y2, y1, y0};
+assign out = {y0, y1, y2, y3};
 
 function [7:0] FUNC_2;
     input [7:0] x;
@@ -36,6 +36,6 @@ mixCol32     mix1(in1, y1);
 mixCol32     mix2(in2, y2);
 mixCol32     mix3(in3, y3);
 
-assign out = {y3, y2, y1, y0};
+assign out = {y0, y1, y2, y3};
 
 endmodule

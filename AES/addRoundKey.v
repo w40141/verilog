@@ -12,7 +12,7 @@ addRoundKey32 add1(w1, k1, s1);
 addRoundKey32 add2(w2, k2, s2);
 addRoundKey32 add3(w3, k3, s3);
 
-assign str = {s3, s2, s1, s0};
+assign str = {s0, s1, s2, s3};
 endmodule
 
 
@@ -30,12 +30,24 @@ addRoundKey1 add1(w1, k1, s1);
 addRoundKey1 add2(w2, k2, s2);
 addRoundKey1 add3(w3, k3, s3);
 
-assign str = {s3, s2, s1, s0};
+assign str = {s0, s1, s2, s3};
 endmodule
 
 
 module addRoundKey1 (word, key, str);
 input  [7:0] word, key;
 output [7:0] str;
+assign str = word ^ key;
+endmodule
+
+module add32 (word, key, str);
+input [31:0] word, key;
+output [31:0] str;
+assign str = word ^ key;
+endmodule
+
+module add128 (word, key, str);
+input [127:0] word, key;
+output [127:0] str;
 assign str = word ^ key;
 endmodule
