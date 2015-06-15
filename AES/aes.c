@@ -77,16 +77,12 @@ void ShiftRows(int data[])
     unsigned char *cb=(unsigned char*)data;
     unsigned char cw[NBb];
     memcpy(cw,cb,sizeof(cw));
-    for(i=0;i<NB;i+=4)
+    for(j=1;j<4;j++)
     {
-        i4 = i*4;
-        for(j=1;j<4;j++)
-        {
-            cw[i4+j+0*4] = cb[i4+j+((j+0)&3)*4];
-            cw[i4+j+1*4] = cb[i4+j+((j+1)&3)*4];
-            cw[i4+j+2*4] = cb[i4+j+((j+2)&3)*4];
-            cw[i4+j+3*4] = cb[i4+j+((j+3)&3)*4];
-        }
+        cw[j+0*4] = cb[j+((j+0)&3)*4];
+        cw[j+1*4] = cb[j+((j+1)&3)*4];
+        cw[j+2*4] = cb[j+((j+2)&3)*4];
+        cw[j+3*4] = cb[j+((j+3)&3)*4];
     }
     memcpy(cb,cw,sizeof(cw));
 }
@@ -99,16 +95,12 @@ void invShiftRows(int data[])
     unsigned char *cb=(unsigned char*)data;
     unsigned char cw[NBb];
     memcpy(cw,cb,sizeof(cw));
-    for(i=0;i<NB;i+=4)
+    for(j=1;j<4;j++)
     {
-        i4 = i*4;
-        for(j=1;j<4;j++)
-        {
-            cw[i4+j+((j+0)&3)*4] = cb[i4+j+0*4];
-            cw[i4+j+((j+1)&3)*4] = cb[i4+j+1*4];
-            cw[i4+j+((j+2)&3)*4] = cb[i4+j+2*4];
-            cw[i4+j+((j+3)&3)*4] = cb[i4+j+3*4];
-        }
+        cw[j+((j+0)&3)*4] = cb[j+0*4];
+        cw[j+((j+1)&3)*4] = cb[j+1*4];
+        cw[j+((j+2)&3)*4] = cb[j+2*4];
+        cw[j+((j+3)&3)*4] = cb[j+3*4];
     }
     memcpy(cb,cw,sizeof(cw));
 }
