@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define NB 4                          /* 128bit 固定として規格されている(データの長さ) */
+#define NB 4
 #define NBb 16
 
 /************************************************************/
@@ -41,7 +41,7 @@ void datadump(char c[],void *dt,int len)
 /************************************************************/
 int main()
 {
-    unsigned char keys[]={  0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
+    unsigned char keys[]={  0x01,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
                             0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,
                             0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,
                             0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f};
@@ -136,21 +136,21 @@ void MixColumns(int data[])
     {
         i4 = i*4;
         x  =  mul(dataget(data,i4+0),2) ^
-            mul(dataget(data,i4+1),3) ^
-            mul(dataget(data,i4+2),1) ^
-            mul(dataget(data,i4+3),1);
+              mul(dataget(data,i4+1),3) ^
+              mul(dataget(data,i4+2),1) ^
+              mul(dataget(data,i4+3),1);
         x |= (mul(dataget(data,i4+1),2) ^
-                mul(dataget(data,i4+2),3) ^
-                mul(dataget(data,i4+3),1) ^
-                mul(dataget(data,i4+0),1)) << 8;
+              mul(dataget(data,i4+2),3) ^
+              mul(dataget(data,i4+3),1) ^
+              mul(dataget(data,i4+0),1)) << 8;
         x |= (mul(dataget(data,i4+2),2) ^
-                mul(dataget(data,i4+3),3) ^
-                mul(dataget(data,i4+0),1) ^
-                mul(dataget(data,i4+1),1)) << 16;
+              mul(dataget(data,i4+3),3) ^
+              mul(dataget(data,i4+0),1) ^
+              mul(dataget(data,i4+1),1)) << 16;
         x |= (mul(dataget(data,i4+3),2) ^
-                mul(dataget(data,i4+0),3) ^
-                mul(dataget(data,i4+1),1) ^
-                mul(dataget(data,i4+2),1)) << 24;
+              mul(dataget(data,i4+0),3) ^
+              mul(dataget(data,i4+1),1) ^
+              mul(dataget(data,i4+2),1)) << 24;
         data[i] = x;
     } 
 }
@@ -164,21 +164,21 @@ void invMixColumns(int data[],int n)
     {
         i4 = i*4;
         x  =  mul(dataget(data,i4+0),14) ^
-            mul(dataget(data,i4+1),11) ^
-            mul(dataget(data,i4+2),13) ^
-            mul(dataget(data,i4+3), 9);
+              mul(dataget(data,i4+1),11) ^
+              mul(dataget(data,i4+2),13) ^
+              mul(dataget(data,i4+3), 9);
         x |= (mul(dataget(data,i4+1),14) ^
-                mul(dataget(data,i4+2),11) ^
-                mul(dataget(data,i4+3),13) ^
-                mul(dataget(data,i4+0), 9)) << 8;
+              mul(dataget(data,i4+2),11) ^
+              mul(dataget(data,i4+3),13) ^
+              mul(dataget(data,i4+0), 9)) << 8;
         x |= (mul(dataget(data,i4+2),14) ^
-                mul(dataget(data,i4+3),11) ^
-                mul(dataget(data,i4+0),13) ^
-                mul(dataget(data,i4+1), 9)) << 16;
+              mul(dataget(data,i4+3),11) ^
+              mul(dataget(data,i4+0),13) ^
+              mul(dataget(data,i4+1), 9)) << 16;
         x |= (mul(dataget(data,i4+3),14) ^
-                mul(dataget(data,i4+0),11) ^
-                mul(dataget(data,i4+1),13) ^
-                mul(dataget(data,i4+2), 9)) << 24;
+              mul(dataget(data,i4+0),11) ^
+              mul(dataget(data,i4+1),13) ^
+              mul(dataget(data,i4+2), 9)) << 24;
         data[i] = x;
     } 
 }
@@ -222,8 +222,6 @@ void KeyExpansion(void *key)
         temp = w[i-1];
         if((i%nk) == 0)
             temp = SubWord(RotWord(temp)) ^ Rcon[(i/nk)-1];
-        else if(nk > 6 && (i%nk) == 4)
-            temp = SubWord(temp);
         w[i] = w[i-nk] ^ temp;
     }
 }
