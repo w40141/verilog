@@ -4,9 +4,10 @@ module test;
     reg [127:0] word, key;
     wire [127:0] str;
 
-    addRoundKey128 add (word, key, str);
+    addRoundKey add (word, key, str);
     initial begin
-                word=127'ha312345689012394;     key=127'h9485413461234514;
+                word = 127'h0102030405060708090a0b0c0d0e0f;
+                key  = 127'h111111111111111111111111111111;
         #100    $finish;
     end
 
