@@ -1,0 +1,114 @@
+#! /usr/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 9;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0xe711c0 .scope module, "test" "test" 2 3;
+ .timescale -9 -9;
+v0xe87300_0 .net "s0", 7 0, L_0xe87e90; 1 drivers
+v0xe873a0_0 .var "word", 7 0;
+S_0xe712b0 .scope module, "rcon" "rcon" 2 7, 3 1, S_0xe711c0;
+ .timescale -9 -9;
+v0xe4a0d0_0 .net *"_s0", 7 0, C4<00001000>; 1 drivers
+v0xe868f0_0 .net *"_s10", 7 0, L_0xe877a0; 1 drivers
+v0xe86990_0 .net *"_s12", 7 0, C4<00000001>; 1 drivers
+v0xe86a30_0 .net *"_s14", 31 0, C4<00000000000000000000000000000001>; 1 drivers
+v0xe86ae0_0 .net *"_s18", 23 0, C4<000000000000000000000000>; 1 drivers
+v0xe86b80_0 .net *"_s19", 31 0, L_0xe87960; 1 drivers
+v0xe86c60_0 .net *"_s2", 0 0, L_0xe87480; 1 drivers
+v0xe86d00_0 .net *"_s20", 31 0, L_0xe87ba0; 1 drivers
+v0xe86df0_0 .net *"_s22", 7 0, L_0xe87d10; 1 drivers
+v0xe86e90_0 .net *"_s4", 7 0, C4<00011011>; 1 drivers
+v0xe86f90_0 .net *"_s6", 7 0, C4<00001001>; 1 drivers
+v0xe87030_0 .net *"_s8", 7 0, L_0xe87620; 1 drivers
+v0xe87140_0 .net "in", 7 0, v0xe873a0_0; 1 drivers
+v0xe871e0_0 .alias "out", 7 0, v0xe87300_0;
+L_0xe87480 .cmp/gt 8, v0xe873a0_0, C4<00001000>;
+L_0xe87620 .arith/sub 8, v0xe873a0_0, C4<00001001>;
+L_0xe877a0 .shift/l 8, C4<00011011>, L_0xe87620;
+L_0xe87960 .concat [ 8 24 0 0], v0xe873a0_0, C4<000000000000000000000000>;
+L_0xe87ba0 .arith/sub 32, L_0xe87960, C4<00000000000000000000000000000001>;
+L_0xe87d10 .shift/l 8, C4<00000001>, L_0xe87ba0;
+L_0xe87e90 .functor MUXZ 8, L_0xe87d10, L_0xe877a0, L_0xe87480, C4<>;
+    .scope S_0xe711c0;
+T_0 ;
+    %set/v v0xe873a0_0, 0, 8;
+    %delay 100, 0;
+    %movi 8, 1, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 2, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 3, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 4, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 5, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 6, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 7, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 8, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 9, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %movi 8, 10, 8;
+    %set/v v0xe873a0_0, 8, 8;
+    %delay 100, 0;
+    %vpi_call 2 20 "$finish";
+    %end;
+    .thread T_0;
+    .scope S_0xe711c0;
+T_1 ;
+    %delay 0, 0;
+    %vpi_call 2 24 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 25 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 26 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 27 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 28 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 29 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 30 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 31 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 32 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 33 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 34 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 35 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 36 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %delay 100, 0;
+    %vpi_call 2 37 "$display", $time, "word=%h, s0=%h", v0xe873a0_0, v0xe87300_0;
+    %end;
+    .thread T_1;
+    .scope S_0xe711c0;
+T_2 ;
+    %vpi_call 2 41 "$dumpfile", "rcon.vcd";
+    %vpi_call 2 42 "$dumpvars", 1'sb0, S_0xe711c0;
+    %end;
+    .thread T_2;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "rcon_te.v";
+    "rcon.v";
