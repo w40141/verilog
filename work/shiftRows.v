@@ -39,5 +39,4 @@ assign out2 = {i02, i13, i20, i31};
 assign out3 = {i03, i10, i21, i32};
 
 assign out = {out0, out1, out2, out3};
-
 endmodule
