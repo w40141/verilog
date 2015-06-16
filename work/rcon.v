@@ -1,5 +1,5 @@
-module rcon (in, out);
-input [7:0] in;
-output [7:0] out;
-assign out = (in > 8'h08)? (8'h1b << (in - 8'h09)) : (8'h01 << (in - 1));
+module rcon (count, out);
+input [7:0] count;
+output [31:0] out;
+assign out = (count > 8'h08)? (32'h1b000000 << (count - 8'h09)) : (32'h01000000 << (count - 1));
 endmodule

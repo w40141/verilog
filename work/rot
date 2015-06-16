@@ -1,0 +1,82 @@
+#! /usr/local/Cellar/icarus-verilog/0.9.7/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 9;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x7fa7a2d06350 .scope module, "test" "test" 2 3;
+ .timescale -9 -9;
+v0x7fa7a2d1aea0_0 .var "count", 31 0;
+v0x7fa7a2d1acb0_0 .net "word", 31 0, L_0x7fa7a2d1bf60; 1 drivers
+S_0x7fa7a2d008a0 .scope module, "rot" "rotWord" 2 7, 3 1, S_0x7fa7a2d06350;
+ .timescale 0 0;
+L_0x7fa7a2d1af20 .functor AND 32, v0x7fa7a2d1aea0_0, C4<11111111000000000000000000000000>, C4<11111111111111111111111111111111>, C4<11111111111111111111111111111111>;
+L_0x7fa7a2d1b2e0 .functor AND 32, v0x7fa7a2d1aea0_0, C4<00000000111111110000000000000000>, C4<11111111111111111111111111111111>, C4<11111111111111111111111111111111>;
+L_0x7fa7a2d1b6b0 .functor AND 32, v0x7fa7a2d1aea0_0, C4<00000000000000001111111100000000>, C4<11111111111111111111111111111111>, C4<11111111111111111111111111111111>;
+L_0x7fa7a2d1ba80 .functor AND 32, v0x7fa7a2d1aea0_0, C4<00000000000000000000000011111111>, C4<11111111111111111111111111111111>, C4<11111111111111111111111111111111>;
+L_0x7fa7a2d1bda0 .functor OR 32, L_0x7fa7a2d1b150, L_0x7fa7a2d1b4f0, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+L_0x7fa7a2d1be80 .functor OR 32, L_0x7fa7a2d1bda0, L_0x7fa7a2d1b8f0, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+L_0x7fa7a2d1bf60 .functor OR 32, L_0x7fa7a2d1be80, L_0x7fa7a2d1bc90, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+v0x7fa7a2d05570_0 .net *"_s0", 31 0, C4<11111111000000000000000000000000>; 1 drivers
+v0x7fa7a2d19fb0_0 .net *"_s10", 31 0, C4<00000000111111110000000000000000>; 1 drivers
+v0x7fa7a2d1a040_0 .net *"_s12", 31 0, L_0x7fa7a2d1b2e0; 1 drivers
+v0x7fa7a2d1a0c0_0 .net *"_s16", 23 0, L_0x7fa7a2d1b3c0; 1 drivers
+v0x7fa7a2d1a150_0 .net *"_s18", 7 0, C4<00000000>; 1 drivers
+v0x7fa7a2d1a210_0 .net *"_s2", 31 0, L_0x7fa7a2d1af20; 1 drivers
+v0x7fa7a2d1a2a0_0 .net *"_s20", 31 0, C4<00000000000000001111111100000000>; 1 drivers
+v0x7fa7a2d1a360_0 .net *"_s22", 31 0, L_0x7fa7a2d1b6b0; 1 drivers
+v0x7fa7a2d1a3e0_0 .net *"_s26", 23 0, L_0x7fa7a2d1b7b0; 1 drivers
+v0x7fa7a2d1a4b0_0 .net *"_s28", 7 0, C4<00000000>; 1 drivers
+v0x7fa7a2d1a530_0 .net *"_s30", 31 0, C4<00000000000000000000000011111111>; 1 drivers
+v0x7fa7a2d1a610_0 .net *"_s32", 31 0, L_0x7fa7a2d1ba80; 1 drivers
+v0x7fa7a2d1a690_0 .net *"_s36", 23 0, L_0x7fa7a2d1bb40; 1 drivers
+v0x7fa7a2d1a780_0 .net *"_s38", 7 0, C4<00000000>; 1 drivers
+v0x7fa7a2d1a800_0 .net *"_s40", 31 0, L_0x7fa7a2d1bda0; 1 drivers
+v0x7fa7a2d1a900_0 .net *"_s42", 31 0, L_0x7fa7a2d1be80; 1 drivers
+v0x7fa7a2d1a980_0 .net *"_s6", 7 0, L_0x7fa7a2d1b040; 1 drivers
+v0x7fa7a2d1a880_0 .net *"_s8", 23 0, C4<000000000000000000000000>; 1 drivers
+v0x7fa7a2d1aa90_0 .net "in", 31 0, v0x7fa7a2d1aea0_0; 1 drivers
+v0x7fa7a2d1abb0_0 .net "in0", 31 0, L_0x7fa7a2d1b150; 1 drivers
+v0x7fa7a2d1ac30_0 .net "in1", 31 0, L_0x7fa7a2d1b4f0; 1 drivers
+v0x7fa7a2d1aa00_0 .net "in2", 31 0, L_0x7fa7a2d1b8f0; 1 drivers
+v0x7fa7a2d1ad60_0 .net "in3", 31 0, L_0x7fa7a2d1bc90; 1 drivers
+v0x7fa7a2d1ab10_0 .alias "out", 31 0, v0x7fa7a2d1acb0_0;
+L_0x7fa7a2d1b040 .part L_0x7fa7a2d1af20, 24, 8;
+L_0x7fa7a2d1b150 .concat [ 8 24 0 0], L_0x7fa7a2d1b040, C4<000000000000000000000000>;
+L_0x7fa7a2d1b3c0 .part L_0x7fa7a2d1b2e0, 0, 24;
+L_0x7fa7a2d1b4f0 .concat [ 8 24 0 0], C4<00000000>, L_0x7fa7a2d1b3c0;
+L_0x7fa7a2d1b7b0 .part L_0x7fa7a2d1b6b0, 0, 24;
+L_0x7fa7a2d1b8f0 .concat [ 8 24 0 0], C4<00000000>, L_0x7fa7a2d1b7b0;
+L_0x7fa7a2d1bb40 .part L_0x7fa7a2d1ba80, 0, 24;
+L_0x7fa7a2d1bc90 .concat [ 8 24 0 0], C4<00000000>, L_0x7fa7a2d1bb40;
+    .scope S_0x7fa7a2d06350;
+T_0 ;
+    %movi 8, 16909060, 32;
+    %set/v v0x7fa7a2d1aea0_0, 8, 32;
+    %delay 100, 0;
+    %movi 8, 168496141, 32;
+    %set/v v0x7fa7a2d1aea0_0, 8, 32;
+    %delay 100, 0;
+    %vpi_call 2 11 "$finish";
+    %end;
+    .thread T_0;
+    .scope S_0x7fa7a2d06350;
+T_1 ;
+    %delay 0, 0;
+    %vpi_call 2 15 "$display", $time, "word=%h, count=%h", v0x7fa7a2d1acb0_0, v0x7fa7a2d1aea0_0;
+    %delay 100, 0;
+    %vpi_call 2 16 "$display", $time, "word=%h, count=%h", v0x7fa7a2d1acb0_0, v0x7fa7a2d1aea0_0;
+    %delay 100, 0;
+    %vpi_call 2 17 "$display", $time, "word=%h, count=%h", v0x7fa7a2d1acb0_0, v0x7fa7a2d1aea0_0;
+    %delay 100, 0;
+    %vpi_call 2 18 "$display", $time, "word=%h, count=%h", v0x7fa7a2d1acb0_0, v0x7fa7a2d1aea0_0;
+    %vpi_call 2 20 "$dumpfile", "rot.vcd";
+    %vpi_call 2 21 "$dumpvars", 1'sb0, S_0x7fa7a2d06350;
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "rcon_te.v";
+    "rotWord.v";

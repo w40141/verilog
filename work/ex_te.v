@@ -28,10 +28,8 @@ initial begin
     #100    $display($time, "count=%h, word=%h, str=%h", count, word, key);
     #100    $display($time, "count=%h, word=%h, str=%h", count, word, key);
     #100    $display($time, "count=%h, word=%h, str=%h", count, word, key);
-end
 
-initial begin
-    $dumpfile("add.vcd");
+    $dumpfile("expand.vcd");
     $dumpvars(0, test);
 end
 
