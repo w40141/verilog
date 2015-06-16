@@ -16,7 +16,7 @@ assign out = {y0, y1, y2, y3};
 function [7:0] FUNC_2;
     input [7:0] x;
     if(x[7] == 1)
-        FUNC_2 = (x << 1) ^ 8'b00011011;
+        FUNC_2 = (x << 1) ^ 8'h1b;
     else
         FUNC_2 = (x << 1);
 endfunction

@@ -1,4 +1,4 @@
-module shiftRows_inv (in, out);
+module shiftRows (in, out);
 input [127:0] in;
 output [127:0] out;
 wire [31:0] in0, in1, in2, in3;
