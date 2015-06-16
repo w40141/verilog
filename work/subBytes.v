@@ -4,7 +4,11 @@ output [127:0] y;
 wire [31:0] x0, x1, x2, x3;
 wire [31:0] y0, y1, y2, y3;
 
-divid128to32 div (x, x0, x1, x2, x3);
+assign x0 = x[127:96];
+assign x1 = x[ 95:64];
+assign x2 = x[ 63:32];
+assign x3 = x[ 31: 0];
+
 subBytes32 sub0 (x0, y0);
 subBytes32 sub1 (x1, y1);
 subBytes32 sub2 (x2, y2);
@@ -20,7 +24,11 @@ output [31:0] y;
 wire [7:0] x0, x1, x2, x3;
 wire [7:0] y0, y1, y2, y3;
 
-divid32to8 div (x, x0, x1, x2, x3);
+assign x0 = x[31:24];
+assign x1 = x[23:16];
+assign x2 = x[15: 8];
+assign x3 = x[ 7: 0];
+
 subBytes sub0 (x0, y0);
 subBytes sub1 (x1, y1);
 subBytes sub2 (x2, y2);
@@ -37,6 +45,7 @@ reg [7:0] y;
 
 always @(x) begin
     case (x)
+        /*{{{*/
         8'b00000000:  y <= 8'b01100011;
         8'b00000001:  y <= 8'b01111010;
         8'b00000010:  y <= 8'b01110111;
@@ -292,7 +301,7 @@ always @(x) begin
         8'b11111100:  y <= 8'b10110000;
         8'b11111101:  y <= 8'b01010100;
         8'b11111110:  y <= 8'b10111011;
-        8'b11111111:  y <= 8'b00010110;
+        8'b11111111:  y <= 8'b00010110;/*}}}*/
     endcase
 end
 endmodule
