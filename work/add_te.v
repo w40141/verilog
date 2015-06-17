@@ -6,8 +6,8 @@ module test;
 
     addRoundKey add (word, key, str);
     initial begin
-                word = 127'h000102030405060708090a0b0c0d0e0f;
-                key  = 127'h0123456789abcdef0123456789abcdef;
+                word = 127'h00112233445566778899aabbccddeeff;
+                key  = 127'h010102030405060708090a0b0c0d0e0f;
         #100    word = word + 8'h01;
         #100    word = word + 8'h01;
         #100    word = word + 8'h01;

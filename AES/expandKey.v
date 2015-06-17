@@ -1,3 +1,6 @@
+// subbytes.v
+// rcon.v
+// leftShift.v
 module expandKey (in, count, out);
 input [127:0] in;
 input [7:0] count;
