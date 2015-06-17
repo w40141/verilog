@@ -8,7 +8,7 @@ integer i;
 
 expandKey expand (key, count, exkey);
 initial begin
-    key  = 127'h010102030405060708090a0b0c0d0e0f;   count = 8'h01;
+    key  = 127'h000102030405060708090a0b0c0d0e0f;   count = 8'h01;
     for (i = 0; i < 10; i = i + 1) begin
         #100;
         count = count + 8'h01;

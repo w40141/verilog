@@ -15,14 +15,13 @@ wire [127:0] roundWord;
 roundFunc round (word, key, roundWord);
 initial begin
     word  = 127'h00112233445566778899aabbccddeeff;
-    key   = 127'h010102030405060708090a0b0c0d0e0f;
+    key   = 127'h000102030405060708090a0b0c0d0e0f;
     #100;   $finish;
 end
 
 initial begin
     #0      $display("word=%h, key=%h, roundWord=%h", word, key, roundWord);
     #100    $display("word=%h, key=%h, roundWord=%h", word, key, roundWord);
-    // #100    $display("word=%h, key=%h, addword=%h, subword=%h, shiftword=%h, mixword=%h, round=%h", word, key, addword, subword, shiftword, mixword, round);
 end
 
 initial begin
