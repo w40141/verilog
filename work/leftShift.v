@@ -1,4 +1,4 @@
-module leftShift32 (in, num, out);
+module shift32 (in, num, out);
 input [31:0] in;
 input [7:0] num;
 output [31:0] out;
@@ -20,7 +20,7 @@ endfunction
 endmodule
 
 
-module leftShift128 (in, out);
+module shift128 (in, out);
 input [127:0] in;
 output [127:0] out;
 

@@ -13,7 +13,7 @@ assign in1 = in[ 95:64];
 assign in2 = in[ 63:32];
 assign in3 = in[ 31: 0];
 rcon rcon (count, rc);
-leftShift32 ls (in3, 8'h01, rw);
+shift32 ls (in3, 8'h01, rw);
 subBytes32 sub (rw, sw);
 assign rt = sw ^ rc;
 assign out0 = in0 ^ rt;
