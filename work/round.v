@@ -38,19 +38,16 @@ end
 endmodule
 
 
-module round (IN, KEY, cs, count, OUT, EXKEY, ENC);
-input [127:0] IN, KEY;
+module round (IN, cs, count, ENC);
+input [127:0] IN;
 input [2:0] cs;
 input [7:0] count;
 output [127:0] ENC;
 reg [127:0] ENC;
-output [127:0] OUT, EXKEY;
 
-malch malch (IN, KEY, cs, count, OUT, EXKEY);
 always @(cs) begin
-    if(cs == `FIN) begin
-        ENC <= OUT;
-    end
+    if(cs == `FIN)  ENC <= IN;
+    else            ENC <= 0;
 end
 endmodule
 
@@ -61,9 +58,9 @@ input [2:0] cs;
 input [7:0] count;
 output [127:0] OUT, EXKEY;
 reg [127:0] OUT, EXKEY;
-wire [127:0] add_out, sub_out, shi_out, mix_out, tmp_key, out, exkey;
+wire [127:0] add_out, sub_out, shi_out, mix_out, tmp_key;
 
-addRoundKey add (IN, exkey, add_out);
+addRoundKey add (IN, KEY, add_out);
 subBytes128 sub (IN, sub_out);
 expandKey   exp (KEY, count, tmp_key);
 shift128    shi (IN, shi_out);

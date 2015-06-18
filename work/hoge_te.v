@@ -6,21 +6,21 @@ wire [7:0] count;
 wire [2:0] cs;
 parameter times = 4;
 
-reg [127:0] IN, KEY;
-wire [127:0] ENC;
-wire [127:0] OUT, EXKEY;
+reg IN2, IN3;
+wire OUT;
 
 state   state   (clk, reset, count, cs);
-malch   malch   (IN, KEY, cs, count, OUT, EXKEY);
-round   round   (OUT, cs, count, ENC);
+cal     cal     (clk, IN2, IN3, cs, count, OUT);
 
 initial begin
     clk = 1'b0;
-    IN  = 128'h00112233445566778899aabbccddeeff;
-    KEY = 128'h000102030405060708090a0b0c0d0e0f;
+    IN2 = 1'b0;
+    IN3 = 1'b1;
 end
 
 always #(times/2)   clk = ~clk;
+always #(times/4)   IN2 = ~IN2;
+always #(times)     IN3 = ~IN3;
 
 initial begin
     reset = 1;
@@ -36,7 +36,7 @@ initial begin
 end
 
 initial begin
-    $dumpfile("state.vcd");
+    $dumpfile("hoge.vcd");
     $dumpvars(0, test);
 end
 
