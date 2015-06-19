@@ -52,7 +52,6 @@ NAND_2  nand_2  (IN1, IN2, nand_out);
 NOR_2   nor_2   (IN1, IN2, nor_out);
 NOT     not_0   (IN1, not_out);
 BUF     buf_0   (IN1, buf_out);
-
 always @(cs) begin
     case (cs)
         `def_AND_2:     OUT <= and_out;

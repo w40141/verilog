@@ -38,6 +38,22 @@ end
 endmodule
 
 
+module change (clk, res, IN, KEY, OUT, EXKEY);
+input clk, res;
+input [127:0] IN, KEY;
+output [127:0] OUT, EXKEY;
+reg [127:0] OUT, EXKEY;
+
+always @(negedge clk or negedge res) begin
+    if(!res) begin
+        OUT     <= 0;
+        EXKEY   <= 0;
+    end else
+        OUT     <= IN;
+        EXKEY   <= KEY;
+end
+endmodule
+
 module round (IN, cs, count, ENC);
 input [127:0] IN;
 input [2:0] cs;
