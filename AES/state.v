@@ -1,6 +1,7 @@
 `define RES 3'b000
 `define ADD 3'b001
 `define SUB 3'b010
+`define EXP 3'b011
 `define SHI 3'b100
 `define MIX 3'b101
 `define FIN 3'b111
@@ -88,6 +89,7 @@ reg  [127:0] inp, keyp;
 state   state   (clk, reset, count, cs);
 malch   malch   (inp, keyp, cs, clk, count, OUT, EXKEY);
 
+// always @(cs or negedge reset) begin
 always @(cs or negedge reset) begin
     if(reset) begin
         inp  <= IN;
