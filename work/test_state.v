@@ -1,7 +1,6 @@
 `define RES 3'b000
 `define ADD 3'b001
 `define SUB 3'b010
-`define EXP 3'b011
 `define SHI 3'b100
 `define MIX 3'b101
 `define FIN 3'b111
