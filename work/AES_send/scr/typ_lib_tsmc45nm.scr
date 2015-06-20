@@ -1,0 +1,54 @@
+# STARC90nm library path
+#set PATH_LIB_CORE "/storage/EDA/library/STARC90/LIB_S9A_CORE"
+#set PATH_LIB_IO25 "/storage/EDA/library/STARC90/LIB_S9A_IO25"
+#set PATH_LIB_IO33 "/storage/EDA/library/STARC90/LIB_S9A_IO33"
+
+# Set search_path
+#set search_path ". ${PATH_LIB_CORE}/astrotech ${PATH_LIB_CORE}/dotdb ${PATH_LIB_CORE}/milkyway ${PATH_LIB_CORE}/nxtgrd ${PATH_LIB_CORE}/pdb ${PATH_LIB_CORE}/tluplus ${PATH_LIB_IO25}/dotdb ${PATH_LIB_IO25}/milkyway ${PATH_LIB_IO25}/pdb ${PATH_LIB_IO33}/dotdb ${PATH_LIB_IO33}/milkyway ${PATH_LIB_IO33}/pdb"
+
+# Typical standard cell library
+#set TYP_LIB "S9A_WIDE_1V_TYP_PRIMITIVE"
+#set TYP_CORE_LIB "${TYP_LIB}.db"
+
+# I/O library
+#set TYP_IO25_LIB "S9A_WIDE_1V_TYP_STAND25"
+#set TYP_IO33_LIB "S9A_WIDE_1V_TYP_STAND33"
+#set IO25_LIB "$TYP_IO25_LIB.db"
+#set IO33_LIB "$TYP_IO33_LIB.db"
+
+# ALIB
+#set alib_library_analysis_path "${PATH_LIB_CORE}"
+
+#set synthetic_library  "dw_foundation.sldb"
+#set target_library  "${TYP_CORE_LIB}"
+#set link_library  "* $synthetic_library $target_library $IO25_LIB"
+
+# Library conditions
+#set TYP_CON "BALANC_TREE"
+
+
+# TSMC45nm
+# ==============================================
+# Setup Typical_Library
+# ==============================================
+
+set synthetic_library  "dw_foundation.sldb"
+
+# TSMC45nm library path
+set PATH_LIB_CORE "/storage/EDA/library/TSMC/tsmc45/TSMCHOME/digital/Front_End/variation/CCSVA/tcbn45gsbwp_110c"
+
+# Set search_path
+set search_path ". ${PATH_LIB_CORE}/"
+
+# Typical standard cell library
+set TYP_LIB "tcbn45gsbwpbc_ccsva"
+set TYP_CORE_LIB "${TYP_LIB}.db"
+
+set target_library  "${TYP_CORE_LIB}"
+
+
+set link_library "$target_library $synthetic_library"
+
+# Library conditions
+#set TYP_CON "typical_1v2c25"
+set TYP_CON "BALANC_TREE"
