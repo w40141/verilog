@@ -25,16 +25,29 @@ malch   malch   (inp, keyp, cs, clk, count, OUT, EXKEY);
 
 // always @(cs or negedge reset) begin
 always @(posedge clk or negedge reset) begin
-    if(reset) begin
-        inp  <= IN;
-        keyp <= KEY;
-    end else begin
-        if(cs == `FIN)  ENC <= OUT;
-        else begin
+    if(reset == 1'b0) begin
+        if(cs == `FIN) begin
+            ENC <= OUT;
+        end else begin
             ENC  <= 127'bz;
             inp  <= OUT;
             keyp <= EXKEY;
         end
+    end else begin
+        inp  <= IN;
+        keyp <= KEY;
     end
+    // if(reset == 1'b1) begin
+    //     inp  <= IN;
+    //     keyp <= KEY;
+    // end else begin
+    //     if(cs == `FIN) begin
+    //         ENC <= OUT;
+    //     end else begin
+    //         ENC  <= 127'bz;
+    //         inp  <= OUT;
+    //         keyp <= EXKEY;
+    //     end
+    // end
 end
 endmodule
