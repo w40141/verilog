@@ -1,5 +1,3 @@
-// module mixCol32 (in, out);
-
 module mixCol128 (in, out);
 input [127:0] in;
 output [127:0] out;

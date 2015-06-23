@@ -9,10 +9,10 @@ assign x1 = x[ 95:64];
 assign x2 = x[ 63:32];
 assign x3 = x[ 31: 0];
 
-subBytes_inv32 sub0 (x0, y0);
-subBytes_inv32 sub1 (x1, y1);
-subBytes_inv32 sub2 (x2, y2);
-subBytes_inv32 sub3 (x3, y3);
+subBytes32_inv sub0_inv (x0, y0);
+subBytes32_inv sub1_inv (x1, y1);
+subBytes32_inv sub2_inv (x2, y2);
+subBytes32_inv sub3_inv (x3, y3);
 
 assign y = {y0, y1, y2, y3};
 endmodule

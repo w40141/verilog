@@ -1,5 +1,5 @@
 $date
-	Tue Jun 23 15:18:26 2015
+	Tue Jun 23 15:31:50 2015
 $end
 $version
 	Icarus Verilog
@@ -7,7 +7,7 @@ $end
 $timescale
 	1ns
 $end
-$scope module test $end
+$scope module state_inv_te $end
 $var wire 128 ! ENC [127:0] $end
 $var reg 128 " IN [127:0] $end
 $var reg 128 # KEY [127:0] $end

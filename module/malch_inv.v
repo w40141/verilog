@@ -4,24 +4,24 @@
 `define SUB 3'b011
 `define SHI 3'b100
 `define MIX 3'b101
-
+`define INV 3'b110
 `define FIN 3'b111
 
-module malch (IN, KEY, cs, clk, count, OUT, EXKEY);
+module malch_inv (IN, KEY, cs, clk, count, OUT, EXKEY);
 input [127:0] IN, KEY;
 input [2:0] cs;
-input [7:0] count;
 input clk;
+input [7:0] count;
 output [127:0] OUT, EXKEY;
 reg [127:0] OUT, EXKEY;
-wire [127:0] add_out, sub_out, shi_out, mix_out, tmp_key;
+wire [127:0] add_out, sub_out, shi_out, mix_out, tmp_key, inv_key;
 
-addRoundKey add (IN, KEY, add_out);
-subBytes128 sub (IN, sub_out);
-expandKey   exp (KEY, count, tmp_key);
-
-shift128    shi (IN, shi_out);
-mixCol128   mix (IN, mix_out);
+addRoundKey     add (IN, KEY, add_out);
+subBytes128_inv sub (IN, sub_out);
+expandKey       key (KEY, count, inv_key);
+expandKey_inv   exp (KEY, count, tmp_key);
+shift128_inv    shi (IN, shi_out);
+mixCol128_inv   mix (IN, mix_out);
 always @(negedge clk) begin
     case (cs)
         `RES:begin
@@ -35,7 +35,7 @@ always @(negedge clk) begin
                 EXKEY   <= tmp_key;
             end
         `MIX:   OUT     <= mix_out;
-
+        `INV:   EXKEY   <= inv_key;
         `FIN:   OUT     <= IN;
         default:begin
                 OUT     <= 127'hxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
