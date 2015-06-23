@@ -17,12 +17,13 @@ always @(posedge clk or negedge res) begin
     if(res == 1'b0) begin
         if(cot < 8'h0a) begin
             case (cs)
-                `RES:begin
-                            cs  <= `INV;
+                `RES:       cs  <= `STL;
+                `INV:begin
+                            cs <= `INV;
                             cot <= cot + 8'h01;
                     end
-                `INV:begin
-                            cs  <= `INV;
+                `STL:begin
+                            cs <= `INV;
                             cot <= cot + 8'h01;
                     end
                 default:    cs  <= `RES;
@@ -30,9 +31,9 @@ always @(posedge clk or negedge res) begin
         end else begin
             case (cs)
                 `RES:       cs  <= `STL;
-                `INV:       cs  <= `RES;
+                `INV:       cs  <= `STL;
                 `STL:       cs  <= `ADD;
-                `ADD:   if(8'h0b == cot)
+                `ADD:   if(8'h0a == cot)
                             cs  <= `SHI;
                         else if(cot < 8'h14)
                             cs  <= `MIX;
