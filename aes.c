@@ -117,24 +117,17 @@ int Cipher(int data[])
     int i;
 
     AddRoundKey(data,0);
-    datadump("ADD:      ",data,4);
 
     for(i=1;i<nr;i++)
     {
         SubBytes(data);
-        datadump("Sub:      ",data,4);
         ShiftRows(data);
-        datadump("shift:    ",data,4);
         MixColumns(data);
-        datadump("mix:      ",data,4);
         AddRoundKey(data,i);
-        datadump("ADD:      ",data,4);
     }
 
     SubBytes(data);
-    datadump("sub:      ",data,4);
     ShiftRows(data);
-    datadump("shift:    ",data,4);
     AddRoundKey(data,i);
     return(i);
 }
@@ -146,17 +139,24 @@ int invCipher(int data[])
   int i;
 
   AddRoundKey(data,nr);
+    datadump("ADD:      ",data,4);
 
   for(i=nr-1;i>0;i--)
   {
     invShiftRows(data);
+        datadump("shift:    ",data,4);
     invSubBytes(data);
+        datadump("Sub:      ",data,4);
     AddRoundKey(data,i);
+        datadump("ADD:      ",data,4);
     invMixColumns(data,i);
+        datadump("mix:      ",data,4);
   }
 
   invShiftRows(data);
+    datadump("shift:    ",data,4);
   invSubBytes(data);
+    datadump("sub:      ",data,4);
   AddRoundKey(data,0);
   return(nr);
 }

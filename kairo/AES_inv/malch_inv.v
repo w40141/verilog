@@ -28,6 +28,10 @@ always @(negedge clk) begin
                 OUT     <= IN;
                 EXKEY   <= KEY;
             end
+        `STL:begin
+                OUT     <= IN;
+                EXKEY   <= KEY;
+            end
         `ADD:   OUT     <= add_out;
         `SUB:   OUT     <= sub_out;
         `SHI:begin
