@@ -32,11 +32,11 @@ always @(negedge clk) begin
         `SUB:   OUT     <= sub_out;
         `SHI:begin
                 OUT     <= shi_out;
-                EXKEY   <= tmp_key;
+                EXKEY   <= inv_key;
             end
         `MIX:   OUT     <= mix_out;
         `INV:begin
-                EXKEY   <= inv_key;
+                EXKEY   <= tmp_key;
                 OUT     <= IN;
         end
         `FIN:   OUT     <= IN;

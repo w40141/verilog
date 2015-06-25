@@ -23,14 +23,13 @@ always @(posedge clk or negedge res) begin
                             cot <= cot + 8'h01;
                     end
                 `STL:begin
-                            cs <= `INV;
+                            cs <= `inv;
                             cot <= cot + 8'h01;
                     end
-                default:    cs  <= `RES;
+                default:    cs  <= `res;
             endcase
         end else begin
             case (cs)
-                `RES:       cs  <= `STL;
                 `INV:       cs  <= `STL;
                 `STL:       cs  <= `ADD;
                 `ADD:   if(8'h0a == cot)
