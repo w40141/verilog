@@ -13,6 +13,7 @@
     $ vvp オブジェクトファイル名  
 
 testファイルに以下の内容を書く必要がある．  
+
     initial begin  
         $monitor($time, "IN1=%b, IN2=%b, OUT=%b", IN1, IN2, OUT);  
         $dumpfile("波形ファイル名.vcd");  
@@ -20,6 +21,7 @@ testファイルに以下の内容を書く必要がある．
     end
 
 EX  
+
     $ iverilog -o hoge hoge_test.v hoge.v  
     $ vvp hoge
 
@@ -29,4 +31,5 @@ EX
     $ gtkwave 波形ファイル名.vcd
 
 EX  
+
     $ gtkwave hoge.vcd
