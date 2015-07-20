@@ -20,13 +20,13 @@ testファイルに以下の内容を書く必要がある．
         end
 
 EX  
-        $ iverilog -o hoge hoge_test.v hoge.v
+        $ iverilog -o hoge hoge_test.v hoge.v  
         $ vvp hoge
 
 
 ###3.gtkwaveでの波形表示
 
-        $ gtkwave 波形ファイル名.vcd
+$ gtkwave 波形ファイル名.vcd
 
-EX
+EX  
         $ gtkwave hoge.vcd
