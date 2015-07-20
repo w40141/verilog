@@ -9,8 +9,9 @@
 
 ###2.コンパイル方法
 
-        $ iverilog -o オフジェクトファイル名 testファイル名.v moderingファイル名.v
-        $ vvp オブジェクトファイル名
+
+$ iverilog -o オフジェクトファイル名 testファイル名.v moderingファイル名.v
+$ vvp オブジェクトファイル名
 
 testファイルに以下の内容を書く必要がある．  
         initial begin  
