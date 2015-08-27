@@ -11,6 +11,13 @@ module ENCRIPT (KEY, IV, clk, reset, STR);
         if(reset == 1'b0) begin
             if(12'h480 <= count) begin
                 STR <= SET;
+            end else if(0 == count) begin
+                SET[79:0]    <= KEY;
+                SET[91:80]   <= 0;
+                SET[171:92]  <= IV;
+                SET[284:172] <= 0;
+                SET[287:285] <= 3'b111;
+                count        <= count + 1;
             end else begin
                 count <= count + 1;
                 SET[92:0]    <= {SET[91:0]   , SET[242] ^ (SET[285] & SET[286]) ^ SET[287] ^ SET[68]};
