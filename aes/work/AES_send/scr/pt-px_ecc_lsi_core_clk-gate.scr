@@ -1,0 +1,24 @@
+# STARC90nm library path
+set PATH_LIB_CORE "/storage/EDA/library/STARC90/LIB_S9A_CORE"
+
+set TYP_LIB S9A_WIDE_1V_TYP_PRIMITIVE
+set TYP_CORE_LIB "$PATH_LIB_CORE/dotdb/${TYP_LIB}.db"
+set link_library  "* $TYP_CORE_LIB"
+
+set power_enable_analysis true
+#read_verilog syn/ecc_lsi_core_clk2.00.v
+read_ddc ddc/ecc_lsi_core_typ_clk-gate2.00.ddc
+current_design ecc_lsi_core
+link
+
+read_saif sim/back_gate_ecc_lsi_core_typ_clk-gate2.00.saif -strip_path test_ecc_lsi_core/ecc_lsi_core
+
+report_switching_activity -list_not_annotated
+
+check_timing
+update_timing
+report_timing
+update_power
+redirect PT-PX_PowerInfo_ecc_lsi_core_clk-gate.rep {report_power -hierarchy -verbose}
+
+quit
