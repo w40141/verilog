@@ -2,6 +2,12 @@
 ----
 
 
+###0.環境
+シミュレータ Icarus Verilog Simulator  
+波形表示ツール gtkwave  
+Mac or Linux ならパッケージ管理で楽にインストールできる  
+
+
 ###1.ディレクトリ
 名前--回路名  
 ディレクトリ内--kairo, module, work  
