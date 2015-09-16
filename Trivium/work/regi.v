@@ -1,7 +1,5 @@
-module ENCRIPT (KEY, IV, clk, reset, OUT);
-// module ENCRIPT (KEY, IV, len, clk, reset, OUT);
-    input [79:0] KEY, IV;
-    // input [11:0] len;
+module ENCRIPT (KEY, clk, reset, OUT);
+    input [79:0] KEY;
     input clk, reset;
     output [511:0] OUT;
     reg [11:0] key_cot, str_cot;
@@ -34,10 +32,10 @@ module ENCRIPT (KEY, IV, clk, reset, OUT);
             end else begin
                 // if(str_cot < len) begin
                 if(str_cot < 512) begin
-                    STRM[str_cot] <= SET[65] ^ SET[92] ^ SET[161] ^ SET[176] ^ SET[242] ^ SET[287];
-                    SET[92:0]     <= {SET[91:0]   , SET[242] ^ SET[287] ^ (SET[285] & SET[286]) ^ SET[68]};
-                    SET[176:93]   <= {SET[175:93] , SET[65]  ^ SET[93]  ^ (SET[90]  & SET[91] ) ^ SET[170]};
-                    SET[287:177]  <= {SET[286:177], SET[161] ^ SET[176] ^ (SET[174] & SET[175]) ^ SET[263]};
+                    STRM[str_cot] <= t1 ^ t2 ^ t3;
+                    SET[92:0]     <= {SET[91:0], t3 ^ SET[285] & SET[286] ^ SET[68]};
+                    SET[176:93]   <= {SET[175:93], t1 ^ SET[90] & SET[91] ^ SET[170]};
+                    SET[287:177]  <= {SET[286:177], t2 ^ SET[174] & SET[175] ^ SET[263]};
                     // t1 <= SET[65] ^ SET[92];
                     // t2 <= SET[161] ^ SET[176];
                     // t3 <= SET[242] ^ SET[287];

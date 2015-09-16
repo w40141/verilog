@@ -10,13 +10,14 @@ module test;
     parameter times = 0.5;
     always #(times)   clk = ~clk;
 
-    ENCRIPT ENCRIPT (KEY, IV, len, clk, reset, OUT);
+    // ENCRIPT ENCRIPT (KEY, IV, len, clk, reset, OUT);
+    ENCRIPT ENCRIPT (KEY, IV, clk, reset, OUT);
 
     initial begin
         clk = 1'b0;
         IV  = 80'h80000000000000000000;
         KEY = 80'h00000000000000000000;
-        len = 512;
+        // len = 512;
         reset = 1;
         repeat(2) @(negedge clk);
         reset = 0;
