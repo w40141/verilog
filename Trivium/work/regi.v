@@ -7,10 +7,10 @@ reg OUT_1, OUT_2, OUT_3;
 
 always @(posedge clk or negedge reset) begin
     if(!reset) begin
-        OUT_1 <= SET[0] ^ SET[1] & SET[2];
-        OUT_2 <= SET[1] & SET[2];
-        OUT_3 <= SET[0] ^ SET[1] & SET[2] ^ SET[3];
-        SET   <= {SET[2:0], SET[0] ^ SET[1] & SET[2] ^ SET[3]};
+        OUT_1 = SET[0] ^ SET[1] & SET[2];
+        OUT_2 = OUT_1 ^ SET[3];
+        OUT_3 = OUT_2 & OUT_1;
+        SET   = {SET[2:0], OUT_3};
     end else begin
         SET <= KEY;
     end
