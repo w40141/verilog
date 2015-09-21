@@ -14,6 +14,7 @@ module test;
     // ENCRIPT ENCRIPT (KEY, IV, clk, reset, OUT);
 
     initial begin
+<<<<<<< HEAD
 //                          key = 80000000000000000000
 //                           IV = 00000000000000000000
 //                stream[0..63] = 7B75CECC2079BD99885A239A9FFC5112
@@ -40,6 +41,10 @@ module test;
         KEY = 80'hffffffffffffffffffff;
         IV  = 80'hffffffffffffffffffff;
         // KEY = 80'h00000000000000000001;
+=======
+        clk = 1'b0;
+        // KEY = 80'h80000000000000000000;
+>>>>>>> 9df9a2d5f49b206be0573c52c636f8b9e21c5590
         // IV  = 80'h00000000000000000000;
         // len = 512 * 8;
         len = 4096;
