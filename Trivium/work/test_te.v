@@ -3,10 +3,10 @@
 module test;
     reg  [79:0] KEY;
     reg  [79:0] IV;
-    reg [11:0] len;
+    reg [15:0] len;
     reg clk;
     reg reset;
-    wire [511:0] OUT;
+    wire [4095:0] OUT;
     parameter times = 0.5;
     always #(times)   clk = ~clk;
 
@@ -14,45 +14,46 @@ module test;
     // ENCRIPT ENCRIPT (KEY, IV, clk, reset, OUT);
 
     initial begin
-// Set 2, vector# 16:
-//                          key = 10101010101010101010
+//                          key = 80000000000000000000
 //                           IV = 00000000000000000000
-//                stream[0..63] = 4567A95BDBA94E17A52438D060DC8EF8
-//                                20A7DA9E51E6F1D67247D3807F41338E
-//                                3F8DE39BEF9E04BB9EE9F952B411A007
-//                                D2F0E295B255A831C264C47D1C078A2B
-//             stream[192..255] = F5393FE158303A91214E77B9A76FE062
-//                                FD25B7F186137F0D5673B3E3B53CA3CF
-//                                2F8B823820EA9646B77D4DBC4A22EF52
-//                                D1498698229EAFD28EA151BF581481B6
-//             stream[256..319] = C934D399C84DD90EBB1274208437C97C
-//                                BDB3C43F65469D131BAD9B49800A9186
-//                                EC066A6291706A792398EACF43D97F94
-//                                3033B0A1FF96CE8448E37260D740D36D
-//             stream[448..511] = EF7226C691BC2EE81DC34FBEAB365944
-//                                4A7C976A4894CCFC6D558E73B2FBF33A
-//                                1DB9FAAB1D11DB6293D7AC126399057D
-//                                C1711DD057FE13395F69D69D37614134
-//                   xor-digest = AB585980991C6ACD1889A72ECF42D41E
-//                                6BB1EC325FFAD62E7A8514AA87ADAB84
-//                                873B44D96413F3AF9AE1A93C02F3E591
-//                                E2C4320B3BEA6BE96B1A9337E81AF2B7
-        clk = 1'b0;
-        // KEY = 80'h80000000000000000000;
+//                stream[0..63] = 7B75CECC2079BD99885A239A9FFC5112
+//                                55A6F0AF4EEEC87E2821D4BF08E6DA86
+//                                EBA76E8002C1AE58F488FA163EAAC3C5
+//                                F2C9BCB13F0B44BB9F9C34C43C7E0ABE
+//             stream[192..255] = 2ED7D89766FB87722AA030036B6338D0
+//                                4E09767BF1719456A6E4C4617E2E41A0
+//                                A43111E55544EADC7A1FD43852CD5F68
+//                                2F143C565BB23BEB81FA5A7367E04528
+//             stream[256..319] = 7762EA2C11982060398800E34F115A9D
+//                                867874CA8AA3FF128649FC239C26D855
+//                                6E26715C6B91A440E93D12888F3F86F0
+//                                9F565649C490FFC26AC01A1A8D73E069
+//             stream[448..511] = 967AFF81855EFF378F543563AC4AE810
+//                                EABAC34346CD636FB55D9AD77BF69E9B
+//                                1797F347572939BA7F10F4AEE4CF1667
+//                                B5D6A1691482C61A6E4518207992E062
+//                   xor-digest = D56432523DF30A9A2078D5ECD7D354AE
+//                                F1D8B4AE9685B5A9A24EA72FE03C4E06
+//                                B5565251A7B5738DFE4E696732C1C85B
+//                                8DD628257E606CEBA74D8F0FB3BE169A
+        clk = 0;
+        KEY = 80'hffffffffffffffffffff;
+        IV  = 80'hffffffffffffffffffff;
+        // KEY = 80'h00000000000000000001;
         // IV  = 80'h00000000000000000000;
-        KEY = 80'h10101010101010101010;
-        IV  = 80'h00000000000000000000;
-        len = 512;
+        // len = 512 * 8;
+        len = 4096;
         reset = 1;
         repeat(2) @(negedge clk);
         reset = 0;
         while(reset) @(negedge clk);
         @(negedge clk);
-        repeat(2000) @(negedge clk);
+        repeat(20000) @(negedge clk);
         $finish;
     end
 
     initial begin
+        $monitor($time, ", KEY=%h, IV=%h, OUT=%h", KEY, IV, OUT);
         $dumpfile("trivium.vcd");
         $dumpvars(0, test);
     end
