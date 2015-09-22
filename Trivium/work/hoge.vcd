@@ -1,0 +1,212 @@
+$date
+	Tue Sep 22 22:47:03 2015
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module test $end
+$var wire 1 ! T1 $end
+$var wire 1 " T2 $end
+$var wire 1 # T3 $end
+$var reg 8 $ KEY [7:0] $end
+$var reg 1 % clk $end
+$var reg 1 & reset $end
+$scope module ENCRIPT $end
+$var wire 8 ' KEY [7:0] $end
+$var wire 1 ( clk $end
+$var wire 1 ) reset $end
+$var reg 8 * SET [7:0] $end
+$var reg 1 + T1 $end
+$var reg 1 , T2 $end
+$var reg 1 - T3 $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+x-
+x,
+x+
+bx *
+1)
+0(
+b1000100 '
+1&
+0%
+b1000100 $
+x#
+x"
+x!
+$end
+#1
+b1000100 *
+1%
+1(
+#2
+0%
+0(
+#3
+1%
+1(
+#4
+0-
+0#
+1,
+1"
+0+
+0!
+b1000100x *
+0&
+0)
+0%
+0(
+#5
+x+
+x!
+b100x1 *
+1%
+1(
+#6
+0%
+0(
+#7
+1-
+1#
+0,
+0"
+b100x1x *
+1%
+1(
+#8
+0%
+0(
+#9
+x,
+x"
+b100x1xx *
+1%
+1(
+#10
+0%
+0(
+#11
+0-
+0#
+b100x1xxx *
+1%
+1(
+#12
+0%
+0(
+#13
+x-
+x#
+b0x1xxxx *
+1%
+1(
+#14
+0%
+0(
+#15
+b0x1xxxxx *
+1%
+1(
+#16
+0%
+0(
+#17
+bx1xxxxxx *
+1%
+1(
+#18
+0%
+0(
+#19
+b1xxxxxxx *
+1%
+1(
+#20
+0%
+0(
+#21
+bx *
+1%
+1(
+#22
+0%
+0(
+#23
+1%
+1(
+#24
+0%
+0(
+#25
+1%
+1(
+#26
+0%
+0(
+#27
+1%
+1(
+#28
+0%
+0(
+#29
+1%
+1(
+#30
+0%
+0(
+#31
+1%
+1(
+#32
+0%
+0(
+#33
+1%
+1(
+#34
+0%
+0(
+#35
+1%
+1(
+#36
+0%
+0(
+#37
+1%
+1(
+#38
+0%
+0(
+#39
+1%
+1(
+#40
+0%
+0(
+#41
+1%
+1(
+#42
+0%
+0(
+#43
+1%
+1(
+#44
+0%
+0(
+#45
+1%
+1(
+#46
+0%
+0(
