@@ -15,7 +15,8 @@ assign max = fst + len;
 always @(posedge clk or negedge reset) begin
     if(!reset) begin
         if(count < max) begin
-            if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
+            if(count == 0) SET = {KEY, 13'b0, IV, 112'b0, 3'b111};
+            // if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
             // if(count == 0) begin
             //     SET[92:0]    = {13'b0, KEY};
             //     SET[176:93]  = {4'b0, IV};
