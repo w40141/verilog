@@ -1,152 +1,142 @@
-#! /usr/bin/vvp
+#! /usr/local/Cellar/icarus-verilog/0.9.7/bin/vvp
 :ivl_version "0.9.7 " "(v0_9_7)";
 :vpi_time_precision - 9;
 :vpi_module "system";
 :vpi_module "v2005_math";
 :vpi_module "va_math";
-S_0x196af00 .scope module, "test" "test" 2 3;
+S_0x7fac034008c0 .scope module, "test" "test" 2 3;
  .timescale -9 -9;
-P_0x196b698 .param/real "times" 2 8, Cr<m4000000000000000gfc1>; value=0.500000
-v0x197fcd0_0 .var "KEY", 7 0;
-v0x197fd70_0 .net "T1", 0 0, v0x197f960_0; 1 drivers
-v0x197fe20_0 .net "T2", 0 0, v0x197fa00_0; 1 drivers
-v0x197fed0_0 .net "T3", 0 0, v0x197fab0_0; 1 drivers
-v0x197ffb0_0 .var "clk", 0 0;
-v0x1980060_0 .var "reset", 0 0;
-E_0x194a0a0 .event negedge, v0x197fb50_0;
-S_0x196aff0 .scope module, "ENCRIPT" "ENCRIPT" 2 11, 3 1, S_0x196af00;
- .timescale -9 -9;
-v0x196b380_0 .net "KEY", 7 0, v0x197fcd0_0; 1 drivers
-v0x197f8c0_0 .var "SET", 7 0;
-v0x197f960_0 .var "T1", 0 0;
-v0x197fa00_0 .var "T2", 0 0;
-v0x197fab0_0 .var "T3", 0 0;
-v0x197fb50_0 .net "clk", 0 0, v0x197ffb0_0; 1 drivers
-v0x197fc30_0 .net "reset", 0 0, v0x1980060_0; 1 drivers
-E_0x196e7e0/0 .event negedge, v0x197fc30_0;
-E_0x196e7e0/1 .event posedge, v0x197fb50_0;
-E_0x196e7e0 .event/or E_0x196e7e0/0, E_0x196e7e0/1;
-    .scope S_0x196aff0;
+P_0x7fac03403188 .param/real "times" 2 9, Cr<m4000000000000000gfc1>; value=0.500000
+v0x7fac037018f0_0 .var "KEY", 3 0;
+v0x7fac03701990_0 .net "SET", 3 0, v0x7fac03701510_0; 1 drivers
+v0x7fac03701a10_0 .net "T1", 0 0, v0x7fac037015a0_0; 1 drivers
+v0x7fac03701ad0_0 .net "T2", 0 0, v0x7fac03701650_0; 1 drivers
+v0x7fac03701b70_0 .net "T3", 0 0, v0x7fac037016e0_0; 1 drivers
+v0x7fac03701c20_0 .var "clk", 0 0;
+v0x7fac03701ca0_0 .var "reset", 0 0;
+E_0x7fac03403300 .event negedge, v0x7fac037017a0_0;
+S_0x7fac034009a0 .scope module, "ENCRIPT" "ENCRIPT" 2 12, 3 1, S_0x7fac034008c0;
+ .timescale 0 0;
+v0x7fac03407890_0 .net "KEY", 3 0, v0x7fac037018f0_0; 1 drivers
+v0x7fac03701510_0 .var "SET", 3 0;
+v0x7fac037015a0_0 .var "T1", 0 0;
+v0x7fac03701650_0 .var "T2", 0 0;
+v0x7fac037016e0_0 .var "T3", 0 0;
+v0x7fac037017a0_0 .net "clk", 0 0, v0x7fac03701c20_0; 1 drivers
+v0x7fac03701830_0 .net "reset", 0 0, v0x7fac03701ca0_0; 1 drivers
+E_0x7fac034033c0/0 .event negedge, v0x7fac03701830_0;
+E_0x7fac034033c0/1 .event posedge, v0x7fac037017a0_0;
+E_0x7fac034033c0 .event/or E_0x7fac034033c0/0, E_0x7fac034033c0/1;
+    .scope S_0x7fac034009a0;
 T_0 ;
-    %wait E_0x196e7e0;
-    %load/v 8, v0x197fc30_0, 1;
+    %wait E_0x7fac034033c0;
+    %load/v 8, v0x7fac03701830_0, 1;
     %inv 8, 1;
     %jmp/0xz  T_0.0, 8;
-    %load/v 8, v0x197f8c0_0, 1; Only need 1 of 8 bits
+    %load/v 8, v0x7fac03701510_0, 1; Only need 1 of 4 bits
 ; Save base=8 wid=1 in lookaside.
     %ix/load 1, 1, 0;
     %mov 4, 0, 1;
     %jmp/1 T_0.2, 4;
-    %load/x1p 9, v0x197f8c0_0, 1;
+    %load/x1p 9, v0x7fac03701510_0, 1;
     %jmp T_0.3;
 T_0.2 ;
     %mov 9, 2, 1;
 T_0.3 ;
 ; Save base=9 wid=1 in lookaside.
     %xor 8, 9, 1;
-    %ix/load 0, 1, 0;
-    %assign/v0 v0x197f960_0, 0, 8;
+    %set/v v0x7fac037015a0_0, 8, 1;
     %ix/load 1, 2, 0;
     %mov 4, 0, 1;
     %jmp/1 T_0.4, 4;
-    %load/x1p 8, v0x197f8c0_0, 1;
+    %load/x1p 8, v0x7fac03701510_0, 1;
     %jmp T_0.5;
 T_0.4 ;
     %mov 8, 2, 1;
 T_0.5 ;
 ; Save base=8 wid=1 in lookaside.
+    %load/v 9, v0x7fac037015a0_0, 1;
+    %xor 8, 9, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v0x7fac03701650_0, 0, 8;
     %ix/load 1, 3, 0;
     %mov 4, 0, 1;
     %jmp/1 T_0.6, 4;
-    %load/x1p 9, v0x197f8c0_0, 1;
+    %load/x1p 8, v0x7fac03701510_0, 1;
     %jmp T_0.7;
 T_0.6 ;
-    %mov 9, 2, 1;
-T_0.7 ;
-; Save base=9 wid=1 in lookaside.
-    %xor 8, 9, 1;
-    %ix/load 0, 1, 0;
-    %assign/v0 v0x197fa00_0, 0, 8;
-    %ix/load 1, 4, 0;
-    %mov 4, 0, 1;
-    %jmp/1 T_0.8, 4;
-    %load/x1p 8, v0x197f8c0_0, 1;
-    %jmp T_0.9;
-T_0.8 ;
     %mov 8, 2, 1;
-T_0.9 ;
+T_0.7 ;
 ; Save base=8 wid=1 in lookaside.
-    %ix/load 1, 5, 0;
-    %mov 4, 0, 1;
-    %jmp/1 T_0.10, 4;
-    %load/x1p 9, v0x197f8c0_0, 1;
-    %jmp T_0.11;
-T_0.10 ;
-    %mov 9, 2, 1;
-T_0.11 ;
-; Save base=9 wid=1 in lookaside.
+    %load/v 9, v0x7fac03701650_0, 1;
     %xor 8, 9, 1;
-    %ix/load 0, 1, 0;
-    %assign/v0 v0x197fab0_0, 0, 8;
-    %load/v 16, v0x197f960_0, 1;
-    %load/v 17, v0x197fa00_0, 1;
-    %xor 16, 17, 1;
-    %load/v 17, v0x197fab0_0, 1;
-    %xor 16, 17, 1;
-    %mov 8, 16, 1;
-    %load/v 9, v0x197f8c0_0, 7; Select 7 out of 8 bits
-    %set/v v0x197f8c0_0, 8, 8;
+    %set/v v0x7fac037016e0_0, 8, 1;
+    %load/v 13, v0x7fac037015a0_0, 1;
+    %load/v 14, v0x7fac03701650_0, 1;
+    %xor 13, 14, 1;
+    %load/v 14, v0x7fac037016e0_0, 1;
+    %xor 13, 14, 1;
+    %mov 8, 13, 1;
+    %load/v 9, v0x7fac03701510_0, 4;
+    %ix/load 0, 4, 0;
+    %assign/v0 v0x7fac03701510_0, 0, 8;
     %jmp T_0.1;
 T_0.0 ;
-    %load/v 8, v0x196b380_0, 8;
-    %ix/load 0, 8, 0;
-    %assign/v0 v0x197f8c0_0, 0, 8;
+    %load/v 8, v0x7fac03407890_0, 4;
+    %ix/load 0, 4, 0;
+    %assign/v0 v0x7fac03701510_0, 0, 8;
+    %ix/load 0, 1, 0;
+    %assign/v0 v0x7fac037015a0_0, 0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v0x7fac03701650_0, 0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v0x7fac037016e0_0, 0, 1;
 T_0.1 ;
     %jmp T_0;
     .thread T_0;
-    .scope S_0x196af00;
+    .scope S_0x7fac034008c0;
 T_1 ;
     %delay 1, 0;
-    %load/v 8, v0x197ffb0_0, 1;
+    %load/v 8, v0x7fac03701c20_0, 1;
     %inv 8, 1;
-    %set/v v0x197ffb0_0, 8, 1;
+    %set/v v0x7fac03701c20_0, 8, 1;
     %jmp T_1;
     .thread T_1;
-    .scope S_0x196af00;
+    .scope S_0x7fac034008c0;
 T_2 ;
-    %set/v v0x197ffb0_0, 0, 1;
-    %movi 8, 68, 8;
-    %set/v v0x197fcd0_0, 8, 8;
-    %set/v v0x1980060_0, 1, 1;
+    %set/v v0x7fac03701c20_0, 0, 1;
+    %movi 8, 4, 4;
+    %set/v v0x7fac037018f0_0, 8, 4;
+    %set/v v0x7fac03701ca0_0, 1, 1;
     %movi 8, 2, 3;
 T_2.0 %cmp/s 0, 8, 3;
     %jmp/0xz T_2.1, 5;
     %add 8, 1, 3;
-    %wait E_0x194a0a0;
+    %wait E_0x7fac03403300;
     %jmp T_2.0;
 T_2.1 ;
-    %set/v v0x1980060_0, 0, 1;
+    %set/v v0x7fac03701ca0_0, 0, 1;
 T_2.2 ;
-    %load/v 8, v0x1980060_0, 1;
+    %load/v 8, v0x7fac03701ca0_0, 1;
     %jmp/0xz T_2.3, 8;
-    %wait E_0x194a0a0;
+    %wait E_0x7fac03403300;
     %jmp T_2.2;
 T_2.3 ;
-    %wait E_0x194a0a0;
+    %wait E_0x7fac03403300;
     %movi 8, 20, 6;
 T_2.4 %cmp/s 0, 8, 6;
     %jmp/0xz T_2.5, 5;
     %add 8, 1, 6;
-    %wait E_0x194a0a0;
+    %wait E_0x7fac03403300;
     %jmp T_2.4;
 T_2.5 ;
-    %vpi_call 2 22 "$finish";
+    %vpi_call 2 23 "$finish";
     %end;
     .thread T_2;
-    .scope S_0x196af00;
+    .scope S_0x7fac034008c0;
 T_3 ;
-    %vpi_call 2 27 "$dumpfile", "hoge.vcd";
-    %vpi_call 2 28 "$dumpvars", 1'sb0, S_0x196af00;
+    %vpi_call 2 28 "$dumpfile", "hoge.vcd";
+    %vpi_call 2 29 "$dumpvars", 1'sb0, S_0x7fac034008c0;
     %end;
     .thread T_3;
 # The file index is used to find the file name in the following table.
