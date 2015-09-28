@@ -15,15 +15,15 @@ assign max = fst + len;
 always @(posedge clk or negedge reset) begin
     if(!reset) begin
         if(count < max) begin
-            // if(count == 0) SET = {KEY, 13'b0, IV, 112'b0, 3'b111};
-            if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
+            if(count == 0) SET = {KEY, 13'b0, IV, 112'b0, 3'b111};
+            // if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
             t1 = SET[65]  ^ SET[92];
             t2 = SET[161] ^ SET[176];
             t3 = SET[242] ^ SET[287];
-            if(fst <= count) STRM[count - fst] <= t1 ^ t2 ^ t3;
-            SET[92:0]    <= {SET[91:0], t3 ^ SET[285] & SET[286] ^ SET[68]};
-            SET[176:93]  <= {SET[175:93], t1 ^ SET[90]  & SET[91]  ^ SET[170]};
-            SET[287:177] <= {SET[286:177], t2 ^ SET[174] & SET[175] ^ SET[263]};
+            if(fst <= count) STRM[count - fst] = t1 ^ t2 ^ t3;
+            SET[92:0]    = {SET[91:0], t3 ^ SET[285] & SET[286] ^ SET[68]};
+            SET[176:93]  = {SET[175:93], t1 ^ SET[90]  & SET[91]  ^ SET[170]};
+            SET[287:177] = {SET[286:177], t2 ^ SET[174] & SET[175] ^ SET[263]};
             count <= count + 1;
         end else OUT <= STRM;
     end else count <= 0;

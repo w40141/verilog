@@ -39,7 +39,7 @@ module test;
         clk = 0;
         // KEY = 80'hffffffffffffffffffff;
         // IV  = 80'hffffffffffffffffffff;
-        KEY = 80'h80000000000000000000;
+        KEY = 80'h10000000000000000000;
         IV  = 80'h00000000000000000000;
         // len = 512 * 8;
         len = 4096;
