@@ -2,11 +2,11 @@ module ENCRIPT (KEY, IV, len, clk, reset, OUT);
 input [79:0] KEY, IV;
 input [15:0] len;
 input clk, reset;
-output [4095:0] OUT;
+output [511:0] OUT;
 wire [15:0] fst, max;
 reg [15:0] count;
 reg [287:0] SET;
-reg [4095:0] STRM, OUT;
+reg [511:0] STRM, OUT;
 reg t1, t2, t3;
 
 assign fst = 4 * 288;
@@ -15,8 +15,7 @@ assign max = fst + len;
 always @(posedge clk or negedge reset) begin
     if(!reset) begin
         if(count < max) begin
-            if(count == 0) SET = {KEY, 13'b0, IV, 112'b0, 3'b111};
-            // if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
+            if(count == 0) SET = {3'b111, 112'b0, IV, 13'b0, KEY};
             t1 = SET[65]  ^ SET[92];
             t2 = SET[161] ^ SET[176];
             t3 = SET[242] ^ SET[287];
