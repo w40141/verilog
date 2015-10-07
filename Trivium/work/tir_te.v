@@ -4,7 +4,8 @@ module test;
     reg  [79:0] KEY, IV;
     reg [15:0] len;
     reg clk, reset;
-    wire OUT;
+    // wire OUT;
+    wire [4095:0] OUT;
     parameter times = 0.5;
     always #(times)   clk = ~clk;
 
@@ -12,8 +13,8 @@ module test;
 
     initial begin
         clk = 1'b0;
-        // KEY = 80'hFF000102030405060708;
-        KEY = 80'h080706050403020100FF;
+        KEY = 80'hFF000102030405060708;
+        // KEY = 80'h080706050403020100FF;
         IV  = 80'h00000000000000000000;
         len = 4096;
         reset = 1;
@@ -27,7 +28,7 @@ module test;
 
     initial begin
         $monitor($time, ", KEY=%h, IV=%h, OUT=%h", KEY, IV, OUT);
-        $dumpfile("trivium.vcd");
+        $dumpfile("tri.vcd");
         $dumpvars(0, test);
     end
 
