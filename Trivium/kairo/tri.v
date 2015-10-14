@@ -20,7 +20,7 @@ assign li_iv  = {IV[7:0], IV[15:8], IV[23:16], IV[31:24], IV[39:32], IV[47:40], 
 
 always @(posedge clk or negedge reset) begin
     if(!reset) begin
-        if(count <= max) begin
+        if(count < max) begin
             if(count == 0) begin
                 SET = {3'b111, 112'b0, li_iv, 13'b0, li_key};
             end

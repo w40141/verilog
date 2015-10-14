@@ -26,7 +26,7 @@ module test;
     end
 
     initial begin
-        $monitor($time, ", KEY=%h, IV=%h, OUT=%h", KEY, IV, OUT);
+        $monitor($time , "\nKEY=%h, IV=%h\nOUT=%h", KEY, IV, OUT);
         $dumpfile("tri.vcd");
         $dumpvars(0, test);
     end
