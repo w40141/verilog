@@ -32,7 +32,7 @@ assign li_iv  = {Din[7:0],   Din[15:8],  Din[23:16],  Din[31:24],   Din[39:32], 
 assign BSY  = BSYrg;
 assign Kvld = Kvldrg;
 assign Dvld = Dvldrg;
-assign Dout[len - count + fst -1] = z;
+assign Dout[len - count + ini -1] = z;
 
 always @(posedge CLK) begin
     if(RSTn == 0) begin
@@ -43,10 +43,14 @@ always @(posedge CLK) begin
         Dvldrg <= 0;
     end else if(EN == 1) begin
         if(EncDec == 0) begin
-            if(Krdy == 1) begin
-                SET    <= {3'b111, 112'b0, li_iv, 13'b0, li_key};
-                count  <= count + 1;
-                Kvldrg <= 1;
+            if(BSYrg == 0) begin
+                if(Krdy == 1) begin
+                    SET    <= {3'b111, 112'b0, li_iv, 13'b0, li_key};
+                    count  <= count + 1;
+                    Kvldrg <= 1;
+                end else if(Drdy == 1) begin
+                    BSYrg <= 1;
+                end
             end else if(Drdy == 1 | BSYrg ==1) begin
                 Kvldrg <= 0;
                 BSYrg  <= 1;
