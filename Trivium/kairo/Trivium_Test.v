@@ -14,7 +14,7 @@ module Trivium_Test;
     wire BSY;         // Busy signal
     wire Kvld;        // Data output valid
     wire Dvld;        // Data output valid
-    parameter times = 1;
+    parameter times = 0.5;
     always #(times)   CLK = ~CLK;
 
     Trivium_Comp Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvld, Dvld);
