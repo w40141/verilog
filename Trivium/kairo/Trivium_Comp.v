@@ -5,7 +5,7 @@ module Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvl
 input  [79:0] Kin;  // Key input
 input  [79:0] Din;  // Data input
 // output [4095:0]Dout;// Data output
-output Dout;// Data output
+output Dout;        // Data output
 input  Krdy;        // Key input ready
 input  Drdy;        // Data input ready
 input  EncDec;      // 0:Encryption 1:Decryption
@@ -32,12 +32,12 @@ assign li_iv  = {Din[7:0], Din[15:8], Din[23:16], Din[31:24], Din[39:32], Din[47
 assign BSY  = BSYrg;
 assign Kvld = Kvldrg;
 assign Dvld = Dvldrg;
-assign len  = max - count;
+assign now  = max - count;
 assign Dout[now] = z;
 
 always @(posedge CLK) begin
     if(!RSTn) begin
-        SET    <= 0;
+        SET    <= {3'b111, 0};
         count  <= 0;
         BSYrg  <= 0;
         Kvldrg <= 0;
