@@ -42,7 +42,7 @@ module Trivium_Test;
         @(posedge BSY)
         Drdy <= 0;
         while(BSY)  @(negedge CLK);
-        repeat(50) @(negedge CLK);
+        repeat(10) @(negedge CLK);
         $finish;
     end
 
