@@ -4,8 +4,8 @@ module Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvl
 // input [4095:0] Din;
 input  [79:0] Kin;  // Key input
 input  [79:0] Din;  // Data input
-// output [4095:0]Dout;// Data output
-output Dout;        // Data output
+output [4095:0]Dout;// Data output
+// output Dout;        // Data output
 input  Krdy;        // Key input ready
 input  Drdy;        // Data input ready
 input  EncDec;      // 0:Encryption 1:Decryption
@@ -16,12 +16,14 @@ output BSY;         // Busy signal
 output Kvld;        // Data output valid
 output Dvld;        // Data output valid
 
-wire [15:0] now, len, max;
+wire [15:0] len, max;
 wire [79:0] li_iv, li_key;
 reg [15:0] count;
 reg [287:0] SET;
-reg Doutrg, t1, t2, t3;
+reg t1, t2, t3;
 reg BSYrg, Kvldrg, Dvldrg;
+reg flag;
+reg [4095:0]Doutrg;
 
 assign len = 4095;
 assign max = 1152 + len;
@@ -32,16 +34,18 @@ assign li_iv  = {Din[7:0], Din[15:8], Din[23:16], Din[31:24], Din[39:32], Din[47
 assign BSY  = BSYrg;
 assign Kvld = Kvldrg;
 assign Dvld = Dvldrg;
-assign now  = max - count;
-assign Dout[now] = z;
+assign Dout = Doutrg;
+// assign Dout = Doutrg;
 
 always @(posedge CLK) begin
     if(!RSTn) begin
-        SET    <= {3'b111, 0};
-        count  <= 0;
+        SET    <= {3'b111, 285'b0};
         BSYrg  <= 0;
         Kvldrg <= 0;
         Dvldrg <= 0;
+        count  <= 0;
+        // Doutrg <= 0;
+        flag   <= 0;
     end else if(EN) begin
         if(Dvldrg) Dvldrg <= 0;
         if(Kvldrg) Kvldrg <= 0;
@@ -54,15 +58,17 @@ always @(posedge CLK) begin
                 if(Drdy) BSYrg  <= 1;
             end
             if(BSYrg) begin
-                if(max <= count) begin
+                if(max < count) begin
                     Dvldrg <= 1;
                     BSYrg  <= 0;
+                    Doutrg <= 0;
                 end else begin
                     t1 = SET[65]  ^ SET[92];
                     t2 = SET[161] ^ SET[176];
                     t3 = SET[242] ^ SET[287];
-                    if(1152 < count) begin
-                        Doutrg <= t1 ^ t2 ^ t3;
+                    if(1152 <= count) begin
+                        Doutrg[max - count] <= t1 ^ t2 ^ t3;
+                        flag   <= 1;
                     end
                     t1 = t1 ^ (SET[90]  & SET[91] ) ^ SET[170];
                     t2 = t2 ^ (SET[174] & SET[175]) ^ SET[263];

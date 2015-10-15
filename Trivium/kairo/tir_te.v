@@ -19,8 +19,8 @@ module test;
         reset = 1;
         repeat(1) @(negedge clk);
         reset = 0;
-        while(reset) @(negedge clk);
-        @(negedge clk);
+        // while(reset) @(negedge clk);
+        // @(negedge clk);
         repeat(15000) @(negedge clk);
         $finish;
     end
