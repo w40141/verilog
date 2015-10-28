@@ -2,7 +2,7 @@ module Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvl
 
 input  [79:0] Kin;  // Key input
 input  [79:0] Din;  // Data input
-output [4095:0]Dout;// Data output
+output [127:0]Dout;// Data output
 // output Dout;        // Data output
 input  Krdy;        // Key input ready
 input  Drdy;        // Data input ready
@@ -20,9 +20,9 @@ reg [15:0] count;
 reg [287:0] SET;
 reg t1, t2, t3;
 reg BSYrg, Kvldrg, Dvldrg;
-reg [4095:0]Doutrg;
+reg [127:0]Doutrg;
 
-assign len = 4095;
+assign len = 128;
 assign max = 1152 + len;
 assign li_key = {Kin[7:0], Kin[15:8], Kin[23:16], Kin[31:24], Kin[39:32], Kin[47:40], Kin[55:48], Kin[63:56], Kin[71:64], Kin[79:72]};
 assign li_iv  = {Din[7:0], Din[15:8], Din[23:16], Din[31:24], Din[39:32], Din[47:40], Din[55:48], Din[63:56], Din[71:64], Din[79:72]};
@@ -53,10 +53,10 @@ always @(posedge CLK) begin
                 if(Drdy) BSYrg  <= 1;
             end
             if(BSYrg) begin
-                if(max < count) begin
+                if(max <= count) begin
                     Dvldrg <= 1;
                     BSYrg  <= 0;
-                    Doutrg <= 0;
+                    // Doutrg <= 0;
                 end else begin
                     t1 = SET[65]  ^ SET[92];
                     t2 = SET[161] ^ SET[176];
