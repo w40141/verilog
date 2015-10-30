@@ -1,10 +1,10 @@
+// SASEBO checker でやる時は右詰めで80bit
 `timescale 1ns/1ns
 
 module Trivium_Test;
     reg  [79:0] Kin;  // Key input
     reg  [79:0] Din;  // Data input
     wire [127:0]Dout;// Data output
-    // wire Dout;        // Data output
     reg  Krdy;        // Key input ready
     reg  Drdy;        // Data input ready
     reg  EncDec;      // 0:Encryption 1:Decryption
@@ -20,29 +20,30 @@ module Trivium_Test;
     Trivium_Comp Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvld, Dvld);
 
     initial begin
-        Kin    = 80'hFF000102030405060708;
-        Din    = 80'h00000000000000000000;
+        // repeat(1)   @(negedge CLK);
         Krdy   = 0;
         Drdy   = 0;
         EncDec = 0;
         RSTn   = 1;
         CLK    = 0;
         EN     = 0;
-        repeat(1)   @(negedge CLK);
+        @(negedge CLK);
         RSTn <= 0;
-        repeat(1)   @(negedge CLK);
+        @(negedge CLK);
         RSTn <= 1;
         EN   <= 1;
-        repeat(1)   @(negedge CLK);
         Krdy <= 1;
+        Kin  <= 80'h06070809000000000000;
         @(posedge Kvld);
-        @(negedge CLK);
         Krdy <= 0;
+        Kin  <= 80'bX;
         Drdy <= 1;
-        @(posedge BSY)
+        Din  <= 80'hf47c637c9a443bbd342e;
+        @(posedge BSY);
         Drdy <= 0;
-        while(BSY)  @(negedge CLK);
-        repeat(10) @(negedge CLK);
+        Din  <= 80'bX;
+        @(posedge Dvld);
+        repeat(10)  @(negedge CLK);
         $finish;
     end
 
