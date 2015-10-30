@@ -53,6 +53,7 @@ always @(posedge CLK) begin
                 if(max < count) begin
                     Dvldrg <= 1;
                     BSYrg  <= 0;
+                    count  <= 0;
                 end else begin
                     t1 = SET[65]  ^ SET[92];
                     t2 = SET[161] ^ SET[176];
