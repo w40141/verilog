@@ -1,11 +1,13 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+ININUM = 288 * 4
+
 
 def input_hex(name):
-    print("Input" + name)
+    # print("Input" + name)
     # rawData = raw_input()
-    rawData = 'ffffffffffffffffffff'
+    rawData = '00000000000000000000'
     data = ''.join([rawData[i-2:i] for i in range(len(rawData), 0, -2)])
     strNum = bin(int(data, 16))
     binNum = strNum[2:]
@@ -13,26 +15,62 @@ def input_hex(name):
     return Num
 
 
-if __name__ == "__main__":
+def initfunc():
     key = input_hex('Key')
     iv = input_hex('Iv')
-    # print("how long")
-    # stream = int(input())
-    iniNum = 1124
-    z = []
     strReg = key + '0'*13 + iv + '0'*112 + '1'*3
     reg = list(strReg)
-    # for i in range(stream + iniNum):
-    for i in range(10000):
-        t1 = int(reg[65]) ^ int(reg[92])
-        t2 = int(reg[161]) ^ int(reg[176])
-        t3 = int(reg[242]) ^ int(reg[287])
-        if i >= iniNum:
-            z.append(t1 ^ t2 ^ t3)
-        t1 = t1 ^ int(reg[90]) & int(reg[91]) ^ int(reg[170])
-        t2 = t2 ^ int(reg[174]) & int(reg[175]) ^ int(reg[263])
-        t3 = t3 ^ int(reg[285]) & int(reg[286]) ^ int(reg[68])
-        reg[1:] = reg[:287]
-        reg[0] = str(t3)
-        reg[93] = str(t1)
-        reg[177] = str(t2)
+    reg = map(int, reg)
+    return reg
+
+
+def firstFunc(reg):
+    t1 = reg[65] ^ reg[92]
+    t2 = reg[161] ^ reg[176]
+    t3 = reg[242] ^ reg[287]
+    return t1, t2, t3
+
+
+def secondFunc(reg, t1, t2, t3):
+    t1 = t1 ^ reg[90] & reg[91] ^ reg[170]
+    t2 = t2 ^ reg[174] & reg[175] ^ reg[263]
+    t3 = t3 ^ reg[285] & reg[286] ^ reg[68]
+    reg[1:] = reg[:287]
+    reg[0] = t3
+    reg[93] = t1
+    reg[177] = t2
+    return reg
+
+
+def strTohex(strBin):
+    intByte = int(strBin, 2)
+    hexByte = hex(intByte)
+    return hexByte
+
+
+def change(reg):
+    z = []
+    strReg = ''.join(map(str, reg[::-1]))
+    byteReg = [strReg[i:i+4] for i in range(0, len(reg), 4)]
+    for i in range(len(byteReg)):
+        z.append(strTohex(byteReg[i]))
+    print(z)
+    # for i in range(len(byteReg)):
+    #     print(strTohex(byteReg))
+
+
+if __name__ == "__main__":
+    # print("how long")
+    # stream = int(input())
+    stream = 128
+    z = []
+    reg = initfunc()
+    # print(strTohex('0011'))
+    # for i in range(stream + ININUM):
+    for i in range(10):
+        t1, t2, t3 = firstFunc(reg)
+        # if i >= ININUM:
+        #     z.append(t1 ^ t2 ^ t3)
+        z.append(t1 ^ t2 ^ t3)
+        reg = secondFunc(reg, t1, t2, t3)
+        change(reg)
