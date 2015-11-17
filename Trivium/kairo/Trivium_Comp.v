@@ -2,8 +2,8 @@ module Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvl
 
 input  [79:0] Kin;  // Key input
 input  [79:0] Din;  // Data input
-// output [127:0]Dout;// Data output
-output Dout;// Data output
+output [127:0]Dout;// Data output
+// output Dout;// Data output
 input  Krdy;        // Key input ready
 input  Drdy;        // Data input ready
 input  EncDec;      // 0:Encryption 1:Decryption
@@ -20,8 +20,8 @@ reg [15:0] count;
 reg [287:0] SET;
 reg t1, t2, t3;
 reg BSYrg, Kvldrg, Dvldrg;
-// reg [127:0]Doutrg;
-reg Doutrg;
+reg [127:0]Doutrg;
+// reg Doutrg;
 
 assign len = 128;
 assign max = 1152 + len;
@@ -60,8 +60,8 @@ always @(posedge CLK) begin
                     t1 = SET[65]  ^ SET[92];
                     t2 = SET[161] ^ SET[176];
                     t3 = SET[242] ^ SET[287];
-                    // if(1152 <= count) Doutrg[max - count] <= t1 ^ t2 ^ t3;
-                    if(1152 <= count) Doutrg <= t1 ^ t2 ^ t3;
+                    if(1152 <= count) Doutrg[max - count] <= t1 ^ t2 ^ t3;
+                    // if(1152 <= count) Doutrg <= t1 ^ t2 ^ t3;
                     t1 = t1 ^ (SET[90]  & SET[91] ) ^ SET[170];
                     t2 = t2 ^ (SET[174] & SET[175]) ^ SET[263];
                     t3 = t3 ^ (SET[285] & SET[286]) ^ SET[68];

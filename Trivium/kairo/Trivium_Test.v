@@ -4,8 +4,8 @@
 module Trivium_Test;
     reg  [79:0] Kin;  // Key input
     reg  [79:0] Din;  // Data input
-    // wire [127:0]Dout;// Data output
-    wire Dout;// Data output
+    wire [127:0]Dout;// Data output
+    // wire Dout;// Data output
     reg  Krdy;        // Key input ready
     reg  Drdy;        // Data input ready
     reg  EncDec;      // 0:Encryption 1:Decryption

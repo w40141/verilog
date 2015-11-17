@@ -45,32 +45,30 @@ def secondFunc(reg, t1, t2, t3):
 def strTohex(strBin):
     intByte = int(strBin, 2)
     hexByte = hex(intByte)
-    return hexByte
+    alph = hexByte[2]
+    return alph
 
 
 def change(reg):
     z = []
-    strReg = ''.join(map(str, reg[::-1]))
+    # strReg = ''.join(map(str, reg[::-1]))
+    strReg = ''.join(map(str, reg))
     byteReg = [strReg[i:i+4] for i in range(0, len(reg), 4)]
     for i in range(len(byteReg)):
         z.append(strTohex(byteReg[i]))
-    print(z)
-    # for i in range(len(byteReg)):
-    #     print(strTohex(byteReg))
+    strZ = ''.join(z)
+    return strZ
 
 
 if __name__ == "__main__":
-    # print("how long")
-    # stream = int(input())
     stream = 128
     z = []
     reg = initfunc()
-    # print(strTohex('0011'))
-    # for i in range(stream + ININUM):
-    for i in range(10):
+    for i in range(stream + ININUM + 1):
         t1, t2, t3 = firstFunc(reg)
-        # if i >= ININUM:
-        #     z.append(t1 ^ t2 ^ t3)
-        z.append(t1 ^ t2 ^ t3)
+        if i > ININUM:
+            z.append(t1 ^ t2 ^ t3)
         reg = secondFunc(reg, t1, t2, t3)
-        change(reg)
+        strReg = ''.join(map(str, reg))
+        print(strReg)
+    # print(change(map(str, z)))
