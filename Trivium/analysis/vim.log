@@ -1,0 +1,335 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.006  000.006: --- VIM STARTING ---
+000.083  000.077: Allocated generic buffers
+000.371  000.288: locale set
+000.376  000.005: clipboard setup
+000.393  000.017: window checked
+000.897  000.504: inits 1
+001.010  000.113: parsing arguments
+001.014  000.004: expanding arguments
+004.491  003.477: shell init
+004.776  000.285: Termcap init
+004.794  000.018: inits 2
+004.916  000.122: init highlight
+006.400  000.042  000.042: sourcing /usr/local/share/vim/vim74/ftoff.vim
+006.493  000.021  000.021: sourcing /usr/local/share/vim/vim74/ftplugof.vim
+006.574  000.020  000.020: sourcing /usr/local/share/vim/vim74/indoff.vim
+007.217  000.376  000.376: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/util.vim
+007.931  001.203  000.827: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle.vim
+008.206  000.155  000.155: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/init.vim
+009.078  000.629  000.629: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/config.vim
+009.585  000.267  000.267: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/autoload.vim
+010.830  000.744  000.744: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/commands.vim
+025.850  000.330  000.330: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/parser.vim
+026.490  000.369  000.369: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/types/git.vim
+080.051  000.896  000.896: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/installer.vim
+081.433  001.078  001.078: sourcing /Users/aisuke/.vim/bundle/NeoBundle.lock
+142.028  000.945  000.945: sourcing /Users/aisuke/.vim/bundle/vim-railscasts-theme/colors/railscasts.vim
+143.186  000.223  000.223: sourcing /usr/local/share/vim/vim74/syntax/syncolor.vim
+143.664  000.198  000.198: sourcing /usr/local/share/vim/vim74/syntax/syncolor.vim
+143.993  001.347  000.926: sourcing /Users/aisuke/.vim/bundle/vim-railscasts-theme/colors/railscasts.vim
+144.103  001.671  000.324: sourcing /usr/local/share/vim/vim74/syntax/synload.vim
+165.371  000.081  000.081: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/neosnippet.vim
+165.506  000.094  000.094: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/vimshrc.vim
+165.688  000.052  000.052: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/ftdetect/vimrecipe.vim
+165.783  021.491  021.264: sourcing /usr/local/share/vim/vim74/filetype.vim
+165.839  023.654  000.492: sourcing /usr/local/share/vim/vim74/syntax/syntax.vim
+166.033  000.013  000.013: sourcing /usr/local/share/vim/vim74/filetype.vim
+166.275  000.053  000.053: sourcing /usr/local/share/vim/vim74/ftplugin.vim
+166.508  000.045  000.045: sourcing /usr/local/share/vim/vim74/indent.vim
+166.536  161.417  130.953: sourcing $HOME/.vimrc
+166.540  000.207: sourcing vimrc file(s)
+166.720  000.048  000.048: sourcing /Users/aisuke/.vim/bundle/vim-snippets/plugin/vimsnippets.vim
+169.401  002.544  002.544: sourcing /Users/aisuke/.vim/bundle/caw.vim/plugin/caw.vim
+173.819  004.280  004.280: sourcing /Users/aisuke/.vim/bundle/YankRing.vim/plugin/yankring.vim
+174.100  000.117  000.117: sourcing /Users/aisuke/.vim/bundle/hl_matchit.vim/plugin/hl_matchit.vim
+174.567  000.345  000.345: sourcing /Users/aisuke/.vim/bundle/easybuffer.vim/plugin/easybuffer.vim
+174.834  000.142  000.142: sourcing /Users/aisuke/.vim/bundle/vimproc/plugin/vimproc.vim
+179.157  004.201  004.201: sourcing /Users/aisuke/.vim/bundle/vim-fugitive/plugin/fugitive.vim
+179.417  000.115  000.115: sourcing /Users/aisuke/.vim/bundle/lightline.vim/plugin/lightline.vim
+180.255  000.714  000.714: sourcing /Users/aisuke/.vim/bundle/vim-anzu/plugin/anzu.vim
+181.439  001.056  001.056: sourcing /Users/aisuke/.vim/bundle/tagbar/plugin/tagbar.vim
+182.264  000.120  000.120: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/highlight.vim
+183.475  001.886  001.766: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/plugin/gitgutter.vim
+184.356  000.042  000.042: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/autoloclist.vim
+184.443  000.033  000.033: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/balloons.vim
+184.527  000.033  000.033: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/checker.vim
+184.609  000.033  000.033: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/cursor.vim
+184.694  000.037  000.037: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/highlighting.vim
+184.783  000.040  000.040: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/loclist.vim
+184.866  000.035  000.035: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/modemap.vim
+184.948  000.035  000.035: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/notifiers.vim
+185.034  000.038  000.038: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/registry.vim
+185.119  000.037  000.037: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/signs.vim
+186.239  000.688  000.688: sourcing /Users/aisuke/.vim/bundle/syntastic/autoload/syntastic/util.vim
+198.612  000.063  000.063: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/autoloclist.vim
+198.728  000.074  000.074: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/balloons.vim
+198.985  000.221  000.221: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/checker.vim
+199.137  000.116  000.116: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/cursor.vim
+199.268  000.096  000.096: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/highlighting.vim
+199.644  000.341  000.341: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/loclist.vim
+199.781  000.101  000.101: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/modemap.vim
+199.901  000.085  000.085: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/notifiers.vim
+200.275  000.339  000.339: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/registry.vim
+200.425  000.114  000.114: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic/signs.vim
+201.621  016.454  014.216: sourcing /Users/aisuke/.vim/bundle/syntastic/plugin/syntastic.vim
+202.235  000.237  000.237: sourcing /Users/aisuke/.vim/bundle/vim-indent-guides/autoload/indent_guides.vim
+202.661  000.894  000.657: sourcing /Users/aisuke/.vim/bundle/vim-indent-guides/plugin/indent_guides.vim
+203.951  001.113  001.113: sourcing /Users/aisuke/.vim/bundle/TweetVim/plugin/tweetvim.vim
+204.535  000.086  000.086: sourcing /usr/local/share/vim/vim74/plugin/getscriptPlugin.vim
+205.032  000.459  000.459: sourcing /usr/local/share/vim/vim74/plugin/gzip.vim
+205.370  000.292  000.292: sourcing /usr/local/share/vim/vim74/plugin/logiPat.vim
+205.635  000.226  000.226: sourcing /usr/local/share/vim/vim74/plugin/matchparen.vim
+206.363  000.689  000.689: sourcing /usr/local/share/vim/vim74/plugin/netrwPlugin.vim
+206.454  000.033  000.033: sourcing /usr/local/share/vim/vim74/plugin/rrhelper.vim
+206.534  000.032  000.032: sourcing /usr/local/share/vim/vim74/plugin/spellfile.vim
+206.771  000.194  000.194: sourcing /usr/local/share/vim/vim74/plugin/tarPlugin.vim
+206.941  000.124  000.124: sourcing /usr/local/share/vim/vim74/plugin/tohtml.vim
+207.161  000.177  000.177: sourcing /usr/local/share/vim/vim74/plugin/vimballPlugin.vim
+207.446  000.229  000.229: sourcing /usr/local/share/vim/vim74/plugin/zipPlugin.vim
+207.715  000.087  000.087: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/plugin/neobundle.vim
+207.721  004.281: loading plugins
+207.729  000.008: inits 3
+208.846  001.117: reading viminfo
+208.887  000.041: setting raw mode
+208.896  000.009: start termcap
+208.990  000.094: clearing screen
+214.517  001.051  001.051: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite.vim
+215.365  000.548  000.548: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite/custom.vim
+216.318  000.273  000.273: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/bookmark.vim
+216.679  000.281  000.281: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/buffer.vim
+216.944  000.158  000.158: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/window.vim
+217.354  000.334  000.334: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite.vim
+218.835  000.546  000.546: sourcing /Users/aisuke/.vim/bundle/vimfiler//plugin/vimfiler.vim
+221.265  001.073  001.073: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline.vim
+222.449  000.608  000.608: sourcing /Users/aisuke/.vim/bundle/vim-anzu/autoload/anzu.vim
+222.962  000.255  000.255: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/hunk.vim
+226.723  003.413  003.413: sourcing /Users/aisuke/.vim/bundle/tagbar/autoload/tagbar.vim
+249.344  000.184  000.184: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/tab.vim
+250.223  000.296  000.296: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/colorscheme.vim
+251.003  001.385  001.089: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/colorscheme/wombat.vim
+264.606  000.381  000.381: sourcing /Users/aisuke/.vim/bundle/syntastic/autoload/syntastic/log.vim
+268.404  000.075  000.075: sourcing /Users/aisuke/.vim/bundle/TweetVim/autoload/vital.vim
+270.001  000.624  000.624: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vital/_vimfiler.vim
+273.805  005.860  005.161: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vimfiler/util.vim
+277.861  000.477  000.477: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vital/_vimfiler/Prelude.vim
+287.332  000.103  000.103: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite/sources/buffer/variables.vim
+287.516  061.596: opening buffers
+287.938  000.236  000.236: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter.vim
+288.395  000.243  000.243: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/utility.vim
+302.213  013.266  013.266: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/diff.vim
+328.052  000.413  000.413: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/sign.vim
+331.489  029.815: BufEnter autocommands
+331.493  000.004: editing files in windows
+345.390  000.102  000.102: sourcing /Users/aisuke/.vim/bundle/jedi-vim//plugin/jedi.vim
+347.036  000.132  000.132: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv.vim
+350.123  000.872  000.872: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv.vim
+352.654  004.792  003.920: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/utils.vim
+355.171  000.234  000.234: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv/Process.vim
+360.028  000.292  000.292: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv/System/Filepath.vim
+362.626  015.037  009.719: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/pyenv.vim
+384.707  021.500  021.500: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/python.vim
+385.946  000.324  000.324: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/util.vim
+389.758  004.403  004.079: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc.vim
+391.350  001.087  001.087: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/parser.vim
+398.299  000.283  000.283: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/filepath.vim
+645.646  299.094  256.652: sourcing /Users/aisuke/.vim/bundle/vim-pyenv//plugin/pyenv.vim
+647.233  000.232  000.232: sourcing /usr/local/share/vim/vim74/ftplugof.vim
+647.561  000.082  000.082: sourcing /usr/local/share/vim/vim74/indoff.vim
+648.352  000.542  000.542: sourcing /usr/local/share/vim/vim74/ftoff.vim
+702.497  000.179  000.179: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/neosnippet.vim
+702.751  000.194  000.194: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/vimshrc.vim
+703.002  000.096  000.096: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/ftdetect/vimrecipe.vim
+703.149  054.520  054.051: sourcing /usr/local/share/vim/vim74/filetype.vim
+703.476  000.076  000.076: sourcing /usr/local/share/vim/vim74/ftplugin.vim
+703.812  000.065  000.065: sourcing /usr/local/share/vim/vim74/indent.vim
+707.419  001.222  001.222: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+866.807  159.000  159.000: sourcing /Users/aisuke/.vim/bundle/jedi-vim/autoload/jedi.vim
+866.986  159.422  000.422: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+875.103  000.817  000.817: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+891.017  015.608  015.608: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+891.502  000.309  000.309: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+892.025  000.151  000.151: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+892.969  000.530  000.530: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+893.185  000.068  000.068: sourcing /usr/local/share/vim/vim74/indent/python.vim
+895.787  001.219  001.219: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+896.194  000.209  000.209: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+903.885  000.745  000.745: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+904.220  000.032  000.032: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+904.425  000.026  000.026: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+905.078  000.166  000.166: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+906.019  000.570  000.570: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+906.179  000.025  000.025: sourcing /usr/local/share/vim/vim74/indent/python.vim
+908.294  000.986  000.986: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+908.628  000.169  000.169: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+916.430  000.704  000.704: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+916.709  000.025  000.025: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+916.871  000.021  000.021: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+917.606  000.140  000.140: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+918.335  000.436  000.436: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+918.455  000.018  000.018: sourcing /usr/local/share/vim/vim74/indent/python.vim
+919.948  050.124: VimEnter autocommands
+919.953  000.005: before starting main loop
+933.078  013.125: first screen update
+933.083  000.005: --- VIM STARTED ---
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.008  000.008: --- VIM STARTING ---
+000.131  000.123: Allocated generic buffers
+000.484  000.353: locale set
+000.491  000.007: clipboard setup
+000.502  000.011: window checked
+001.172  000.670: inits 1
+001.327  000.155: parsing arguments
+001.331  000.004: expanding arguments
+005.341  004.010: shell init
+005.816  000.475: Termcap init
+005.841  000.025: inits 2
+005.988  000.147: init highlight
+009.025  000.144  000.144: sourcing /usr/local/share/vim/vim74/ftoff.vim
+009.238  000.047  000.047: sourcing /usr/local/share/vim/vim74/ftplugof.vim
+009.411  000.043  000.043: sourcing /usr/local/share/vim/vim74/indoff.vim
+010.999  000.927  000.927: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/util.vim
+012.862  003.080  002.153: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle.vim
+013.424  000.221  000.221: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/init.vim
+014.604  000.788  000.788: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/config.vim
+015.604  000.536  000.536: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/autoload.vim
+017.521  000.994  000.994: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/commands.vim
+040.636  000.357  000.357: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/parser.vim
+041.351  000.423  000.423: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/types/git.vim
+122.825  000.849  000.849: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/autoload/neobundle/installer.vim
+125.165  001.757  001.757: sourcing /Users/aisuke/.vim/bundle/NeoBundle.lock
+207.602  000.932  000.932: sourcing /Users/aisuke/.vim/bundle/vim-railscasts-theme/colors/railscasts.vim
+209.410  000.398  000.398: sourcing /usr/local/share/vim/vim74/syntax/syncolor.vim
+210.339  000.427  000.427: sourcing /usr/local/share/vim/vim74/syntax/syncolor.vim
+211.170  002.686  001.861: sourcing /Users/aisuke/.vim/bundle/vim-railscasts-theme/colors/railscasts.vim
+211.341  003.214  000.528: sourcing /usr/local/share/vim/vim74/syntax/synload.vim
+235.529  000.084  000.084: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/neosnippet.vim
+235.663  000.094  000.094: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/vimshrc.vim
+235.845  000.051  000.051: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/ftdetect/vimrecipe.vim
+235.943  024.369  024.140: sourcing /usr/local/share/vim/vim74/filetype.vim
+235.999  028.258  000.675: sourcing /usr/local/share/vim/vim74/syntax/syntax.vim
+236.187  000.013  000.013: sourcing /usr/local/share/vim/vim74/filetype.vim
+236.423  000.052  000.052: sourcing /usr/local/share/vim/vim74/ftplugin.vim
+236.652  000.045  000.045: sourcing /usr/local/share/vim/vim74/indent.vim
+236.679  230.362  191.823: sourcing $HOME/.vimrc
+236.684  000.334: sourcing vimrc file(s)
+236.868  000.047  000.047: sourcing /Users/aisuke/.vim/bundle/vim-snippets/plugin/vimsnippets.vim
+240.287  003.285  003.285: sourcing /Users/aisuke/.vim/bundle/caw.vim/plugin/caw.vim
+250.907  010.395  010.395: sourcing /Users/aisuke/.vim/bundle/YankRing.vim/plugin/yankring.vim
+251.807  000.383  000.383: sourcing /Users/aisuke/.vim/bundle/hl_matchit.vim/plugin/hl_matchit.vim
+252.606  000.449  000.449: sourcing /Users/aisuke/.vim/bundle/easybuffer.vim/plugin/easybuffer.vim
+253.468  000.385  000.385: sourcing /Users/aisuke/.vim/bundle/vimproc/plugin/vimproc.vim
+266.906  013.131  013.131: sourcing /Users/aisuke/.vim/bundle/vim-fugitive/plugin/fugitive.vim
+268.523  001.019  001.019: sourcing /Users/aisuke/.vim/bundle/lightline.vim/plugin/lightline.vim
+271.999  002.135  002.135: sourcing /Users/aisuke/.vim/bundle/vim-anzu/plugin/anzu.vim
+274.814  002.197  002.197: sourcing /Users/aisuke/.vim/bundle/tagbar/plugin/tagbar.vim
+275.802  000.135  000.135: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/highlight.vim
+277.143  002.128  001.993: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/plugin/gitgutter.vim
+278.673  000.552  000.552: sourcing /Users/aisuke/.vim/bundle/vim-indent-guides/autoload/indent_guides.vim
+280.029  002.161  001.609: sourcing /Users/aisuke/.vim/bundle/vim-indent-guides/plugin/indent_guides.vim
+282.277  001.554  001.554: sourcing /Users/aisuke/.vim/bundle/TweetVim/plugin/tweetvim.vim
+282.880  000.086  000.086: sourcing /usr/local/share/vim/vim74/plugin/getscriptPlugin.vim
+283.312  000.394  000.394: sourcing /usr/local/share/vim/vim74/plugin/gzip.vim
+283.638  000.287  000.287: sourcing /usr/local/share/vim/vim74/plugin/logiPat.vim
+283.893  000.217  000.217: sourcing /usr/local/share/vim/vim74/plugin/matchparen.vim
+284.612  000.681  000.681: sourcing /usr/local/share/vim/vim74/plugin/netrwPlugin.vim
+284.700  000.029  000.029: sourcing /usr/local/share/vim/vim74/plugin/rrhelper.vim
+284.778  000.031  000.031: sourcing /usr/local/share/vim/vim74/plugin/spellfile.vim
+285.021  000.191  000.191: sourcing /usr/local/share/vim/vim74/plugin/tarPlugin.vim
+285.184  000.118  000.118: sourcing /usr/local/share/vim/vim74/plugin/tohtml.vim
+285.395  000.168  000.168: sourcing /usr/local/share/vim/vim74/plugin/vimballPlugin.vim
+285.672  000.226  000.226: sourcing /usr/local/share/vim/vim74/plugin/zipPlugin.vim
+285.929  000.082  000.082: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/plugin/neobundle.vim
+285.936  007.473: loading plugins
+285.941  000.005: inits 3
+286.855  000.914: reading viminfo
+286.896  000.041: setting raw mode
+286.902  000.006: start termcap
+286.970  000.068: clearing screen
+293.986  000.909  000.909: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite.vim
+295.216  000.736  000.736: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite/custom.vim
+296.290  000.267  000.267: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/bookmark.vim
+296.665  000.289  000.289: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/buffer.vim
+296.975  000.227  000.227: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite/window.vim
+297.514  000.412  000.412: sourcing /Users/aisuke/.vim/bundle/unite.vim//plugin/unite.vim
+301.244  001.727  001.727: sourcing /Users/aisuke/.vim/bundle/vimfiler//plugin/vimfiler.vim
+303.613  000.610  000.610: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline.vim
+304.857  000.412  000.412: sourcing /Users/aisuke/.vim/bundle/vim-anzu/autoload/anzu.vim
+305.288  000.163  000.163: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/hunk.vim
+311.196  005.528  005.528: sourcing /Users/aisuke/.vim/bundle/tagbar/autoload/tagbar.vim
+339.597  000.643  000.643: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/tab.vim
+347.013  000.838  000.838: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/colorscheme.vim
+348.647  008.380  007.542: sourcing /Users/aisuke/.vim/bundle/lightline.vim/autoload/lightline/colorscheme/wombat.vim
+367.961  000.101  000.101: sourcing /Users/aisuke/.vim/bundle/TweetVim/autoload/vital.vim
+369.409  000.777  000.777: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vital/_vimfiler.vim
+372.792  005.299  004.421: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vimfiler/util.vim
+387.265  002.988  002.988: sourcing /Users/aisuke/.vim/bundle/vimfiler/autoload/vital/_vimfiler/Prelude.vim
+399.064  000.183  000.183: sourcing /Users/aisuke/.vim/bundle/unite.vim/autoload/unite/sources/buffer/variables.vim
+399.828  084.085: opening buffers
+400.884  000.671  000.671: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter.vim
+401.963  000.461  000.461: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/utility.vim
+433.801  031.080  031.080: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/diff.vim
+481.549  000.600  000.600: sourcing /Users/aisuke/.vim/bundle/vim-gitgutter/autoload/gitgutter/sign.vim
+484.305  051.665: BufEnter autocommands
+484.318  000.013: editing files in windows
+515.601  000.135  000.135: sourcing /Users/aisuke/.vim/bundle/jedi-vim//plugin/jedi.vim
+517.932  000.134  000.134: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv.vim
+520.405  000.420  000.420: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv.vim
+522.845  004.079  003.659: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/utils.vim
+525.887  000.392  000.392: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv/Process.vim
+529.964  000.426  000.426: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/vital/_vim_pyenv/System/Filepath.vim
+533.455  014.948  010.051: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/pyenv.vim
+584.635  050.249  050.249: sourcing /Users/aisuke/.vim/bundle/vim-pyenv/autoload/pyenv/python.vim
+587.089  000.306  000.306: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/util.vim
+594.017  007.488  007.182: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc.vim
+596.251  001.234  001.234: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/parser.vim
+605.616  000.310  000.310: sourcing /Users/aisuke/.vim/bundle/vimproc/autoload/vimproc/filepath.vim
+1126.490  610.041  535.678: sourcing /Users/aisuke/.vim/bundle/vim-pyenv//plugin/pyenv.vim
+1128.585  000.263  000.263: sourcing /usr/local/share/vim/vim74/ftplugof.vim
+1129.019  000.146  000.146: sourcing /usr/local/share/vim/vim74/indoff.vim
+1130.021  000.726  000.726: sourcing /usr/local/share/vim/vim74/ftoff.vim
+1220.388  001.396  001.396: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/neosnippet.vim
+1221.225  000.656  000.656: sourcing /Users/aisuke/.vim/bundle/.neobundle/ftdetect/vimshrc.vim
+1222.760  001.084  001.084: sourcing /Users/aisuke/.vim/bundle/neobundle.vim/ftdetect/vimrecipe.vim
+1223.882  093.484  090.348: sourcing /usr/local/share/vim/vim74/filetype.vim
+1224.824  000.174  000.174: sourcing /usr/local/share/vim/vim74/ftplugin.vim
+1225.228  000.075  000.075: sourcing /usr/local/share/vim/vim74/indent.vim
+1229.663  001.539  001.539: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+1458.928  228.773  228.773: sourcing /Users/aisuke/.vim/bundle/jedi-vim/autoload/jedi.vim
+1459.208  229.333  000.560: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+1471.959  001.271  001.271: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+1508.631  036.143  036.143: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+1509.467  000.572  000.572: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+1510.573  000.373  000.373: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+1511.323  000.440  000.440: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+1511.477  000.046  000.046: sourcing /usr/local/share/vim/vim74/indent/python.vim
+1513.953  001.361  001.361: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+1514.613  000.271  000.271: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+1522.026  000.734  000.734: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+1522.540  000.102  000.102: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+1522.829  000.030  000.030: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+1523.371  000.146  000.146: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+1524.039  000.400  000.400: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+1524.151  000.017  000.017: sourcing /usr/local/share/vim/vim74/indent/python.vim
+1525.870  000.811  000.811: sourcing /usr/local/share/vim/vim74/syntax/python.vim
+1526.150  000.139  000.139: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/syntax/python.vim
+1533.975  001.306  001.306: sourcing /Users/aisuke/.vim/bundle/jedi-vim/ftplugin/python/jedi.vim
+1534.521  000.054  000.054: sourcing /Users/aisuke/.vim/bundle/pyflakes-vim/ftplugin/python/pyflakes.vim
+1534.734  000.026  000.026: sourcing /usr/local/share/vim/vim74/ftplugin/python.vim
+1535.492  000.242  000.242: sourcing /Users/aisuke/.vim/bundle/jedi-vim/after/ftplugin/python/jedi.vim
+1536.587  000.692  000.692: sourcing /Users/aisuke/.vim/bundle/vim-python-pep8-indent/indent/python.vim
+1536.886  000.041  000.041: sourcing /usr/local/share/vim/vim74/indent/python.vim
+1543.647  079.196: VimEnter autocommands
+1543.656  000.009: before starting main loop
+1559.598  015.942: first screen update
+1559.601  000.003: --- VIM STARTED ---

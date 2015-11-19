@@ -4,12 +4,7 @@
 ININUM = 288 * 4
 
 
-# def inputForFile()
-
-def input_hex(name):
-    # print("Input" + name)
-    # rawData = raw_input()
-    rawData = '00000000000000000000'
+def inputHex(rawData):
     data = ''.join([rawData[i-2:i] for i in range(len(rawData), 0, -2)])
     strNum = bin(int(data, 16))
     binNum = strNum[2:]
@@ -17,9 +12,7 @@ def input_hex(name):
     return Num
 
 
-def initfunc():
-    key = input_hex('Key')
-    iv = input_hex('Iv')
+def initfunc(key, iv):
     strReg = key + '0'*13 + iv + '0'*112 + '1'*3
     reg = list(strReg)
     reg = map(int, reg)
@@ -55,33 +48,36 @@ def secondFunc(reg, t1, t2, t3):
     return reg
 
 
-def strToHex(strBin):
-    intByte = int(strBin, 2)
-    hexByte = hex(intByte)
-    alph = hexByte[2]
-    return alph
-
-
-def bitToHex(reg):
-    z = []
-    strReg = ''.join(map(str, reg))
-    byteReg = [strReg[i:i+4] for i in range(0, len(reg), 4)]
-    for i in range(len(byteReg)):
-        z.append(strToHex(byteReg[i]))
-    strZ = ''.join(z)
-    return strZ
+def makeZ(z, reg):
+    t1, t2, t3 = firstFunc(reg)
+    if i > ININUM:
+        z.append(t1 ^ t2 ^ t3)
+    reg = secondFunc(reg, t1, t2, t3)
+    return z, reg
 
 
 if __name__ == "__main__":
-    stream = 128
     z = []
-    reg = initfunc()
-    for i in range(stream + ININUM + 1):
-        reg = shiftFunc(reg)
-        # t1, t2, t3 = firstFunc(reg)
-        # if i > ININUM:
-        #     z.append(t1 ^ t2 ^ t3)
-        # reg = secondFunc(reg, t1, t2, t3)
-        strReg = ''.join(map(str, reg))
-        print(strReg)
-    # print(change(map(str, z)))
+    stream = 128
+    print("input key")
+    # raw_key = raw_input()
+    raw_key = '00000000000000000000'
+    key = inputHex(raw_key)
+    print('input inputfile name')
+    # inputFile = raw_input()
+    inputFile = 'test.txt'
+    print('input outputfile name')
+    outputFile = raw_input()
+    with open(inputFile, "r") as fi:
+        fl = fi.readlines()
+        print(fl)
+        for i in fl:
+            iv = inputHex(i[:-1].replace(' ', ''))
+            reg = initfunc(key, iv)
+            for j in range(stream + ININUM + 1):
+                reg = shiftFunc(reg)
+                # z, reg = makeZ(z, reg)
+                strReg = ''.join(map(str, reg))
+                print(strReg)
+                with open(outputFile, 'a') as fh:
+                    fh.write(strReg + '\n')
