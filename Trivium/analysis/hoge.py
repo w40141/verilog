@@ -1,8 +1,14 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import random
 
+lines = []
+with open("text.txt", "r") as f:
+    fl = f.readlines()
+    print(fl)
+    for i in fl:
+        lines.append(i[:-1].replace(' ', ''))
+    print(lines)
 
 if __name__ == "__main__":
     print("how many number do you want?")
@@ -17,3 +23,5 @@ if __name__ == "__main__":
         with open(name, 'a') as fh:
             fh.write(word[0:-1] + '\n')
     print("Finish write " + str(count) + " lines to " + name + ".")
+with open(name, 'a') as fh:
+    fh.write(word[0:-1] + '\n')
