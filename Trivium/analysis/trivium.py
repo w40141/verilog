@@ -34,6 +34,9 @@ def shiftFunc(reg):
 if __name__ == "__main__":
     inReg = []
     tmp = ''
+    window = 0
+    count = 0
+    strReg = []
     print("input key")
     # raw_key = raw_input()
     raw_key = '11111111111111111111'
@@ -42,7 +45,7 @@ if __name__ == "__main__":
     # inputFile = raw_input()
     inputFile = 'randomNum.txt'
     print('input outputfile name')
-    outputFile = raw_input()
+    # outputFile = raw_input()
     signe = [['' for i in range(CYCLES)] for j in range(INREGS)]
     with open(inputFile, "r") as fi:
         fl = fi.readlines()
@@ -51,12 +54,22 @@ if __name__ == "__main__":
             reg = initfunc(key, iv)
             for j in range(CYCLES):
                 reg = shiftFunc(reg)
-                strReg = ''.join(map(str, reg))
-                inReg.append(strReg)
-                with open(outputFile, 'a') as fh:
-                    fh.write(strReg + '\n')
-    for i in range(INREGS):
-        for cyc in range(CYCLES):
-            for j in range(len(fl)):
-                signe[i][cyc] = signe[i][cyc] + inReg[cyc + CYCLES * j][i]
-    print(signe)
+                strReg = [window, count]
+                strReg = strReg + reg
+                # strReg.append(str(count))
+                # strReg.append(str(window))
+                # strReg.append(map(str, reg))
+                # inReg.append(strReg)
+                inReg.append(map(str, strReg))
+                # strReg = ''.join(map(str, reg))
+                # inReg.append(strReg)
+                window += 1
+                # with open(outputFile, 'a') as fh:
+                    # fh.write(strReg + '\n')
+            count += 1
+    print(inReg)
+    # for i in range(INREGS):
+    #     for cyc in range(CYCLES):
+    #         for j in range(len(fl)):
+    #             signe[i][cyc] = signe[i][cyc] + inReg[cyc + CYCLES * j][i]
+    # print(signe)
