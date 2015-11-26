@@ -1,7 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-CYCLES = 100
 INREGS = 288
 
 
@@ -34,23 +33,23 @@ def shiftFunc(reg):
 if __name__ == "__main__":
     inReg = []
     tmp = ''
-    window = 0
-    count = 0
     strReg = []
-    print("input key")
-    # raw_key = raw_input()
-    raw_key = '11111111111111111111'
+    # raw_key = raw_input('input key')
+    raw_key = '00010203040506070809'
     key = inputHex(raw_key)
-    print('input inputfile name')
-    # inputFile = raw_input()
-    inputFile = 'randomNum.txt'
-    print('input outputfile name')
-    # outputFile = raw_input()
+    # inputFile = raw_input('input inputfile name')
+    inputFile = 'test.txt'
+    # outputFile = raw_input('input outputfile name')
+    # keyLen = raw_input('length')
+    keyLen = 16
+    CYCLES = 1024 / keyLen
+    window = 0
     signe = [['' for i in range(CYCLES)] for j in range(INREGS)]
     with open(inputFile, "r") as fi:
-        fl = fi.readlines()
-        for i in fl:
-            iv = inputHex(i[:-1].replace(' ', ''))
+        for i in range(keyLen):
+            fl = fi.readline()
+            count = 0
+            iv = inputHex(fl[:-1].replace(' ', ''))
             reg = initfunc(key, iv)
             for j in range(CYCLES):
                 reg = shiftFunc(reg)
@@ -64,9 +63,9 @@ if __name__ == "__main__":
                 # strReg = ''.join(map(str, reg))
                 # inReg.append(strReg)
                 window += 1
+                count += 1
                 # with open(outputFile, 'a') as fh:
-                    # fh.write(strReg + '\n')
-            count += 1
+                # fh.write(strReg + '\n')
     print(inReg)
     # for i in range(INREGS):
     #     for cyc in range(CYCLES):

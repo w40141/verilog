@@ -19,7 +19,7 @@ if __name__ == "__main__":
             # data = i.replace('\t', ' ')
             # data.split(' ')
             # print(data[:1024])
-            lines.append(data[:1026])
+            lines.append(data[1:1026])
         print(lines)
         # for i in fl:
         #     lines.append(i[:-1].replace(' ', ''))
