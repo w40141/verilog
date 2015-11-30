@@ -3,7 +3,7 @@
 
 
 import re
-Trivium = []
+TRIVIUM = []
 DATA = []
 
 
@@ -70,7 +70,7 @@ def dataFunc():
     # outputFile = input('input outputFile name: ')
     # outputFile = 'arr.txt'
     with open(openF, "r") as f:
-        for i in range(1024):
+        for i in range(1025):
             fl = f.readline()
             if i != 0:
                 liData = re.split(r"[\t\r\n]", fl)
@@ -81,19 +81,33 @@ def dataFunc():
     return lines
 
 
-def makeList(data):
-    length = len(data)
-    signe = [['' for i in range(data[-1][0] + 1)] for j in range(length)]
-    for i in data:
-        print(i[0])
-        for j in range(length):
-            signe[i[0]][j] = signe[i[0]][j] + i[j]
+def makeList(liData):
+    lenList = len(liData[0]) - 1
+    signe = [['' for i in range(liData[-1][0] + 1)] for j in range(lenList)]
+    for li in liData:
+        tmp = li[1:]
+        for i in range(len(tmp)):
+            signe[i][li[0]] = signe[i][li[0]] + tmp[i]
+    return signe
 
+
+def compare(Tri, Data):
+    ans = ['' for x in range(len(Tri))]
+    for i in range(len(Tri)):
+        print(i)
+        print(Tri[i])
+        for k in range(len(Data)):
+            if Tri[i] == Data[k]:
+                print(k)
+                # ans[i] = ans[i] + str(k)
+                break
+    return ans
 
 if __name__ == "__main__":
-    Trivium = triviumFunc()
-    print(len(Trivium[0]))
+    TRIVIUM = triviumFunc()
+    liTri = makeList(TRIVIUM)
     print('finish Trivium')
     DATA = dataFunc()
+    liDat = makeList(DATA)
     print('finish DATA')
-    # makeList(Trivium)
+    print(compare(liTri, liDat))
