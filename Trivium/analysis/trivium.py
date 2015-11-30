@@ -36,8 +36,9 @@ if __name__ == "__main__":
     raw_key = '00010203040506070809'
     key = inputHex(raw_key)
     # inputFile = input('input inputfile name')
-    inputFile = 'test.txt'
-    outputFile = input('input outputfile name: ')
+    inputFile = 'RandomNum'
+    # outputFile = input('input outputfile name: ')
+    outputFile = 'tri.txt'
     # keyLen = input('length')
     keyLen = 16
     CYCLES = int(1024 / keyLen)
