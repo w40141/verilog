@@ -3,8 +3,6 @@
 
 
 import re
-TRIVIUM = []
-DATA = []
 
 
 def inputHex(rawData):
@@ -48,11 +46,11 @@ def triviumFunc():
     with open(inputFile, "r") as fi:
         for i in range(keyLen):
             fl = fi.readline()
-            # count = 0
             window = 0
             iv = inputHex(fl[:-1].replace(' ', ''))
             reg = initfunc(key, iv)
             for j in range(CYCLES):
+                print(reg)
                 reg = shiftFunc(reg)
                 strReg = [str(x) for x in reg]
                 lisReg = [window]
@@ -104,10 +102,13 @@ def compare(Tri, Data):
     return ans
 
 if __name__ == "__main__":
+    TRIVIUM = []
+    DATA = []
     TRIVIUM = triviumFunc()
     liTri = makeList(TRIVIUM)
+    # print(liTri)
     print('finish Trivium')
-    DATA = dataFunc()
-    liDat = makeList(DATA)
-    print('finish DATA')
-    print(compare(liTri, liDat))
+    # DATA = dataFunc()
+    # liDat = makeList(DATA)
+    # print('finish DATA')
+    # print(compare(liTri, liDat))

@@ -4,7 +4,8 @@
 module Trivium_Test;
     reg  [79:0] Kin;  // Key input
     reg  [79:0] Din;  // Data input
-    wire [127:0]Dout;// Data output
+    // wire [127:0]Dout;// Data output
+    wire [4095:0]Dout;// Data output
     // wire Dout;// Data output
     reg  Krdy;        // Key input ready
     reg  Drdy;        // Data input ready
@@ -34,7 +35,7 @@ module Trivium_Test;
         RSTn <= 1;
         EN   <= 1;
         Krdy <= 1;
-        Kin  <= 80'h00000000000000000000;
+        Kin  <= 80'h40000000000000000000;
         @(posedge Kvld);
         Krdy <= 0;
         Kin  <= 80'bX;
@@ -49,7 +50,7 @@ module Trivium_Test;
     end
 
     initial begin
-        $monitor($time , "\nKEY=%h, IV=%h\nOUT=%h", Kin, Din, Dout);
+        // $monitor($time, "\nDout=%h", Dout);
         $dumpfile("Test.vcd");
         $dumpvars(0, Trivium_Test);
     end
