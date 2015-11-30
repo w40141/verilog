@@ -1,8 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-INREGS = 288
-
 
 def inputHex(rawData):
     data = ''.join([rawData[i-2:i] for i in range(len(rawData), 0, -2)])
@@ -15,7 +13,7 @@ def inputHex(rawData):
 def initfunc(key, iv):
     strReg = key + '0'*13 + iv + '0'*112 + '1'*3
     reg = list(strReg)
-    reg = map(int, reg)
+    reg = [int(x) for x in reg]
     return reg
 
 
@@ -31,44 +29,32 @@ def shiftFunc(reg):
 
 
 if __name__ == "__main__":
-    inReg = []
-    tmp = ''
-    strReg = []
-    # raw_key = raw_input('input key')
+    # inReg = []
+    # tmp = ''
+    # strReg = []
+    # raw_key = input('input key')
     raw_key = '00010203040506070809'
     key = inputHex(raw_key)
-    # inputFile = raw_input('input inputfile name')
+    # inputFile = input('input inputfile name')
     inputFile = 'test.txt'
-    # outputFile = raw_input('input outputfile name')
-    # keyLen = raw_input('length')
+    outputFile = input('input outputfile name: ')
+    # keyLen = input('length')
     keyLen = 16
-    CYCLES = 1024 / keyLen
+    CYCLES = int(1024 / keyLen)
     window = 0
-    signe = [['' for i in range(CYCLES)] for j in range(INREGS)]
     with open(inputFile, "r") as fi:
         for i in range(keyLen):
             fl = fi.readline()
-            count = 0
+            # count = 0
+            window = 0
             iv = inputHex(fl[:-1].replace(' ', ''))
             reg = initfunc(key, iv)
             for j in range(CYCLES):
                 reg = shiftFunc(reg)
-                strReg = [window, count]
-                strReg = strReg + reg
-                # strReg.append(str(count))
-                # strReg.append(str(window))
-                # strReg.append(map(str, reg))
-                # inReg.append(strReg)
-                inReg.append(map(str, strReg))
-                # strReg = ''.join(map(str, reg))
-                # inReg.append(strReg)
+                lisReg = [window]
+                lisReg = lisReg + reg
+                strReg = ':'.join(map(str, lisReg))
                 window += 1
-                count += 1
-                # with open(outputFile, 'a') as fh:
-                # fh.write(strReg + '\n')
-    print(inReg)
-    # for i in range(INREGS):
-    #     for cyc in range(CYCLES):
-    #         for j in range(len(fl)):
-    #             signe[i][cyc] = signe[i][cyc] + inReg[cyc + CYCLES * j][i]
-    # print(signe)
+                # count += 1
+                with open(outputFile, 'a') as fh:
+                    fh.write(strReg + '\n')
