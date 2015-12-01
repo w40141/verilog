@@ -3,6 +3,8 @@
 
 
 import re
+TRIVIUM = []
+DATA = []
 
 
 def inputHex(rawData):
@@ -51,7 +53,10 @@ def triviumFunc():
         CYCLES = int(1024 / keyLen)
         for win in range(keyLen):
             for i in range(CYCLES):
-                reReg.append([win] + [str(x) for x in shiftFunc(reg)])
+                # reReg.append([i] + [str(x) for x in reg])
+                # print(reReg[i])
+                # reg = shiftFunc(reg)
+                reReg.append([i] + [str(x) for x in shiftFunc(reg)])
     return reReg
 
 
@@ -67,6 +72,7 @@ def dataFunc():
                 liData = [str(x) for x in liData]
                 stData = liData[1:1026]
                 stData[0] = int(stData[0])
+                # print(stData)
                 lines.append(stData)
     return lines
 
@@ -78,30 +84,33 @@ def makeList(liData):
         tmp = li[1:]
         for i in range(len(tmp)):
             signe[i][li[0]] = signe[i][li[0]] + tmp[i]
+    # print(signe)
     return signe
 
 
 def compare(Tri, Data):
-    ans = ['' for x in range(len(Tri))]
-    for i in range(len(Tri)):
-        # print(i)
-        # print(Tri[i])
-        for k in range(len(Data)):
-            if Tri[i] == Data[k]:
-                print(k)
-                # ans[i] = ans[i] + str(k)
-                break
-    return ans
+    # ans = ['' for x in range(len(Tri))]
+    for i, itemT in enumerate(Tri):
+        print(itemT[0])
+        for k, itemD in enumerate(Data):
+            # print(itemD)
+            if itemT[0] == itemD[0]:
+                # if itemT[1] == itemD[1]:
+            #     ans[i] = ans[i] + str(k)
+                print('find')
+            #     break
+    # return ans
 
 
 if __name__ == "__main__":
-    TRIVIUM = []
-    DATA = []
     TRIVIUM = triviumFunc()
+    # print(TRIVIUM)
     liTri = makeList(TRIVIUM)
     # print(liTri)
     print('finish Trivium')
     DATA = dataFunc()
+    # print(DATA)
     liDat = makeList(DATA)
+    # print(liDat)
     print('finish DATA')
     print(compare(liTri, liDat))
