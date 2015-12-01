@@ -6,18 +6,25 @@ import re
 
 
 def inputHex(rawData):
-    data = ''.join([rawData[i-2:i] for i in range(len(rawData), 0, -2)])
-    strNum = bin(int(data, 16))
-    binNum = strNum[2:]
-    Num = binNum.zfill(80)
-    return Num
+    bunkatu = [rawData[i:i+2] for i in range(0, len(rawData), 2)]
+    bit = [bin(int(i, 16))[2:].zfill(8) for i in bunkatu]
+    num = ''.join([i[::-1] for i in bit]).zfill(80)
+    return num
 
 
 def initfunc(key, iv):
+    # keyLen = input('length')
+    keyLen = 16
     strReg = key + '0'*13 + iv + '0'*112 + '1'*3
-    reg = list(strReg)
-    reg = [int(x) for x in reg]
-    return reg
+    reg = [int(x) for x in list(strReg)]
+    return keyLen, reg
+
+
+def change(rawData, zero):
+    revData = [str(x) for x in rawData[::-1]]
+    strData = [''.join(revData[i:i+4]) for i in range(0, len(revData), 4)]
+    zNum = hex(int(''.join(strData), 2))[2:-1].zfill(zero)
+    return zNum
 
 
 def shiftFunc(reg):
@@ -37,27 +44,14 @@ def triviumFunc():
     key = inputHex(raw_key)
     # inputFile = input('input inputfile name')
     inputFile = 'RandomNum'
-    # outputFile = input('input outputfile name: ')
-    # outputFile = 'tri.txt'
-    # keyLen = input('length')
-    keyLen = 16
-    CYCLES = int(1024 / keyLen)
-    window = 0
     with open(inputFile, "r") as fi:
-        for i in range(keyLen):
-            fl = fi.readline()
-            window = 0
-            iv = inputHex(fl[:-1].replace(' ', ''))
-            reg = initfunc(key, iv)
-            for j in range(CYCLES):
-                print(reg)
-                reg = shiftFunc(reg)
-                strReg = [str(x) for x in reg]
-                lisReg = [window]
-                lisReg = lisReg + strReg
-                # lisReg = [str(x) for x in lisReg]
-                reReg.append(lisReg)
-                window += 1
+        fl = fi.readline()
+        iv = inputHex(fl[:-1].replace(' ', ''))
+        keyLen, reg = initfunc(key, iv)
+        CYCLES = int(1024 / keyLen)
+        for win in range(keyLen):
+            for i in range(CYCLES):
+                reReg.append([win] + [str(x) for x in shiftFunc(reg)])
     return reReg
 
 
@@ -65,8 +59,6 @@ def dataFunc():
     lines = []
     # openF = input("which file do you want to open: ")
     openF = '1124_trivium.prn'
-    # outputFile = input('input outputFile name: ')
-    # outputFile = 'arr.txt'
     with open(openF, "r") as f:
         for i in range(1025):
             fl = f.readline()
@@ -92,14 +84,15 @@ def makeList(liData):
 def compare(Tri, Data):
     ans = ['' for x in range(len(Tri))]
     for i in range(len(Tri)):
-        print(i)
-        print(Tri[i])
+        # print(i)
+        # print(Tri[i])
         for k in range(len(Data)):
             if Tri[i] == Data[k]:
                 print(k)
                 # ans[i] = ans[i] + str(k)
                 break
     return ans
+
 
 if __name__ == "__main__":
     TRIVIUM = []
@@ -108,7 +101,7 @@ if __name__ == "__main__":
     liTri = makeList(TRIVIUM)
     # print(liTri)
     print('finish Trivium')
-    # DATA = dataFunc()
-    # liDat = makeList(DATA)
-    # print('finish DATA')
-    # print(compare(liTri, liDat))
+    DATA = dataFunc()
+    liDat = makeList(DATA)
+    print('finish DATA')
+    print(compare(liTri, liDat))
