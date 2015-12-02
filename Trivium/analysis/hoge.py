@@ -91,26 +91,27 @@ def makeList(liData):
 def compare(Tri, Data):
     # ans = ['' for x in range(len(Tri))]
     for i, itemT in enumerate(Tri):
-        print(itemT[0])
         for k, itemD in enumerate(Data):
             # print(itemD)
-            if itemT[0] == itemD[0]:
+            if itemT == itemD:
                 # if itemT[1] == itemD[1]:
             #     ans[i] = ans[i] + str(k)
-                print('find')
+                print(str(i) + 'find')
             #     break
     # return ans
 
 
 if __name__ == "__main__":
     TRIVIUM = triviumFunc()
+    TRIVIU2 = triviumFunc()
     # print(TRIVIUM)
     liTri = makeList(TRIVIUM)
+    liTr2 = makeList(TRIVIU2)
     # print(liTri)
     print('finish Trivium')
-    DATA = dataFunc()
+    # DATA = dataFunc()
     # print(DATA)
-    liDat = makeList(DATA)
+    # liDat = makeList(DATA)
     # print(liDat)
     print('finish DATA')
-    print(compare(liTri, liDat))
+    print(compare(liTri, liTr2))

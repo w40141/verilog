@@ -18,6 +18,6 @@ if __name__ == "__main__":
             fl = f.readline()
             if i != 0:
                 liData = re.split(r"[\t\r\n]", fl)
-                stData = ':'.join(liData[1:1026])
+                # stData = ':'.join(liData[-1])
                 with open(outputFile, 'a') as fh:
-                    fh.write(stData + '\n')
+                    fh.write(str(liData[-3]) + '\n')
