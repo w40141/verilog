@@ -18,34 +18,37 @@ module Trivium_Test;
     wire Dvld;        // Data output valid
     parameter times = 0.5;
     always #(times)   CLK = ~CLK;
+    integer i;
 
     Trivium_Comp Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvld, Dvld);
 
     initial begin
         // repeat(1)   @(negedge CLK);
-        Krdy   = 0;
-        Drdy   = 0;
-        EncDec = 0;
-        RSTn   = 1;
-        CLK    = 0;
-        EN     = 0;
-        @(negedge CLK);
-        RSTn <= 0;
-        @(negedge CLK);
-        RSTn <= 1;
-        EN   <= 1;
-        Krdy <= 1;
-        Kin  <= 80'h00010203040506070809;
-        @(posedge Kvld);
-        Krdy <= 0;
-        Kin  <= 80'bX;
-        Drdy <= 1;
-        Din  <= 80'h95338443e29d4089d544;
-        @(posedge BSY);
-        Drdy <= 0;
-        Din  <= 80'bX;
-        @(posedge Dvld);
-        repeat(10)  @(negedge CLK);
+        for (i = 0; i < 10; i = i + 1) begin
+            Krdy   = 0;
+            Drdy   = 0;
+            EncDec = 0;
+            RSTn   = 1;
+            CLK    = 0;
+            EN     = 0;
+            @(negedge CLK);
+            RSTn <= 0;
+            @(negedge CLK);
+            RSTn <= 1;
+            EN   <= 1;
+            Krdy <= 1;
+            Kin  <= 80'h06070809000000000000 + i;
+            @(posedge Kvld);
+            Krdy <= 0;
+            Kin  <= 80'bX;
+            Drdy <= 1;
+            Din  <= 80'h4089d544000000000000 + i * 2;
+            @(posedge BSY);
+            Drdy <= 0;
+            Din  <= 80'bX;
+            @(posedge Dvld);
+            repeat(3)  @(negedge CLK);
+        end
         $finish;
     end
 

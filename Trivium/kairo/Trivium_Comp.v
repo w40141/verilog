@@ -43,6 +43,8 @@ always @(posedge CLK) begin
         Kvldrg <= 0;
         Dvldrg <= 0;
         count  <= 0;
+        Doutrg <= 0;
+        SET    <= 0;
     end else if(EN) begin
         if(Dvldrg) Dvldrg <= 0;
         if(Kvldrg) Kvldrg <= 0;
