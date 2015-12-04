@@ -19,11 +19,22 @@ module Trivium_Test;
     parameter times = 0.5;
     always #(times)   CLK = ~CLK;
     integer i;
+    reg [79:0] key [0:15];
 
     Trivium_Comp Trivium_Comp (Kin, Din, Dout, Krdy, Drdy, EncDec, RSTn, EN, CLK, BSY, Kvld, Dvld);
 
     initial begin
         // repeat(1)   @(negedge CLK);
+        key [0] = 80'h06070809000000000000;
+        key [1] = 80'h21134a33000000000000;
+        key [2] = 80'h489db4b3000000000000;
+        key [3] = 80'h5af119a4000000000000;
+        key [4] = 80'h5e019ed6000000000000;
+        key [5] = 80'h66c6f21f000000000000;
+        key [6] = 80'h80000000000000000000;
+        key [7] = 80'h8c4effe0000000000000;
+        key [8] = 80'ha23c0791000000000000;
+        key [9] = 80'had793e5a000000000000;
         for (i = 0; i < 10; i = i + 1) begin
             Krdy   = 0;
             Drdy   = 0;
@@ -37,12 +48,12 @@ module Trivium_Test;
             RSTn <= 1;
             EN   <= 1;
             Krdy <= 1;
-            Kin  <= 80'h06070809000000000000 + i;
+            Kin  <= key [i];
             @(posedge Kvld);
             Krdy <= 0;
             Kin  <= 80'bX;
             Drdy <= 1;
-            Din  <= 80'h4089d544000000000000 + i * 2;
+            Din  <= 80'h00000000000000000000;
             @(posedge BSY);
             Drdy <= 0;
             Din  <= 80'bX;
