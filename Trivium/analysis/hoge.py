@@ -7,55 +7,51 @@ import re
 
 TRIVIUM = []
 DATA = []
-cycle = 1024
 raw_key = ['06070809000000000000',
            '112a4370000000000000',
            '21134a33000000000000',
-           '489db4b3000000000000']
-           # '4ddfa569000000000000',
-           # '5133be2d000000000000',
-           # '5e019ed6000000000000',
-           # '7bd23871000000000000',
-           # '8c4effe0000000000000',
-           # 'ae505988000000000000',
-           # 'b34fdadf000000000000',
-           # 'd8b1e90d000000000000',
-           # 'db108386000000000000',
-           # 'df794c1f000000000000',
-           # 'f25ceb0e000000000000',
-           # 'f315f97c000000000000']
+           '489db4b3000000000000',
+           '4ddfa569000000000000',
+           '5e019ed6000000000000',
+           '7bd23871000000000000',
+           '8c4effe0000000000000',
+           'a23c0791000000000000',
+           'ae505988000000000000',
+           'b34fdadf000000000000',
+           'd8b1e90d000000000000',
+           'db108386000000000000',
+           'df794c1f000000000000',
+           'f25ceb0e000000000000',
+           'f315f97c000000000000']
 raw_iv = '4089d544000000000000'
 files = ['./1204data/06070809key.prn',
          './1204data/112a4370key.prn',
          './1204data/21134a33key.prn',
-         './1204data/489db4b3key.prn']
-         # './1204data/4ddfa569key.prn',
-         # './1204data/5133be2dkey.prn',
-         # './1204data/5e019ed6key.prn',
-         # './1204data/7bd23871key.prn',
-         # './1204data/8c4effe0key.prn',
-         # './1204data/ae505988key.prn',
-         # './1204data/b34fdadfkey.prn',
-         # './1204data/d8b1e90dkey.prn',
-         # './1204data/db108386key.prn',
-         # './1204data/df794c1fkey.prn',
-         # './1204data/f25ceb0ekey.prn',
-         # './1204data/f315f97ckey.prn']
+         './1204data/489db4b3key.prn',
+         './1204data/4ddfa569key.prn',
+         './1204data/5e019ed6key.prn',
+         './1204data/7bd23871key.prn',
+         './1204data/8c4effe0key.prn',
+         './1204data/a23c0791key.prn',
+         './1204data/ae505988key.prn',
+         './1204data/b34fdadfkey.prn',
+         './1204data/d8b1e90dkey.prn',
+         './1204data/db108386key.prn',
+         './1204data/df794c1fkey.prn',
+         './1204data/f25ceb0ekey.prn',
+         './1204data/f315f97ckey.prn']
 
 
-def dataFunc(files):
+def dataFunc(files, num):
     lines = []
     for fi in files:
         with open(fi, "r") as f:
             fl = f.readlines()
-        for i, data in enumerate(fl):
+        for i in range(num+1):
             if i > 0:
-                liData = re.split(r"[\t\r\n]", data)
+                liData = re.split(r"[\t\r\n]", fl[i])
                 liData[1] = int(liData[1])
                 lines.append(liData[1:1026])
-            # else:
-            #     liData = re.split(r"[\t\r\n]", data)
-            #     print(liData[538])
     return lines
 
 
@@ -108,26 +104,20 @@ def triviumFunc(raw_key, raw_iv, cycle):
         tmp = '00000000000000000000'
         tmp = inputHex(tmp)
         reg = initfunc(key, tmp)
-        # print(revChange(reg))
         reReg.append([0] + [str(x) for x in reg])
         iv = inputHex(raw_iv)
         reg = initfunc(key, iv)
-        # print(revChange(reg))
         for i in range(1, cycle):
             reReg.append([i] + [str(x) for x in reg])
             reg = shiftFunc(reg)
-            # print(revChange(reg))
     return reReg
 # }}}
 
 
 def makeList(liData):
     lenList = len(liData[0]) - 1
-    # print(len(liData[0]))
     signe = [['' for i in range(liData[-1][0] + 1)] for j in range(lenList)]
     for li in liData:
-        # print(li)
-        # print(len(li))
         tmp = li[1:]
         for i in range(len(tmp)):
             signe[i][li[0]] = signe[i][li[0]] + tmp[i]
@@ -135,29 +125,31 @@ def makeList(liData):
 
 
 def compare(Triv, Data):
-    # ans = ['' for x in range(len(Tri))]
-    # for i, itemT in enumerate(Triv):
+    # ans = [['' for x in range(len(Triv))] for x in range(len(Triv))]
+    ans = [[] for x in range(len(Triv))]
     for i in range(len(Triv)):
-        for k in range(len(Data)-1, 0, -1):
-        # for k, itemD in enumerate(Data):
-            # print(len(itemT[0]), len(itemD[0]))
-            # print(itemD)
+        for k in range(len(Data)):
             if Triv[i] == Data[k]:
-                # if itemT[1] == itemD[1]:
-                # ans[i] = ans[i] + str(k)
-                print(str(i) + 'find: ' + str(k))
-                # break
-    # return ans
+                # ans[i] = ans[i] + str(k) + ', '
+                ans[i].append(str(k))
+                # print(str(i) + 'find: ' + str(k))
+    return ans
 
 
 if __name__ == "__main__":
-    TRIVIUM = triviumFunc(raw_key, raw_iv, cycle)
-    # print(TRIVIUM)
-    liTri = makeList(TRIVIUM)
-    # print(liTri)
-    print('finish Trivium')
-    DATA = dataFunc(files)
-    # print(DATA)
-    liDat = makeList(DATA)
-    # print('finish DATA')
-    compare(liTri, liDat)
+    cycle = 150
+    output = 'output.txt'
+    for i in range(145, cycle):
+        print(i)
+        TRIVIUM = triviumFunc(raw_key, raw_iv, i)
+        liTri = makeList(TRIVIUM)
+        # print(len(liTri[0]))
+        print('finish Trivium')
+        DATA = dataFunc(files, i)
+        # print(DATA)
+        liDat = makeList(DATA)
+        # print(len(liDat[0]))
+        print('finish DATA')
+        print(compare(liTri, liDat))
+        # with open(output, 'a') as f:
+        #     f.write(str(compare(liTri, liDat)) + '\n')
