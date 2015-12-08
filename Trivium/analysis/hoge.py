@@ -3,43 +3,51 @@
 
 
 import re
+import time
 
 
 TRIVIUM = []
 DATA = []
-raw_key = ['06070809000000000000',
-           '112a4370000000000000',
-           '21134a33000000000000',
-           '489db4b3000000000000',
-           '4ddfa569000000000000',
-           '5e019ed6000000000000',
-           '7bd23871000000000000',
-           '8c4effe0000000000000',
-           'a23c0791000000000000',
-           'ae505988000000000000',
-           'b34fdadf000000000000',
-           'd8b1e90d000000000000',
-           'db108386000000000000',
-           'df794c1f000000000000',
-           'f25ceb0e000000000000',
-           'f315f97c000000000000']
-raw_iv = '4089d544000000000000'
-files = ['./1204data/06070809key.prn',
-         './1204data/112a4370key.prn',
-         './1204data/21134a33key.prn',
-         './1204data/489db4b3key.prn',
-         './1204data/4ddfa569key.prn',
-         './1204data/5e019ed6key.prn',
-         './1204data/7bd23871key.prn',
-         './1204data/8c4effe0key.prn',
-         './1204data/a23c0791key.prn',
-         './1204data/ae505988key.prn',
-         './1204data/b34fdadfkey.prn',
-         './1204data/d8b1e90dkey.prn',
-         './1204data/db108386key.prn',
-         './1204data/df794c1fkey.prn',
-         './1204data/f25ceb0ekey.prn',
-         './1204data/f315f97ckey.prn']
+raw_key = ['00000000000000000000',
+           'ffffffffffffffffffff']
+           # '06070809000000000000']
+# raw_key = ['00000000000000000000']
+           # '112a4370000000000000']
+           # '21134a33000000000000',
+           # '489db4b3000000000000',
+           # '4ddfa569000000000000',
+           # '5e019ed6000000000000',
+           # '7bd23871000000000000',
+           # '8c4effe0000000000000',
+           # 'a23c0791000000000000',
+           # 'ae505988000000000000',
+           # 'b34fdadf000000000000',
+           # 'd8b1e90d000000000000',
+           # 'db108386000000000000',
+           # 'df794c1f000000000000',
+           # 'f25ceb0e000000000000',
+           # 'f315f97c000000000000']
+raw_iv = 'ffffffffffffffffffff'
+# raw_iv = '00000000000000000000'
+files = ['./1207data/00000000000000000000key.prn',
+         './1207data/ffffffffffkey.prn']
+# files = ['./1207data/ffffffffffkey.prn']
+# files = ['./1204data/06070809key.prn',
+#          './1204data/112a4370key.prn']
+         # './1204data/21134a33key.prn',
+         # './1204data/489db4b3key.prn',
+         # './1204data/4ddfa569key.prn',
+         # './1204data/5e019ed6key.prn',
+         # './1204data/7bd23871key.prn',
+         # './1204data/8c4effe0key.prn',
+         # './1204data/a23c0791key.prn',
+         # './1204data/ae505988key.prn',
+         # './1204data/b34fdadfkey.prn',
+         # './1204data/d8b1e90dkey.prn',
+         # './1204data/db108386key.prn',
+         # './1204data/df794c1fkey.prn',
+         # './1204data/f25ceb0ekey.prn',
+         # './1204data/f315f97ckey.prn']
 
 
 def dataFunc(files, num):
@@ -137,12 +145,15 @@ def compare(Triv, Data):
 
 
 if __name__ == "__main__":
-    cycle = 150
+    start = time.time()
+    scycle = 100
+    ecycle = 250
     output = 'output.txt'
-    for i in range(145, cycle):
+    for i in range(scycle, ecycle):
         print(i)
         TRIVIUM = triviumFunc(raw_key, raw_iv, i)
         liTri = makeList(TRIVIUM)
+        # print(liTri)
         # print(len(liTri[0]))
         print('finish Trivium')
         DATA = dataFunc(files, i)
@@ -153,3 +164,5 @@ if __name__ == "__main__":
         print(compare(liTri, liDat))
         # with open(output, 'a') as f:
         #     f.write(str(compare(liTri, liDat)) + '\n')
+    elapsed_time = time.time() - start
+    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
