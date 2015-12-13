@@ -51,6 +51,7 @@ always @(posedge CLK) begin
         if(!EncDec) begin
             if(!BSYrg) begin
                 if(Krdy) begin
+                    SET     = 0;
                     SET    <= {3'b111, 205'b0, li_key};
                     Kvldrg <= 1;
                 end else if(Drdy) begin
