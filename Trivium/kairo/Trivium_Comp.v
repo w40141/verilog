@@ -22,6 +22,7 @@ reg [287:0] SET;
 reg t1, t2, t3;
 reg BSYrg, Kvldrg, Dvldrg;
 reg [127:0]Doutrg;
+reg [79:0] reKey;
 // reg [4095:0]Doutrg;
 // reg Doutrg;
 
@@ -51,15 +52,16 @@ always @(posedge CLK) begin
         if(!EncDec) begin
             if(!BSYrg) begin
                 if(Krdy) begin
-                    SET     = 0;
-                    SET    <= {3'b111, 205'b0, li_key};
-                    Kvldrg <= 1;
+                    reKey = li_key;
+                    SET    = {3'b111, 205'b0, reKey};
+                    Kvldrg = 1;
                 end else if(Drdy) begin
                     BSYrg       <= 1;
                     SET[172:93] <= li_iv;
                 end
             end else begin
                 if(max < count) begin
+                    SET    <= {3'b111, 205'b0, reKey};
                     Dvldrg <= 1;
                     BSYrg  <= 0;
                     count  <= 0;

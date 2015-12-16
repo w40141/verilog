@@ -133,15 +133,17 @@ def makeList(liData):
 
 
 def compare(Triv, Data):
-    # ans = [['' for x in range(len(Triv))] for x in range(len(Triv))]
     ans = [[] for x in range(len(Triv))]
     for i in range(len(Triv)):
         for k in range(len(Data)):
             if Triv[i] == Data[k]:
-                # ans[i] = ans[i] + str(k) + ', '
                 ans[i].append(str(k))
-                # print(str(i) + 'find: ' + str(k))
     return ans
+
+
+def checkList(li):
+    # if :
+        # pass
 
 
 if __name__ == "__main__":
@@ -153,13 +155,9 @@ if __name__ == "__main__":
         print(i)
         TRIVIUM = triviumFunc(raw_key, raw_iv, i)
         liTri = makeList(TRIVIUM)
-        # print(liTri)
-        # print(len(liTri[0]))
         print('finish Trivium')
         DATA = dataFunc(files, i)
-        # print(DATA)
         liDat = makeList(DATA)
-        # print(len(liDat[0]))
         print('finish DATA')
         print(compare(liTri, liDat))
         # with open(output, 'a') as f:
