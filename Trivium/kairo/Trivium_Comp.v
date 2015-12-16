@@ -53,11 +53,12 @@ always @(posedge CLK) begin
             if(!BSYrg) begin
                 if(Krdy) begin
                     reKey = li_key;
-                    SET    = {3'b111, 205'b0, reKey};
                     Kvldrg = 1;
                 end else if(Drdy) begin
                     BSYrg       <= 1;
-                    SET[172:93] <= li_iv;
+                    // SET    = {3'b111, 205'b0, reKey};
+                    SET = {3'b111, 112'b0, li_iv, 13'b0, reKey};
+                    // SET[172:93] <= li_iv;
                 end
             end else begin
                 if(max < count) begin
