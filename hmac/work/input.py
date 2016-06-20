@@ -2,7 +2,11 @@
 
 
 import binascii
-import struct
+
+
+WORD = 8
+LENGTH = 16
+M_LENGTH = 128
 
 
 def split_str(s, n):
@@ -10,42 +14,46 @@ def split_str(s, n):
     return v
 
 
-def append_length(message):
-    m_len = len(message)
-    print(message)
-    n_hex = hex(m_len - 1).replace('x', '').zfill(16)
-    print(n_hex)
-    message_append_length = zero_padded(message) + n_hex
-    return message_append_length
+def append_length(m):
+    m_len = (len(m) - 1) * 4
+    n_hex = hex(m_len).replace('x', '').zfill(LENGTH)
+    m_append_length = zero_padded(m) + n_hex
+    return m_append_length
 
 
-def zero_padded(message):
-    message_tmp = message.replace("'", '80')
-    m_len = len(message_tmp)
-    if m_len <= 60:
-        message_padded = message_tmp.ljust(60 - m_len, '0')
-        print(message_padded + ',')
-    else:
-        m_len_tmp = m_len // 64
-        print(m_len_tmp)
-        message_padded = message_tmp.ljust(64 * m_len_tmp + 60, '0')
-    return message_padded
+def zero_padded(m):
+    m_tmp = m.replace("'", '80')
+    count = (len(m_tmp) // M_LENGTH+ 1)
+    m_len = M_LENGTH * count - LENGTH
+    m_padded = m_tmp.ljust(m_len, '0')
+    return m_padded
+
+
+def bit_stream(m):
+    m = '0x' + m
+    m_hex = hex(int(m, 16))
+    m_bin = bin(hex)
+    bit = m_bin.replace('0b', '').zfill(32)
+    return bit
 
 
 def i_padding_message():
     m=[[]]
-    message = input('Input message> ')
-    message_init = str(binascii.hexlify(message.encode()))[2:]
-    print(message_init)
-    print(append_length(message_init))
-    # message_str = str(message_int)
-    # m_len_hex = hex(m_len).replace('x', '').zfill(16)
-    # print(message_str + m_len_hex)
-    # le = len(hex_message)
-    # counter = le / LENGTH
-    # for i in range(0, counter+1):
-    # padding_message = [hex_message[i:i+4] for i in range(0, le, 4)]
-    # return padding_message
+    m = input('Input message> ')
+    m_init = str(binascii.hexlify(m.encode()))[2:]
+    m_padded = append_length(m_init)
+    m_list = split_str(m_padded, M_LENGTH)
+    return m_list
 
 
-print(i_padding_message())
+def word_split(m):
+    vi = []
+    print(m)
+    print(len(m))
+    for i in m:
+        v = split_str(i, 8)
+        vi.append(v)
+    return vi
+
+
+print(word_split(i_padding_message()))
