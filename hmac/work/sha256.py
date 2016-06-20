@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-def init():
+def __init__():
     """initial"""
     num = input('input number: ')
     int_num = int(num)
