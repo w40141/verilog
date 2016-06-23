@@ -10,6 +10,25 @@ LENGTH = 16
 M_LENGTH = 128
 
 
+def chain(reg_list):
+    scanchain = [[0 for i in range(list)] for j in range(list[0])]
+    for i, cyc_reg in enumerate(reg_list):
+        for j, one_reg in enumerate(cyc_reg):
+            scanchain[i][j] = one_reg
+    return scanchain
+
+
+def conpare_reg(reg_list):
+    for i in :
+        pass
+
+
+def int2bin(num):
+    num_bin = bin(num)
+    num_bin = num.replace('0b', '')
+    num_zero = num_bin.zfill(32)
+
+
 # hogehogehoge -> [ho, ge, ho, ge, ho, ge]
 def split_str(s, n):
     v = [s[i:i+n] for i in range(0, len(s), n)]

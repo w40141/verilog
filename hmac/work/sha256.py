@@ -13,7 +13,8 @@ M_LENGTH = 128
 
 class SHA256():
 
-    def __init__(self):
+
+    def __init__(self):# {{{
         self.value_H = [0] * 8
         self.t1 = 0
         self.t2 = 0
@@ -44,8 +45,11 @@ class SHA256():
                   0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
                   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
                   0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
+        self.register = []
+# }}}
 
 
+# function {{{
     def get_H(self, flag):
         if flag :
             message = imput('input H value > ')
@@ -60,6 +64,7 @@ class SHA256():
         self._W_schedule(block)
         self._input_digest()
         for i in range(64):
+            self._restore_reg()
             self._sha256_round(i)
         self._update_digest()
 
@@ -160,10 +165,33 @@ class SHA256():
         return (n >> r)
 
 
-    def _print_reg():
-        print("0x%08x, 0x%08x, 0x%08x, 0x%08x 0x%08x, 0x%08x, 0x%08x, 0x%08x" %\
-                (self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h))
-        print("")
+    # def _print_reg(self):
+    #     print("0x%08x, 0x%08x, 0x%08x, 0x%08x 0x%08x, 0x%08x, 0x%08x, 0x%08x" %\
+    #             (self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h))
+    #     print("")
+
+# }}}
+
+
+    def _restore_reg(self):
+        bin_a = int2bin(self.a)
+        bin_b = int2bin(self.b)
+        bin_c = int2bin(self.c)
+        bin_d = int2bin(self.d)
+        bin_e = int2bin(self.e)
+        bin_f = int2bin(self.f)
+        bin_g = int2bin(self.g)
+        bin_h = int2bin(self.h)
+        reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
+        list_reg = split_str(reg, 1)
+        self.register.append(list_reg)
+
+
+def int2bin(num):
+    num_bin = bin(num)
+    num_bin = num_bin.replace('0b', '')
+    num_zero = num_bin.zfill(32)
+    return num_zero
 
 
 def print_digest(digest):
@@ -183,24 +211,27 @@ def compare_digests(digest, expected):
         print("Test case ok.")
 
 
-def hmac_mode():
-    flag = int(input('select hmac mode\n0 -> SHA256, else -> hmac :'))
-    return flag
-
-
 def sha256_tests():
     my_sha256 = SHA256();
     message = input('Input message > ')
     hash_origin = make_hash(message)
     block = word_split(message_input(message))
-    flag = hmac_mode()
-    my_sha256.get_H(flag)
+    # flag = hmac_mode()
+    # my_sha256.get_H(flag)
+    my_sha256.get_H(0)
     for i in block:
-        print(i)
         my_sha256.rotation(i)
     my_hash = my_sha256.get_digest()
+    scanchain = chain(my_sha256.register)
+    print(scanchain)
     compare_digests(my_hash, hash_origin)
     print("")
+
+
+# {{{
+def hmac_mode():
+    flag = int(input('select hmac mode\n0 -> SHA256, else -> hmac :'))
+    return flag
 
 
 def make_hash(m):
@@ -239,6 +270,16 @@ def word_split(m):
         vi.append(v)
     return vi
 
+
+def chain(reg_list):
+    scanchain = [[0 for i in range(len(reg_list))] for j in range(len(reg_list[0]))]
+    for i, cyc_reg in enumerate(reg_list):
+        for j, one_reg in enumerate(cyc_reg):
+            scanchain[j][i] = one_reg
+    return scanchain
+
+
+# }}}
 
 def main():
     print("---------------------------------")
