@@ -18,9 +18,27 @@ def chain(reg_list):
     return scanchain
 
 
-def conpare_reg(reg_list):
-    for i in :
-        pass
+def compare_reg(reg_list):
+    num = [i for i in range(len(reg_list))]
+    series = []
+    for i, src_reg in enumerate(reg_list):
+        for j, dst_reg in enumerate(reg_list):
+            if src_reg[:-1] == dst_reg[1:]:
+                series.append([i, j])
+    return series
+
+
+def find_series(series):
+    fin_ser = []
+    for i in series:
+        for j in series:
+            if i[-1] == j[0]:
+                tmp = i+j
+                tmp.remove(i[-1])
+                i = tmp
+        fin_ser.append(tmp)
+    return fin_ser
+
 
 
 def int2bin(num):
@@ -33,6 +51,20 @@ def int2bin(num):
 def split_str(s, n):
     v = [s[i:i+n] for i in range(0, len(s), n)]
     return v
+
+
+def divide_word_case(reg_list):
+    reg = []
+    for i in reg_list:
+        reg = divide64(i)
+    return reg
+
+
+def divide64(reg_list):
+    reg = []
+    for i in range(0, len(reg_list), 64):
+        reg.append(reg_list[i:i+64])
+    return reg
 
 
 def split_str2int(s, n):

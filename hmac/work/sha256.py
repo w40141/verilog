@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 # {{{
 # -*- coding: utf-8 -*-
 import sys
 import binascii
@@ -8,7 +8,7 @@ import hashlib
 WORD = 8
 LENGTH = 16
 M_LENGTH = 128
-
+# }}}
 
 
 class SHA256():
@@ -170,8 +170,6 @@ class SHA256():
     #             (self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h))
     #     print("")
 
-# }}}
-
 
     def _restore_reg(self):
         bin_a = int2bin(self.a)
@@ -185,6 +183,35 @@ class SHA256():
         reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str(reg, 1)
         self.register.append(list_reg)
+# }}}
+
+
+def sha256_tests(message, flag):
+    my_sha256 = SHA256();
+    hash_origin = make_hash(message)
+    block = word_split(message_input(message))
+    my_sha256.get_H(flag)
+    for i in block:
+        my_sha256.rotation(i)
+    my_hash = my_sha256.get_digest()
+    compare_digests(my_hash, hash_origin)
+    return my_sha256.register
+
+
+# {{{
+
+
+def fun_input():
+    # message = input('input message > ')
+    # flag = hmac_mode()
+    return message, flag
+
+
+def compare_digests(digest, expected):
+    if (digest != expected):
+        print("Error:")
+    else:
+        print("Test case ok.")
 
 
 def int2bin(num):
@@ -194,41 +221,6 @@ def int2bin(num):
     return num_zero
 
 
-def print_digest(digest):
-    print("0x%08x, 0x%08x, 0x%08x, 0x%08x 0x%08x, 0x%08x, 0x%08x, 0x%08x" %\
-          (digest[0], digest[1], digest[2], digest[3], digest[4], digest[5], digest[6], digest[7]))
-    print("")
-
-
-def compare_digests(digest, expected):
-    if (digest != expected):
-        print("Error:")
-        print("Got:")
-        print_digest(digest)
-        print("Expected:")
-        print_digest(expected)
-    else:
-        print("Test case ok.")
-
-
-def sha256_tests():
-    my_sha256 = SHA256();
-    message = input('Input message > ')
-    hash_origin = make_hash(message)
-    block = word_split(message_input(message))
-    # flag = hmac_mode()
-    # my_sha256.get_H(flag)
-    my_sha256.get_H(0)
-    for i in block:
-        my_sha256.rotation(i)
-    my_hash = my_sha256.get_digest()
-    scanchain = chain(my_sha256.register)
-    print(scanchain)
-    compare_digests(my_hash, hash_origin)
-    print("")
-
-
-# {{{
 def hmac_mode():
     flag = int(input('select hmac mode\n0 -> SHA256, else -> hmac :'))
     return flag
@@ -272,20 +264,116 @@ def word_split(m):
 
 
 def chain(reg_list):
-    scanchain = [[0 for i in range(len(reg_list))] for j in range(len(reg_list[0]))]
-    for i, cyc_reg in enumerate(reg_list):
-        for j, one_reg in enumerate(cyc_reg):
-            scanchain[j][i] = one_reg
-    return scanchain
+    orig = []
+    for x in reg_list:
+        scanchain = [[0 for i in range(len(x))] for j in range(len(x[0]))]
+        for i, cyc_reg in enumerate(x):
+            for j, one_reg in enumerate(cyc_reg):
+                scanchain[j][i] = one_reg
+        orig.append(scanchain)
+    return orig
+
+
+def compare_reg(reg_list):
+    num = [i for i in range(len(reg_list))]
+    series = []
+    for i, src_reg in enumerate(reg_list):
+        for j, dst_reg in enumerate(reg_list):
+            if src_reg[:-1] == dst_reg[1:]:
+                series.append([i, j])
+    return series
+
+
+def find_series(series):
+    # series.sort()
+    fin_ser = []
+    for ser in series:
+        count = 0
+        while count < len(series):
+            if ser[-1] == series[count][0]:
+                ser = ser + series[count]
+                ser.remove(series[count][0])
+                series.remove(series[count])
+                count = 0
+            count += 1
+        fin_ser.append(ser)
+    return fin_ser
+
+
+def first_step(reg):
+    set_ser = []
+    for i in reg:
+        series = compare_reg(i)
+        ser = find_series(series)
+        set_ser.append(ser)
+    return set_ser[0]
+
+
+def extract_first_bit(reg, set_ser):
+    revers_bit = []
+    stream_first = [x[0] for x in set_ser]
+    stream_first.sort()
+    for i in reg:
+        tmp = []
+        for j in stream_first:
+            tmp.append(i[j])
+        revers_bit.append(tmp)
+    return revers_bit
 
 
 # }}}
 
-def main():
-    print("---------------------------------")
-    print("start")
 
-    sha256_tests()
+def com_list(orig_li, dst_li):
+    diff_bit = []
+    for i in range(len(orig_li)):
+        if orig_li[i] != dst_li[i]:
+            diff_bit.append(i)
+    return diff_bit
+
+
+def double_com_list(orig_li, dst_li):
+    revers_bit = []
+    for i in range(len(orig_li)):
+        revers_bit.append(com_list(orig_li[i], dst_li[i]))
+    return revers_bit
+
+
+def find_reverse_bit(revers_bit):
+    origan = revers_bit[0]
+    destination = revers_bit[1:]
+    rev_bit = []
+    for dst_reg in destination:
+        rev_bit.append(double_com_list(origan, dst_reg))
+    return rev_bit
+
+
+def second_step(reg, set_ser):
+    first_bit = extract_first_bit(reg, set_ser)
+    diff_bit = find_reverse_bit(first_bit)
+    print(diff_bit)
+
+
+
+def main():
+    print("start")
+    register = []
+    fi = open('text.txt', 'r')
+    lines = fi.readlines()
+    # input_flag = int(input('count: '))
+    # for i in range(input_flag):
+    for message in lines:
+        message = message.replace('\n', '')
+        print(message)
+        # message, flag = fun_input()
+        # message = 'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'
+        flag = 0
+        reg = sha256_tests(message, flag)
+        register.append(reg)
+    fi.close
+    scanchain = chain(register)
+    data = first_step(scanchain)
+    second_step(scanchain, data)
 
 
 if __name__=="__main__":
