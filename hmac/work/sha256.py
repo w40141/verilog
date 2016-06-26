@@ -283,7 +283,6 @@ def message_input(m):
     return m_list
 
 
-# origan
 def word_split(m):
     vi = []
     for i in m:
@@ -292,14 +291,6 @@ def word_split(m):
     return vi
 
 
-# test
-# def word_split(m):
-#     for i in m:
-#         v = split_str2int(i, 8)
-#     return v
-
-
-# orig
 def convert(reg_list):
     orig = []
     for reg_li in reg_list:
@@ -369,7 +360,6 @@ def com_list(orig_li, dst_li, stream_first):
     return diff_bit
 
 
-# def com_double_list(orig_reg, dst_reg, stream_first, hamming):
 def com_double_list(orig_reg, dst_reg, stream_first):
     diff_bit_class = []
     for i in range(len(orig_reg)):
@@ -402,10 +392,6 @@ def find_reverse_bit(first_bit_stream, stream_first, bin_w):
     return diff_bit_class
 
 
-# }}}
-
-
-# group_bit = second_step(register, flow_data)
 def second_step(register, flow_data, bin_w):
     first_bit_stream, stream_first = extract_first_bit(register, flow_data)
     diff_bit = find_reverse_bit(first_bit_stream, stream_first, bin_w)
@@ -449,7 +435,11 @@ def group(diff_li):
     return group_bit
 
 
+# }}}
+
+
 # {{{
+
 
 def find_flow(flow_data, g):
     for f in flow_data:
@@ -495,6 +485,7 @@ def s_i(scan, i):
 #     s25 = scan[]
 #     return t1
 
+
 def third_step(scan, g_bit, flow_data, W):
     # K value{{{
     K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -514,6 +505,8 @@ def third_step(scan, g_bit, flow_data, W):
          0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
          0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
     # }}}
+
+
     g_bit.reverse()
     for group in g_bit:
         for g in group:
@@ -529,7 +522,7 @@ def analysis(register, bin_w):
     group_bit = second_step(register, flow_data, bin_w)
     print('second step finished')
     # print(group_bit)
-    # third_step(scanchain[0], group_bit, W)
+    third_step(scanchain[0], group_bit, bin_w)
 
 
 # }}}
