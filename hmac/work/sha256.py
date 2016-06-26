@@ -62,9 +62,6 @@ class SHA256(): # {{{
         self._W_schedule(block)
         self._input_digest()
         for i in range(64):
-            # if i < 10:
-            #     print(int2bin(self.w))
-            #     self._print_reg()
             self._restore_reg()
             self._sha256_round(i)
         self._update_digest()
@@ -220,22 +217,16 @@ def sha256_tests(message, flag):
     for i in block:
         my_sha256.rotation(i)
         my_sha256._W_schedule(i)
-    return my_sha256.register, block
+    return my_sha256.register, block[0]
 
 
 # {{{
 
 
-# def compare_digests(digest, expected):
-#     if (digest != expected):
-#         print("Error:")
-#     else:
-#         print("Test case ok.")
-
-
 def int2bin(num):
-    num_bin = bin(num)
-    num_bin = num_bin.replace('0b', '')
+    # num_bin = bin(num)
+    # num_bin = num_bin.replace('0b', '')
+    num_bin = format(num, 'b')
     num_zero = num_bin.zfill(32)
     return num_zero
 
@@ -261,6 +252,24 @@ def split_str2int(s, n):
     return v
 
 
+def make_message():
+    li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
+    org = 'qqqq'
+    message = []
+    for i in li:
+        src = ''
+        dst = ''
+        for j in range(4):
+            src = org
+            dst = org[:j] + i + org[j+1:]
+            for k in range(8):
+                message.append(src)
+                message.append(dst)
+                src = org + src
+                dst = org + dst
+    return message
+
+
 def message_input(m):
     m_init = str(binascii.hexlify(m.encode()))[2:]
     m_len = (len(m_init) - 1) * 4
@@ -274,6 +283,7 @@ def message_input(m):
     return m_list
 
 
+# origan
 def word_split(m):
     vi = []
     for i in m:
@@ -282,29 +292,23 @@ def word_split(m):
     return vi
 
 
+# test
+# def word_split(m):
+#     for i in m:
+#         v = split_str2int(i, 8)
+#     return v
+
+
 # orig
 def convert(reg_list):
     orig = []
-    for x in reg_list:
-        scanchain = [[0 for i in range(len(x))] for j in range(len(x[0]))]
-        for i, cyc_reg in enumerate(x):
+    for reg_li in reg_list:
+        scanchain = [[0 for i in reg_li] for j in reg_li[0]]
+        for i, cyc_reg in enumerate(reg_li):
             for j, one_reg in enumerate(cyc_reg):
                 scanchain[j][i] = int(one_reg)
         orig.append(scanchain)
     return orig
-
-
-# test
-# def convert(reg_list):
-#     # orig = []
-#     scanchain = [[0 for i in range(len(reg_list))] for j in range(len(reg_list[0]))]
-#     for i, cyc_reg in enumerate(reg_list):
-#         for j, one_reg in enumerate(cyc_reg):
-#             scanchain[j][i] = one_reg
-#     # orig.append(scanchain)
-#     # return orig
-#     # print(scanchain)
-#     return scanchain
 
 
 def compare_reg(reg_list):
@@ -318,7 +322,6 @@ def compare_reg(reg_list):
 
 # orig
 def find_series(series):
-    # series.sort()
     fin_ser = []
     for ser in series:
         count = 0
@@ -348,58 +351,6 @@ def first_step(reg):
     return set_ser[0]
 
 
-# #orig
-# def first_step(reg):
-#     series = compare_reg(reg)
-#     ser = find_series(series)
-#     return ser
-
-
-# }}}
-
-
-# orig
-# def com_list(org_li, dst_li, ser):
-#     diff = [ser[i] for i in range(len(org_li)) if org_li[i] != dst_li[i]]
-#     return diff
-
-
-# test
-def com_list(orig_li, dst_li, stream_first):
-    diff_bit = []
-    for i, num in enumerate(stream_first):
-        if orig_li[i] != dst_li[i]:
-            diff_bit.append(num)
-    return diff_bit
-
-
-def com_double_list(orig_reg, dst_reg, stream_first):
-    diff_bit_class = []
-    for i in range(len(orig_reg)):
-        diff_bit_class.append(com_list(orig_reg[i], dst_reg[i], stream_first))
-    return diff_bit_class
-
-
-def find_reverse_bit(first_bit_stream, stream_first):
-    diff_bit_class = []
-    for i in range(0, len(first_bit_stream), 2):
-        origan = first_bit_stream[i]
-        destin = first_bit_stream[i+1]
-        diff_bit_class.append(com_double_list(origan, destin, stream_first))
-        # diff_bit_class.append(com_list(origan[1], destin[1], stream_first))
-        # print(rev_bit)
-    return diff_bit_class
-
-
-# group_bit = second_step(register, flow_data)
-def second_step(register, flow_data):
-    first_bit_stream, stream_first = extract_first_bit(register, flow_data)
-    diff_bit = find_reverse_bit(first_bit_stream, stream_first)
-    print(diff_bit)
-    # g_bit = group(diff_bit)
-    # return g_bit
-
-
 def extract_first_bit(register, flow_data):
     first_bit_stream = []
     stream_first = [x[0] for x in flow_data]
@@ -410,13 +361,91 @@ def extract_first_bit(register, flow_data):
     return first_bit_stream, stream_first
 
 
-def group(diff):
+def com_list(orig_li, dst_li, stream_first):
+    diff_bit = []
+    for i, num in enumerate(stream_first):
+        if orig_li[i] != dst_li[i]:
+            diff_bit.append(num)
+    return diff_bit
+
+
+# def com_double_list(orig_reg, dst_reg, stream_first, hamming):
+def com_double_list(orig_reg, dst_reg, stream_first):
+    diff_bit_class = []
+    for i in range(len(orig_reg)):
+        com = com_list(orig_reg[i], dst_reg[i], stream_first)
+        if len(com) != 0:
+            break
+    return com
+
+
+def hamming(num_li0, num_li1):
+    for i in range(len(num_li0)):
+        xor = format(num_li0[i] ^ num_li1[i], 'b')
+        if xor != '0':
+            xor = xor.zfill(32)
+            for j, letter in enumerate(xor):
+                if letter == '1':
+                    num = j
+            break
+    return num
+
+
+def find_reverse_bit(first_bit_stream, stream_first, bin_w):
+    diff_bit_class = [[j] for j in range(32)]
+    for i in range(0, len(first_bit_stream), 2):
+        origan = first_bit_stream[i]
+        destin = first_bit_stream[i+1]
+        num_hamming = hamming(bin_w[i], bin_w[i+1])
+        tmp = com_double_list(origan, destin, stream_first)
+        diff_bit_class[num_hamming].append(tmp)
+    return diff_bit_class
+
+
+# }}}
+
+
+# group_bit = second_step(register, flow_data)
+def second_step(register, flow_data, bin_w):
+    first_bit_stream, stream_first = extract_first_bit(register, flow_data)
+    diff_bit = find_reverse_bit(first_bit_stream, stream_first, bin_w)
+    g_bit = group(diff_bit)
+    print(g_bit)
+    return g_bit
+
+
+def find_bit(diff_li, already_bit):
+    candidate_bit = set()
+    a_bit = already_bit
+    for d_li in diff_li:
+        d_set = set(d_li)
+        if len(candidate_bit) == 0:
+            candidate_bit = d_set
+        else:
+            candidate_bit = candidate_bit & d_set
+        a_bit = a_bit | d_set
+    return candidate_bit, a_bit
+
+
+def find_else_bit(already_bit, group_bit):
+    else_bit = already_bit
+    for g_bit in group_bit:
+        if type(g_bit) == set:
+            else_bit -= g_bit
+    return else_bit
+
+
+def group(diff_li):
     already_bit = set()
-    group_bit = []
-    for i in diff:
-        i_set = set(i)
-        group_bit.append(list(i_set.difference(already_bit)))
-        already_bit = already_bit.union(i_set)
+    group_bit = ['0' for i in diff_li]
+    for diff in diff_li:
+        number = diff[0]
+        d_li = diff[1:]
+        if number % 8 != 0:
+            cnd_bit, already_bit = find_bit(d_li, already_bit)
+            group_bit[number] = cnd_bit
+            if (number + 1) % 8 == 0:
+                group_bit[number - 7] = find_else_bit(already_bit, group_bit)
     return group_bit
 
 
@@ -489,33 +518,32 @@ def third_step(scan, g_bit, flow_data, W):
     for group in g_bit:
         for g in group:
             flow = find_flow(flow_data, g)
-# }}}
 
 
-def main():
-
-    # hash function{{{
-    register = []
-    fi = open('text.txt', 'r')
-    lines = fi.readlines()
-    bin_w = [0] * len(lines)
-    for i, message in enumerate(lines):
-        message = message.replace('\n', '')
-        flag = 0
-        reg, bin_w[i] = sha256_tests(message, flag)
-        register.append(reg)
-    fi.close
-    # }}}
-
+def analysis(register, bin_w):
     print('Analysis start')
     scanchain = convert(register)
     print('convert register data finished')
     flow_data = first_step(scanchain)
     print('first step finished')
-    group_bit = second_step(register, flow_data)
+    group_bit = second_step(register, flow_data, bin_w)
     print('second step finished')
     # print(group_bit)
     # third_step(scanchain[0], group_bit, W)
+
+
+# }}}
+
+
+def main():
+    lines = make_message()
+    register = []
+    bin_w = [0] * len(lines)
+    flag = 0
+    for i, message in enumerate(lines):
+        reg, bin_w[i] = sha256_tests(message, flag)
+        register.append(reg)
+    analysis(register, bin_w)
 
 
 if __name__=="__main__":
