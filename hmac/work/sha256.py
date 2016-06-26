@@ -27,7 +27,7 @@ class SHA256(): # {{{
         self.g = 0
         self.h = 0
         self.w = 0
-        self.W = [0] * 16
+        self.W = [0] * 64
         self.k = 0
         self.K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
                   0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -112,11 +112,13 @@ class SHA256(): # {{{
         if (round < 16):
             return self.W[round]
         else:
-            tmp_w = (self._delta1(self.W[14]) + self.W[9] + self._delta0(self.W[1]) + self.W[0]) & 0xffffffff
-            for i in range(15):
-                self.W[i] = self.W[(i+1)]
-            self.W[15] = tmp_w
-            return tmp_w
+            self.W[round] = (self._delta1(self.W[round - 2]) + self.W[round - 7] + self._delta0(self.W[round -15]) + self.W[round - 16]) & 0xffffffff
+            # tmp_w = (self._delta1(self.W[14]) + self.W[9] + self._delta0(self.W[1]) + self.W[0]) & 0xffffffff
+            # for i in range(15):
+            #     self.W[i] = self.W[(i+1)]
+            # self.W[15] = tmp_w
+            # return tmp_w
+            return self.W[round]
 
 
     def _W_schedule(self, block):
@@ -185,6 +187,7 @@ class SHA256(): # {{{
         bin_h = int2bin(self.h)
         reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str2int(reg, 1)
+        self.register.append(list_reg)
         # rand = [252,   4, 126, 176,  46,  59, 130,  14,  53, 185,   1,  34, 118,  62, 154, 234,
         #         129, 156,  88,  93, 163,  22,  24, 222, 146, 110, 125, 253,  75,  85,  32,  54,
         #         202, 109, 105, 169,  56,  20, 228, 181,  10, 178,  77, 115,  50,  86, 104,  19,
@@ -203,7 +206,6 @@ class SHA256(): # {{{
         #         165, 210, 246, 145, 153, 230, 219, 251, 150, 101, 190, 139, 207,  78,   5,  25]
         # tmp_reg = [list_reg[x] for x in rand]
         # self.register.append(tmp_reg)
-        self.register.append(list_reg)
 
 
 # }}}
@@ -217,7 +219,8 @@ def sha256_tests(message, flag):
     for i in block:
         my_sha256.rotation(i)
         my_sha256._W_schedule(i)
-    return my_sha256.register, block[0]
+    # return my_sha256.register, block[0]
+    return my_sha256.register, my_sha256.W
 
 
 # {{{
@@ -396,8 +399,8 @@ def second_step(register, flow_data, bin_w):
     first_bit_stream, stream_first = extract_first_bit(register, flow_data)
     diff_bit = find_reverse_bit(first_bit_stream, stream_first, bin_w)
     g_bit = group(diff_bit)
-    print(g_bit)
-    return g_bit
+    g_bit_li = set2list(g_bit)
+    return g_bit_li
 
 
 def find_bit(diff_li, already_bit):
@@ -435,18 +438,24 @@ def group(diff_li):
     return group_bit
 
 
+def set2list(group_bit):
+    group = []
+    for i in group_bit:
+        tmp = list(i)
+        group.append(tmp)
+    group.reverse()
+    return group
+
+
 # }}}
-
-
-# {{{
 
 
 def find_flow(flow_data, g):
     for f in flow_data:
         if g == f[0]:
-            grope_e = f
+            group_flow = f
             break
-    return grope_e
+    return group_flow
 
 
 def sigma(s6, s13, s25):
@@ -463,30 +472,57 @@ def ch(e, f, g):
     return ch
 
 
+def cal_next_e(d_li, h_li, ch_li, sigma_li, kw_li, carry_li):
+    next_e = [0 for i in range(len(h_li))]
+    for i in range(len(h_li)):
+        tmp = d_li[i] + h_li[i] + sigma_li[i] + ch_li[i] + kw_li[i] + carry_li[i]
+        next_e[i] = tmp & 1
+        carry[i] = tmp & 2
+    return next_e, carry
+
+
 def com_e(next_e, e):
     if next_e[:-1] == e[1:]:
         flag = 1
     return flag
 
 
-def s_i(scan, i):
+def cal(scan, group_li, flow_data, kw_li, carry, reg_li):
+    next_e = [0] * 64
+    for i in range(len(group_li)):
+        flow = find_flow(flow_data, group_li[i])
+        d_li = scan[group_li[i-1]]
+        e_li = scan[flow[0]]
+        f_li = scan[flow[1]]
+        g_li = scan[flow[2]]
+        h_li = scan[flow[3]]
+        ch_li = ch(e_li, f_li, g_li)
+        s6_li = g_bit[(6 + i) % 32]
+        s11_li = g_bit[(11 + i) % 32]
+        s25_li = g_bit[(25 + i) % 32]
+        for s6 in s6_li:
+            s6_data = scan[s6]
+            for s11 in s11_li:
+                s11_data = scan[s11]
+                for s25 in s25_li:
+                    s25_data = scan[s25]
+                    sigma_li = sigma(s6_data, s11_data, s25_data)
+                    next_e_li, c_li = cal_e1(d_li, h_li, scan, flow, sigma_li, kw_li, carry)
+                    flag = com_e(next_e, )
+                    if flag:
 
-    return data
+    return t1
 
 
-# def cal_t1(flow_data, scan, k, w):
-#     t1 = []
-#     e_li = scan[flow_data[0]]
-#     f_li = scan[flow_data[1]]
-#     g_li = scan[flow_data[2]]
-#     h_li = scan[flow_data[3]]
-#     s6 = scan[]
-#     s13 = scan[]
-#     s25 = scan[]
-#     return t1
+def kw(k_li, w_li):
+    kw=[]
+    for k, w in zip(k_li, w_li):
+        tmp = (k + w) & 0xffffffff
+        kw.append(split_str2(int2bin(tmp), 1))
+    return kw
 
 
-def third_step(scan, g_bit, flow_data, W):
+def third_step(scan, g_bit, flow_data, bin_w):
     # K value{{{
     K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
          0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -506,11 +542,13 @@ def third_step(scan, g_bit, flow_data, W):
          0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
     # }}}
 
+    kw_li = kw(k, bin_w)
+    carry = [0] * 64
 
-    g_bit.reverse()
+    # g_bit(32) -> group(2)
     for group in g_bit:
-        for g in group:
-            flow = find_flow(flow_data, g)
+        tmp = cal()
+        # flow([1, 2, 3, 4])
 
 
 def analysis(register, bin_w):
@@ -522,10 +560,8 @@ def analysis(register, bin_w):
     group_bit = second_step(register, flow_data, bin_w)
     print('second step finished')
     # print(group_bit)
-    third_step(scanchain[0], group_bit, bin_w)
-
-
-# }}}
+    third_step(scanchain[0], group_bit, flow_data, bin_w)
+    print('third step finished')
 
 
 def main():
@@ -535,6 +571,7 @@ def main():
     flag = 0
     for i, message in enumerate(lines):
         reg, bin_w[i] = sha256_tests(message, flag)
+        print(bin_w[i])
         register.append(reg)
     analysis(register, bin_w)
 
