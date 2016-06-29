@@ -71,6 +71,7 @@ class SHA256(): # {{{
 
 
     def _sha256_round(self, round):
+        # print('d    :{0:0>33b}'.format(self.d))
         self.k = self.K[round]
         self.w = self._next_w(round)
         self.t1 = self._T1(self.e, self.f, self.g, self.h, self.k, self.w)
@@ -91,7 +92,6 @@ class SHA256(): # {{{
         # print('t2   :{0:0>33b}'.format(self.t2))
         # print('e    :{0:0>33b}'.format(self.e))
         # print('left :{0:0>33b}'.format(self.left))
-        # print('a    :{0:0>33b}'.format(self.a))
         # print('d    :{0:0>33b}'.format(tmp_d))
         # print('right:{0:0>33b}'.format(self.right))
         # print("0x%08x, 0x%08x" %(self.left, self.right))
@@ -509,10 +509,19 @@ def cal_digit(bit_num, group_li, flow_data, scan):
                     sigma_li = sigma(s2_li, s13_li, s22_li)
                     t1_li = t1(sigma_li, maj_li)
                     et_li = cal_add(e_li, t1_li)
-                    print(ad_li)
+                    print(a_bit, s2_bit, s13_bit, s22_bit)
                     print(et_li)
                     if ad_li == et_li:
                         print('hoge')
+
+
+def cal_carry(li):
+    cal_li = []
+    carry_li = []
+    for i in li:
+        cal_li.append(i & 1)
+        carry_li.append(i & 14)
+    return cal_li, carry_li
 
 
 def make_abcd(scan, flow_data):
@@ -574,6 +583,7 @@ def main():
     # reg = sha256_tests(message, flag)
     # register.append(reg)
     for i, message in enumerate(lines):
+        print(message)
         reg, w[i] = sha256_tests(message, flag)
         register.append(reg)
     analysis(register, w)
