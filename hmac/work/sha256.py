@@ -92,7 +92,7 @@ class SHA256(): # {{{
         # print('e    :{0:0>33b}'.format(self.e))
         # print('left :{0:0>33b}'.format(self.left))
         # print('a    :{0:0>33b}'.format(self.a))
-        # print('d    :{0:0>33b}'.format(self.d))
+        # print('d    :{0:0>33b}'.format(tmp_d))
         # print('right:{0:0>33b}'.format(self.right))
         # print("0x%08x, 0x%08x" %(self.left, self.right))
 
@@ -457,23 +457,15 @@ def set2list(group_bit):
 # }}}
 
 
-# {{{
 def find_flow(bit_num, flow_data):
     for f in flow_data:
-        if bit_num == f[i]:
+        if bit_num == f[0]:
             break
     return f
 
 
 def get_scan(i, scan):
     return scan[i]
-
-
-def cal_sigma(s6, s11, s25, scan):
-    s6_li = get_scan(s6, scan)
-    s11_li = get_scan(s11, scan)
-    s25_li = get_scan(s25, scan)
-    return sigma(s6_li, s11_li, s25_li)
 
 
 def maj(a_li, b_li, c_li):
@@ -483,49 +475,44 @@ def maj(a_li, b_li, c_li):
     return maj
 
 
-def get_s(a_point, i, group_li):
-    return group_li[a_point - i]
-
-
 def sigma(s2_li, s13_li, s22_li):
     sigma_li = []
     for s2, s13, s22 in zip(s2_li, s13_li, s22_li):
-        sig.append(s2 ^ s13 ^ s22)
+        sigma_li.append(s2 ^ s13 ^ s22)
     return sigma_li
-
-
-def cal_sigma():
-
-
-def _T2(self, a, b, c):
-    return (self._sigma0(a) + self._Maj(a, b, c)) & 0xffffffff
 
 
 def t1(sigma_li, maj_li):
     t1_li = []
-    for sigma, maj in zip(sigma_li, maj_li):
-        t1.append(sigma + maj)
+    for s, m in zip(sigma_li, maj_li):
+        t1_li.append(s + m)
     return t1_li
 
 
-def cal_t1():
-    maj_li = maj(a_li, b_li, c_li)
-    sigma_li = sigma(s2, s13, s22)
-    return t1(sigma_li, maj_li)
-
-
-def cal_digit(bit_num, group_li, ):
-    group = group_li[bit_num]
+def cal_digit(bit_num, group_li, flow_data, scan):
+    a_group = group_li[bit_num]
     for i in range(2):
-        a_bit = group[i]
-        a_li = get_scan(scan, a_bit)
-        e_bit = group[1-i]
-        e_li = get_scan(scan, e_bit)
+        a_bit = a_group[i]
         a_bit_flow = find_flow(a_bit, flow_data)
-        b_li = get_scan(scan, a_bit_flow[1])
-        c_li = get_scan(scan, a_bit_flow[2])
-        d_li = get_scan(scan, a_bit_flow[3])
-        ad_li = cal_add(a_li, d_li)
+        dic_abcd = make_abcd(scan, a_bit_flow)
+        e_bit = a_group[1-i]
+        e_li = get_scan(e_bit, scan)
+        ad_li = cal_add(dic_abcd['a'], dic_abcd['d'])
+        maj_li = maj(dic_abcd['a'], dic_abcd['b'], dic_abcd['c'])
+        dic_si = make_si(bit_num, group_li)
+        for s2_bit in dic_si['s2']:
+            s2_li = get_scan(s2_bit, scan)
+            for s13_bit in dic_si['s13']:
+                s13_li = get_scan(s13_bit, scan)
+                for s22_bit in dic_si['s22']:
+                    s22_li = get_scan(s22_bit, scan)
+                    sigma_li = sigma(s2_li, s13_li, s22_li)
+                    t1_li = t1(sigma_li, maj_li)
+                    et_li = cal_add(e_li, t1_li)
+                    print(ad_li)
+                    print(et_li)
+                    if ad_li == et_li:
+                        print('hoge')
 
 
 def make_abcd(scan, flow_data):
@@ -533,22 +520,35 @@ def make_abcd(scan, flow_data):
     b = get_scan(flow_data[1], scan)
     c = get_scan(flow_data[2], scan)
     d = get_scan(flow_data[3], scan)
-    dic_efgh = {'a': a, 'b': b, 'c': c, 'd': d}
+    dic_abcd = {'a': a, 'b': b, 'c': c, 'd': d}
     return dic_abcd
 
+
+def get_s(num, i, group_li):
+    return group_li[num - i]
+
+
+def make_si(bit_num, group_li):
+    s2_group = get_s(bit_num, 2, group_li)
+    s13_group = get_s(bit_num, 13, group_li)
+    s22_group = get_s(bit_num, 22, group_li)
+    dic_si = {'s2': s2_group, 's13': s13_group, 's22': s22_group}
+    return dic_si
 
 
 def cal_add(one_li, two_li):
     add_li = []
     for one, two in zip(one_li[1:], two_li[:-1]):
-        add_li.append(onw + two)
+        add_li.append(one + two)
     return add_li
 
 
 def third_step(scan, group_li, flow_data):
+    cal_digit(31, group_li, flow_data, scan)
+    # for i in range(len(group_li)-1, -1, -1):
+    #     cal_digit(i, group_li, flow_data, scan)
     reg_li = 0
     return reg_li
-# }}}
 
 
 def analysis(register, bin_w):
