@@ -46,6 +46,8 @@ class SHA256(): # {{{
                   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
                   0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
         self.register = []
+        self.left = 0
+        self.right = 0
 
 
     def get_H(self, flag):
@@ -63,8 +65,36 @@ class SHA256(): # {{{
         self._input_digest()
         for i in range(64):
             self._restore_reg()
+            # self._print_reg()
             self._sha256_round(i)
         self._update_digest()
+
+
+    def _sha256_round(self, round):
+        self.k = self.K[round]
+        self.w = self._next_w(round)
+        self.t1 = self._T1(self.e, self.f, self.g, self.h, self.k, self.w)
+        self.t2 = self._T2(self.a, self.b, self.c)
+        tmp_d = self.d
+        self.h = self.g
+        self.g = self.f
+        self.f = self.e
+        self.e = (self.d + self.t1) &  0xffffffff
+        self.d = self.c
+        self.c = self.b
+        self.b = self.a
+        self.a = (self.t1 + self.t2) & 0xffffffff
+        self.left = self.e + self.t2 & 0xffffffff
+        self.right = self.a + tmp_d  & 0xffffffff
+        # print('t   :{0:0>33b}'.format(self.t2))
+        # print('t   :{0:0>33b}'.format(self.t2))
+        # print('t2   :{0:0>33b}'.format(self.t2))
+        # print('e    :{0:0>33b}'.format(self.e))
+        # print('left :{0:0>33b}'.format(self.left))
+        # print('a    :{0:0>33b}'.format(self.a))
+        # print('d    :{0:0>33b}'.format(self.d))
+        # print('right:{0:0>33b}'.format(self.right))
+        # print("0x%08x, 0x%08x" %(self.left, self.right))
 
 
     def get_digest(self):
@@ -93,31 +123,11 @@ class SHA256(): # {{{
         self.value_H[7] = (self.value_H[7] + self.h) & 0xffffffff
 
 
-    def _sha256_round(self, round):
-        self.k = self.K[round]
-        self.w = self._next_w(round)
-        self.t1 = self._T1(self.e, self.f, self.g, self.h, self.k, self.w)
-        self.t2 = self._T2(self.a, self.b, self.c)
-        self.h = self.g
-        self.g = self.f
-        self.f = self.e
-        self.e = (self.d + self.t1) &  0xffffffff
-        self.d = self.c
-        self.c = self.b
-        self.b = self.a
-        self.a = (self.t1 + self.t2) & 0xffffffff
-
-
     def _next_w(self, round):
         if (round < 16):
             return self.W[round]
         else:
             self.W[round] = (self._delta1(self.W[round - 2]) + self.W[round - 7] + self._delta0(self.W[round -15]) + self.W[round - 16]) & 0xffffffff
-            # tmp_w = (self._delta1(self.W[14]) + self.W[9] + self._delta0(self.W[1]) + self.W[0]) & 0xffffffff
-            # for i in range(15):
-            #     self.W[i] = self.W[(i+1)]
-            # self.W[15] = tmp_w
-            # return tmp_w
             return self.W[round]
 
 
@@ -219,16 +229,14 @@ def sha256_tests(message, flag):
     for i in block:
         my_sha256.rotation(i)
         my_sha256._W_schedule(i)
-    # return my_sha256.register, block[0]
     return my_sha256.register, my_sha256.W
+    # return my_sha256.register
 
 
 # {{{
 
 
 def int2bin(num):
-    # num_bin = bin(num)
-    # num_bin = num_bin.replace('0b', '')
     num_bin = format(num, 'b')
     num_zero = num_bin.zfill(32)
     return num_zero
@@ -335,7 +343,6 @@ def find_series(series):
     return fin_ser
 
 
-#orig
 def first_step(reg):
     set_ser = []
     for i in reg:
@@ -443,112 +450,105 @@ def set2list(group_bit):
     for i in group_bit:
         tmp = list(i)
         group.append(tmp)
-    group.reverse()
+    # group.reverse()
     return group
 
 
 # }}}
 
 
-def find_flow(flow_data, g):
+# {{{
+def find_flow(bit_num, flow_data):
     for f in flow_data:
-        if g == f[0]:
-            group_flow = f
+        if bit_num == f[i]:
             break
-    return group_flow
+    return f
 
 
-def sigma(s6, s13, s25):
-    sig = []
-    for i, j, k in s6, s13, s25:
-        sig.append(i ^ j ^ k)
-    return sig
+def get_scan(i, scan):
+    return scan[i]
 
 
-def ch(e, f, g):
-    ch = []
-    for i, j, k in e, f, g:
-        ch.append((i & j) ^ (~i & g))
-    return ch
+def cal_sigma(s6, s11, s25, scan):
+    s6_li = get_scan(s6, scan)
+    s11_li = get_scan(s11, scan)
+    s25_li = get_scan(s25, scan)
+    return sigma(s6_li, s11_li, s25_li)
 
 
-def cal_next_e(d_li, h_li, ch_li, sigma_li, kw_li, carry_li):
-    next_e = [0 for i in range(len(h_li))]
-    for i in range(len(h_li)):
-        tmp = d_li[i] + h_li[i] + sigma_li[i] + ch_li[i] + kw_li[i] + carry_li[i]
-        next_e[i] = tmp & 1
-        carry[i] = tmp & 2
-    return next_e, carry
+def maj(a_li, b_li, c_li):
+    maj = []
+    for a, b, c in zip(a_li, b_li, c_li):
+        maj.append((a & b) ^ (a & c) ^ (b & c))
+    return maj
 
 
-def com_e(next_e, e):
-    if next_e[:-1] == e[1:]:
-        flag = 1
-    return flag
+def get_s(a_point, i, group_li):
+    return group_li[a_point - i]
 
 
-def cal(scan, group_li, flow_data, kw_li, carry, reg_li):
-    next_e = [0] * 64
-    for i in range(len(group_li)):
-        flow = find_flow(flow_data, group_li[i])
-        d_li = scan[group_li[i-1]]
-        e_li = scan[flow[0]]
-        f_li = scan[flow[1]]
-        g_li = scan[flow[2]]
-        h_li = scan[flow[3]]
-        ch_li = ch(e_li, f_li, g_li)
-        s6_li = g_bit[(6 + i) % 32]
-        s11_li = g_bit[(11 + i) % 32]
-        s25_li = g_bit[(25 + i) % 32]
-        for s6 in s6_li:
-            s6_data = scan[s6]
-            for s11 in s11_li:
-                s11_data = scan[s11]
-                for s25 in s25_li:
-                    s25_data = scan[s25]
-                    sigma_li = sigma(s6_data, s11_data, s25_data)
-                    next_e_li, c_li = cal_e1(d_li, h_li, scan, flow, sigma_li, kw_li, carry)
-                    flag = com_e(next_e, )
-                    if flag:
-
-    return t1
+def sigma(s2_li, s13_li, s22_li):
+    sigma_li = []
+    for s2, s13, s22 in zip(s2_li, s13_li, s22_li):
+        sig.append(s2 ^ s13 ^ s22)
+    return sigma_li
 
 
-def kw(k_li, w_li):
-    kw=[]
-    for k, w in zip(k_li, w_li):
-        tmp = (k + w) & 0xffffffff
-        kw.append(split_str2(int2bin(tmp), 1))
-    return kw
+def cal_sigma():
 
 
-def third_step(scan, g_bit, flow_data, bin_w):
-    # K value{{{
-    K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
-         0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
-         0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-         0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
-         0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-         0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
-         0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-         0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
-         0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-         0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
-         0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-         0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
-         0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
-         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
-    # }}}
+def _T2(self, a, b, c):
+    return (self._sigma0(a) + self._Maj(a, b, c)) & 0xffffffff
 
-    kw_li = kw(k, bin_w)
-    carry = [0] * 64
 
-    # g_bit(32) -> group(2)
-    for group in g_bit:
-        tmp = cal()
-        # flow([1, 2, 3, 4])
+def t1(sigma_li, maj_li):
+    t1_li = []
+    for sigma, maj in zip(sigma_li, maj_li):
+        t1.append(sigma + maj)
+    return t1_li
+
+
+def cal_t1():
+    maj_li = maj(a_li, b_li, c_li)
+    sigma_li = sigma(s2, s13, s22)
+    return t1(sigma_li, maj_li)
+
+
+def cal_digit(bit_num, group_li, ):
+    group = group_li[bit_num]
+    for i in range(2):
+        a_bit = group[i]
+        a_li = get_scan(scan, a_bit)
+        e_bit = group[1-i]
+        e_li = get_scan(scan, e_bit)
+        a_bit_flow = find_flow(a_bit, flow_data)
+        b_li = get_scan(scan, a_bit_flow[1])
+        c_li = get_scan(scan, a_bit_flow[2])
+        d_li = get_scan(scan, a_bit_flow[3])
+        ad_li = cal_add(a_li, d_li)
+
+
+def make_abcd(scan, flow_data):
+    a = get_scan(flow_data[0], scan)
+    b = get_scan(flow_data[1], scan)
+    c = get_scan(flow_data[2], scan)
+    d = get_scan(flow_data[3], scan)
+    dic_efgh = {'a': a, 'b': b, 'c': c, 'd': d}
+    return dic_abcd
+
+
+
+def cal_add(one_li, two_li):
+    add_li = []
+    for one, two in zip(one_li[1:], two_li[:-1]):
+        add_li.append(onw + two)
+    return add_li
+
+
+def third_step(scan, group_li, flow_data):
+    reg_li = 0
+    return reg_li
+# }}}
 
 
 def analysis(register, bin_w):
@@ -560,20 +560,23 @@ def analysis(register, bin_w):
     group_bit = second_step(register, flow_data, bin_w)
     print('second step finished')
     # print(group_bit)
-    third_step(scanchain[0], group_bit, flow_data, bin_w)
+    reg_li = third_step(scanchain[0], group_bit, flow_data)
+    print(reg_li)
     print('third step finished')
 
 
 def main():
     lines = make_message()
     register = []
-    bin_w = [0] * len(lines)
+    w = [0] * len(lines)
     flag = 0
+    # message = 'abc'
+    # reg = sha256_tests(message, flag)
+    # register.append(reg)
     for i, message in enumerate(lines):
-        reg, bin_w[i] = sha256_tests(message, flag)
-        print(bin_w[i])
+        reg, w[i] = sha256_tests(message, flag)
         register.append(reg)
-    analysis(register, bin_w)
+    analysis(register, w)
 
 
 if __name__=="__main__":
