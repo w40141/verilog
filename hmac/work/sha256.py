@@ -489,7 +489,7 @@ def t1(sigma_li, maj_li):
     return t1_li
 
 
-def cal_digit(bit_num, group_li, flow_data, scan):
+def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):
     a_group = group_li[bit_num]
     for i in range(2):
         a_bit = a_group[i]
@@ -497,7 +497,7 @@ def cal_digit(bit_num, group_li, flow_data, scan):
         dic_abcd = make_abcd(scan, a_bit_flow)
         e_bit = a_group[1-i]
         e_li = get_scan(e_bit, scan)
-        ad_li = cal_add(dic_abcd['a'], dic_abcd['d'])
+        ad_li, ad_carry_li = cal_add(dic_abcd['a'], dic_abcd['d'], carry_dic['ad'])
         maj_li = maj(dic_abcd['a'], dic_abcd['b'], dic_abcd['c'])
         dic_si = make_si(bit_num, group_li)
         for s2_bit in dic_si['s2']:
@@ -508,20 +508,15 @@ def cal_digit(bit_num, group_li, flow_data, scan):
                     s22_li = get_scan(s22_bit, scan)
                     sigma_li = sigma(s2_li, s13_li, s22_li)
                     t1_li = t1(sigma_li, maj_li)
-                    et_li = cal_add(e_li, t1_li)
-                    print(a_bit, s2_bit, s13_bit, s22_bit)
-                    print(et_li)
+                    et_li, et_carry_li = cal_add(e_li, t1_li, carry_dic['et'])
                     if ad_li == et_li:
-                        print('hoge')
-
-
-def cal_carry(li):
-    cal_li = []
-    carry_li = []
-    for i in li:
-        cal_li.append(i & 1)
-        carry_li.append(i & 14)
-    return cal_li, carry_li
+                        carry_dic['ad'] = ad_carry_li
+                        carry_dic['et'] = et_carry_li
+                        reg_li[bit_num] = a_bit
+                        reg_li[bit_num - 2] = s2_bit
+                        reg_li[bit_num - 13] = s13_bit
+                        reg_li[bit_num - 22] = s22_bit
+    return reg_li, carry_dic
 
 
 def make_abcd(scan, flow_data):
@@ -545,18 +540,23 @@ def make_si(bit_num, group_li):
     return dic_si
 
 
-def cal_add(one_li, two_li):
+def cal_add(one_li, two_li, carry):
     add_li = []
-    for one, two in zip(one_li[1:], two_li[:-1]):
-        add_li.append(one + two)
-    return add_li
+    carry_li = []
+    for one, two, c in zip(one_li[1:], two_li[:-1], carry):
+        cal = one + two + c
+        add_li.append(cal & 1)
+        carry_li.append((cal & 6) >> 1)
+    return add_li, carry_li
 
 
 def third_step(scan, group_li, flow_data):
-    cal_digit(31, group_li, flow_data, scan)
-    # for i in range(len(group_li)-1, -1, -1):
-    #     cal_digit(i, group_li, flow_data, scan)
-    reg_li = 0
+    reg_li = [0] * 32
+    ad_carry_li = [0] * 63
+    et_carry_li = [0] * 63
+    carry_dic = {'ad':ad_carry_li, 'et':et_carry_li}
+    for i in range(len(group_li)-1, -1, -1):
+        reg_li, carry_dic = cal_digit(reg_li, i, group_li, flow_data, scan, carry_dic)
     return reg_li
 
 
@@ -583,7 +583,6 @@ def main():
     # reg = sha256_tests(message, flag)
     # register.append(reg)
     for i, message in enumerate(lines):
-        print(message)
         reg, w[i] = sha256_tests(message, flag)
         register.append(reg)
     analysis(register, w)
