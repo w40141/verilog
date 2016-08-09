@@ -3,13 +3,11 @@
 import sys
 import binascii
 import hashlib
-import random
 
 
 WORD = 8
 LENGTH = 16
 M_LENGTH = 128
-CHAIN = 256
 # }}}
 
 
@@ -17,7 +15,7 @@ class SHA256(): # {{{
 
 
     def __init__(self):
-        self.value_IV = [0] * 8
+        self.value_H = [0] * 8
         self.t1 = 0
         self.t2 = 0
         self.a = 0
@@ -48,24 +46,24 @@ class SHA256(): # {{{
                   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
                   0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
         self.register = []
-        # self.left = 0
-        # self.right = 0
+        self.left = 0
+        self.right = 0
 
 
-    def get_IV(self, flag):
+    def get_H(self, flag):
         if flag :
             message = imput('input H value > ')
             h = word_split(message_input(message))
-            self.value_IV = h[0]
+            self.value_H = h[0]
         else:
-            self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
-                             0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
+            self.value_H = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
+                            0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
 
 
-    def rotation(self, block, count):
+    def rotation(self, block):
         self._W_schedule(block)
         self._input_digest()
-        for i in range(count+1):
+        for i in range(64):
             self._restore_reg()
             # self._print_reg()
             self._sha256_round(i)
@@ -73,6 +71,7 @@ class SHA256(): # {{{
 
 
     def _sha256_round(self, round):
+        # print('d    :{0:0>33b}'.format(self.d))
         self.k = self.K[round]
         self.w = self._next_w(round)
         self.t1 = self._T1(self.e, self.f, self.g, self.h, self.k, self.w)
@@ -86,34 +85,42 @@ class SHA256(): # {{{
         self.c = self.b
         self.b = self.a
         self.a = (self.t1 + self.t2) & 0xffffffff
-        # self.left = self.e + self.t2 & 0xffffffff
-        # self.right = self.a + tmp_d  & 0xffffffff
+        self.left = self.e + self.t2 & 0xffffffff
+        self.right = self.a + tmp_d  & 0xffffffff
+        # print('t   :{0:0>33b}'.format(self.t2))
+        # print('t   :{0:0>33b}'.format(self.t2))
+        # print('t2   :{0:0>33b}'.format(self.t2))
+        # print('e    :{0:0>33b}'.format(self.e))
+        # print('left :{0:0>33b}'.format(self.left))
+        # print('d    :{0:0>33b}'.format(tmp_d))
+        # print('right:{0:0>33b}'.format(self.right))
+        # print("0x%08x, 0x%08x" %(self.left, self.right))
 
 
     def get_digest(self):
-        return self.value_IV
+        return self.value_H
 
 
     def _input_digest(self):
-        self.a = self.value_IV[0]
-        self.b = self.value_IV[1]
-        self.c = self.value_IV[2]
-        self.d = self.value_IV[3]
-        self.e = self.value_IV[4]
-        self.f = self.value_IV[5]
-        self.g = self.value_IV[6]
-        self.h = self.value_IV[7]
+        self.a = self.value_H[0]
+        self.b = self.value_H[1]
+        self.c = self.value_H[2]
+        self.d = self.value_H[3]
+        self.e = self.value_H[4]
+        self.f = self.value_H[5]
+        self.g = self.value_H[6]
+        self.h = self.value_H[7]
 
 
     def _update_digest(self):
-        self.value_IV[0] = (self.value_IV[0] + self.a) & 0xffffffff
-        self.value_IV[1] = (self.value_IV[1] + self.b) & 0xffffffff
-        self.value_IV[2] = (self.value_IV[2] + self.c) & 0xffffffff
-        self.value_IV[3] = (self.value_IV[3] + self.d) & 0xffffffff
-        self.value_IV[4] = (self.value_IV[4] + self.e) & 0xffffffff
-        self.value_IV[5] = (self.value_IV[5] + self.f) & 0xffffffff
-        self.value_IV[6] = (self.value_IV[6] + self.g) & 0xffffffff
-        self.value_IV[7] = (self.value_IV[7] + self.h) & 0xffffffff
+        self.value_H[0] = (self.value_H[0] + self.a) & 0xffffffff
+        self.value_H[1] = (self.value_H[1] + self.b) & 0xffffffff
+        self.value_H[2] = (self.value_H[2] + self.c) & 0xffffffff
+        self.value_H[3] = (self.value_H[3] + self.d) & 0xffffffff
+        self.value_H[4] = (self.value_H[4] + self.e) & 0xffffffff
+        self.value_H[5] = (self.value_H[5] + self.f) & 0xffffffff
+        self.value_H[6] = (self.value_H[6] + self.g) & 0xffffffff
+        self.value_H[7] = (self.value_H[7] + self.h) & 0xffffffff
 
 
     def _next_w(self, round):
@@ -190,45 +197,42 @@ class SHA256(): # {{{
         bin_h = int2bin(self.h)
         reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str2int(reg, 1)
-        self.register.append(list_reg)
+        # self.register.append(list_reg)
+        rand = [252,   4, 126, 176,  46,  59, 130,  14,  53, 185,   1,  34, 118,  62, 154, 234,
+                129, 156,  88,  93, 163,  22,  24, 222, 146, 110, 125, 253,  75,  85,  32,  54,
+                202, 109, 105, 169,  56,  20, 228, 181,  10, 178,  77, 115,  50,  86, 104,  19,
+                 31,  99, 183, 108,  15,  87, 133,  76,  42, 255, 205, 136,  38, 237, 188, 128,
+                 26, 159, 193, 170, 142, 151, 248,  47,  37, 132,  11, 239,  58,  97, 198, 218,
+                226,  79, 209, 141,  57, 114, 184, 137, 192, 186,  48, 171, 149, 208,  21, 138,
+                179, 172,  33, 119,  67, 206,  65, 161, 160, 175, 107, 245, 112, 155, 168, 232,
+                167,  80, 116,  68, 123, 211, 180, 147, 247, 225,  17, 135,  96, 224, 134,  74,
+                 91,  16,  44, 194,  45,  63,  23, 220,  90,  36, 203, 233,  39, 241, 152, 148,
+                 89,   6,  83, 221, 182,   9,  95, 231, 243, 254, 199, 195,  98, 196, 127, 177,
+                 43,  49,  13,   8, 143, 164,   2, 157,  40, 250, 144, 223,  12, 215, 235, 227,
+                 27,  28, 240,  29, 244, 197, 242, 162, 187, 201,  52, 111,  41,  82, 212, 124,
+                117,  71,  35, 100,  70, 158,  72, 191, 113, 229, 238,  60, 189,  18, 120, 103,
+                102, 166,   3,  64,  55, 174,   7, 216,  51,  84,  92, 140, 236, 122,  61,  81,
+                  0, 121, 249, 204, 200, 213, 173,  66, 131,  73,  30,  69, 217,  94, 106, 214,
+                165, 210, 246, 145, 153, 230, 219, 251, 150, 101, 190, 139, 207,  78,   5,  25]
+        tmp_reg = [list_reg[x] for x in rand]
+        self.register.append(tmp_reg)
+
+
+def sha256_tests(message, flag):
+    my_sha256 = SHA256();
+    hash_origin = make_hash(message)
+    block = word_split(message_input(message))
+    my_sha256.get_H(flag)
+    for i in block:
+        my_sha256.rotation(i)
+        my_sha256._W_schedule(i)
+    return my_sha256.register, my_sha256.W
 
 
 # }}}
 
 
-def sha256_tests(message, flag, count):
-    my_sha256 = SHA256();
-    # hash_origin = make_hash(message)
-    block = word_split(message_input(message))
-    my_sha256.get_IV(flag)
-    for i in block:
-        my_sha256.rotation(i, count)
-        my_sha256._W_schedule(i)
-    return my_sha256.register, my_sha256.W
-    # return my_sha256.register
-
-
 # {{{
-
-
-def shuffle_li(num):
-    li = [i for i in range(num)]
-    random.shuffle(li)
-    rand = li
-    return rand
-
-
-def convert_chain(reg_li, rand_li):
-    scan_li_li = []
-    for r in reg_li:
-        scan_li = []
-        for i in rand_li:
-            if 0 <= i and i < len(r):
-                scan_li.append(r[i])
-            else:
-                scan_li.append(random.randint(0, 1))
-        scan_li_li.append(scan_li)
-    return scan_li_li
 
 
 def int2bin(num):
@@ -253,30 +257,26 @@ def split_str(s, n):
     return v
 
 
-# to split n word
 def split_str2int(s, n):
     v = [int(s[i:i+n], 16) for i in range(0, len(s), n)]
     return v
 
 
-def make_message(num, ):
-    # li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
-    li = ['1']
+def make_message():
+    li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
     org = 'qqqq'
-    src = ''
-    dst = ''
-    tmp = ''
     message = []
-    for i in range(num):
-        src += org
-        for j in range(1):
-        # for j in range(4):
-            for k in li:
-                dst = org[:j] + k + org[j+1:]
+    for i in li:
+        src = ''
+        dst = ''
+        for j in range(4):
+            src = org
+            dst = org[:j] + i + org[j+1:]
+            for k in range(8):
                 message.append(src)
-                message.append(tmp + dst)
-        dst += org
-        tmp += org
+                message.append(dst)
+                src = org + src
+                dst = org + dst
     return message
 
 
@@ -301,41 +301,25 @@ def word_split(m):
     return vi
 
 
+# test
 def convert(reg_list):
-    orig = []
-    for reg_li in reg_list:
-        scanchain = [[0 for i in reg_li] for j in reg_li[0]]
-        for i, cyc_reg in enumerate(reg_li):
-            for j, one_reg in enumerate(cyc_reg):
-                scanchain[j][i] = int(one_reg)
-        orig.append(scanchain)
-    return orig
-
-# }}}
+    scanchain = [[0 for cyc in reg_list] for num in reg_list[0]]
+    for cyc, cyc_reg in enumerate(reg_list):
+        for num, reg_bit in enumerate(cyc_reg):
+            scanchain[num][cyc] = int(reg_bit)
+    return scanchain
 
 
-# first_step {{{
-# def compare_reg(reg_list):
-#     series = []
-#     for i, src_reg in enumerate(reg_list):
-#         count = 0
-#         for j, dst_reg in enumerate(reg_list):
-#             if count < 2:
-#                 if src_reg[:-1] == dst_reg[1:]:
-#                     series.append([i, j])
-#                     count += 1
-#             else:
-#                 break
-#     return series
-
-
-def compare_reg(reg_list):
-    series = []
-    for i, src_reg in enumerate(reg_list):
-        for j, dst_reg in enumerate(reg_list):
-            if src_reg[:-1] == dst_reg[1:]:
-                series.append([i, j])
-    return series
+# orig
+# def convert(reg_list):
+#     orig = []
+#     for reg_li in reg_list:
+#         scanchain = [[0 for i in reg_li] for j in reg_li[0]]
+#         for i, cyc_reg in enumerate(reg_li):
+#             for j, one_reg in enumerate(cyc_reg):
+#                 scanchain[j][i] = int(one_reg)
+#         orig.append(scanchain)
+#     return orig
 
 
 def find_series(series):
@@ -353,66 +337,47 @@ def find_series(series):
                 ser.remove(series[count][-1])
                 series.remove(series[count])
                 count = 0
-            else:
-                count += 1
+            count += 1
         fin_ser.append(ser)
     return fin_ser
 
 
-def reg_compare(reg_li):
-    if len(reg_li) == 0:
-        flag = 1
-    else:
-        org = reg_li[0]
-        flag = 0
-        for reg in reg_li:
-            if org != reg:
-                flag = 1
-    return flag
+# orig
+# def compare_reg(reg_list):
+#     num = [i for i in range(len(reg_list))]
+#     series = []
+#     for i, src_reg in enumerate(reg_list):
+#         for j, dst_reg in enumerate(reg_list):
+#             if src_reg[:-1] == dst_reg[1:]:
+#                 series.append([i, j])
+#     return series
+
+
+def compare_reg(reg_list):
+    series = []
+    for i, src_reg in enumerate(reg_list):
+        for j, dst_reg in enumerate(reg_list):
+            if src_reg[:-1] == dst_reg[1:]:
+                series.append([i, j])
+    return series
+
+
+def first_step(reg):
+    series = compare_reg(reg)
+    ser = find_series(series)
+    # set_ser.append(ser)
+    return ser
 
 
 # def first_step(reg):
 #     set_ser = []
 #     for i in reg:
 #         series = compare_reg(i)
-#         if len(series) ==192:
-#             ser = find_series(series)
-#             set_ser.append(ser)
-#         flag = reg_compare(set_ser)
-#     if flag:
-#         return 0
-#     else:
-#         return set_ser[0]
+#         ser = find_series(series)
+#         set_ser.append(ser)
+#     return set_ser[0]
 
 
-def and_ser_li(set_ser):
-    matched_list = []
-    for i in set_ser:
-        if len(matched_list) == 0:
-            matched_list = i
-            print('init')
-        else:
-            matched_list = [tag for tag in i if tag in matched_list]
-            print('and_ser_li')
-    return matched_list
-
-
-def first_step(reg):
-    set_ser = []
-    for i in reg:
-        set_ser.append(compare_reg(i))
-        print('i')
-    ser_li = and_ser_li(set_ser)
-    if len(ser_li) ==192:
-        ser = find_series(ser_li)
-        set_ser.append(ser)
-        return ser_li
-    else:
-        return 0
-# }}}
-
-
-# second_step {{{
 def extract_first_bit(register, flow_data):
     first_bit_stream = []
     stream_first = [x[0] for x in flow_data]
@@ -515,10 +480,6 @@ def set2list(group_bit):
     return group
 
 
-# }}}
-
-
-# third_step{{{
 def find_flow(bit_num, flow_data):
     for f in flow_data:
         if bit_num == f[0]:
@@ -551,7 +512,7 @@ def t1(sigma_li, maj_li):
     return t1_li
 
 
-def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):
+def cal_digit(reg_dic, bit_num, group_li, flow_data, scan, carry_dic):
     a_group = group_li[bit_num]
     for i in range(2):
         a_bit = a_group[i]
@@ -574,11 +535,26 @@ def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):
                     if ad_li == et_li:
                         carry_dic['ad'] = ad_carry_li
                         carry_dic['et'] = et_carry_li
-                        reg_li[bit_num] = a_bit
-                        reg_li[bit_num - 2] = s2_bit
-                        reg_li[bit_num - 13] = s13_bit
-                        reg_li[bit_num - 22] = s22_bit
-    return reg_li, carry_dic
+                        reg_dic['a'][bit_num] = find_flow(a_bit, flow_data)
+                        reg_dic['a'][bit_num - 2] = find_flow(s2_bit, flow_data)
+                        reg_dic['a'][bit_num - 13] = find_flow(s13_bit, flow_data)
+                        reg_dic['a'][bit_num - 22] = find_flow(s22_bit, flow_data)
+                        # reg_dic['a'][bit_num - 2] = s2_bit
+                        # reg_dic['a'][bit_num - 13] = s13_bit
+                        # reg_dic['a'][bit_num - 22] = s22_bit
+                        reg_dic['e'][bit_num] = find_flow(e_bit, flow_data)
+    return reg_dic, carry_dic
+
+
+# def compare_reg():
+#     carry_dic['ad'] = ad_carry_li
+#     carry_dic['et'] = et_carry_li
+#     reg_dic['a'][bit_num] = a_bit
+#     reg_dic['a'][bit_num - 2] = s2_bit
+#     reg_dic['a'][bit_num - 13] = s13_bit
+#     reg_dic['a'][bit_num - 22] = s22_bit
+#     reg_dic['e'][bit_num] = e_bit
+#     return reg_dic, carry_dic
 
 
 def make_abcd(scan, flow_data):
@@ -613,101 +589,79 @@ def cal_add(one_li, two_li, carry):
 
 
 def third_step(scan, group_li, flow_data):
-    reg_li = [0] * 32
+    reg_li_a = [0] * 32
+    reg_li_e = [0] * 32
+    reg_dic = {'a':reg_li_a, 'e':reg_li_e}
     ad_carry_li = [0] * 63
     et_carry_li = [0] * 63
     carry_dic = {'ad':ad_carry_li, 'et':et_carry_li}
     for i in range(len(group_li)-1, -1, -1):
-        reg_li, carry_dic = cal_digit(reg_li, i, group_li, flow_data, scan, carry_dic)
+        reg_li, carry_dic = cal_digit(reg_dic, i, group_li, flow_data, scan, carry_dic)
     return reg_li
+
+
 # }}}
 
 
-def analysis(register, bin_w, chain):
-    scanchain = convert(register)
-    # print('convert register data finished')
+def restore_flow(reg_dic):
+    reg_li = [0] * 256
+    reg_li_a = reg_dic['a']
+    reg_li_e = reg_dic['e']
+    for i in range(len(reg_li_a)):
+        for j in range(len(reg_li_a[0])):
+            reg_li[i + 32 * j] = reg_li_a[i][j]
+            reg_li[128 + i + 32 * j] = reg_li_e[i][j]
+    return reg_li
+
+
+def restore_bit(reg_li, register):
+    stream_bit = []
+    for num in reg_li:
+        stream_bit.append(register[0][0][num])
+    return stream_bit
+
+
+def restore_key(stream_bit):
+    stream_bit_str = ''.join(list(map(str, stream_bit)))
+    block_li = split_str(stream_bit_str, 32)
+    for block in block_li:
+        block_int = int(block, 2)
+        block_hex = hex(block_int)
+        print(block_hex)
+
+
+
+def forth_step(reg_dic, register):
+    reg_li = restore_flow(reg_dic)
+    stream_bit = restore_bit(reg_li, register)
+    restore_key(stream_bit)
+
+
+def analysis(register, bin_w):
+    print('Analysis start')
+    scanchain = convert(register[0])
+    print('convert register data finished')
     flow_data = first_step(scanchain)
-    # for i in range(64, 0, -1):
-    #     flow_data = first_step(scanchain)
-    #     if flow_data == 0:
-    #         print(i+1)
-    #         break
-    #     scanchain = chain_end_remove(scanchain)
-    # print('first step finished')
-    # print(chack_chain(flow_data, chain))
-    # group_bit = second_step(register, flow_data, bin_w)
-    # print('second step finished')
-    # # print(group_bit)
-    # reg_li = third_step(scanchain[0], group_bit, flow_data)
-    # print(reg_li)
-    # print('third step finished')
-    return flow_data
+    print('first step finished')
+    group_bit = second_step(register, flow_data, bin_w)
+    print('second step finished')
+    reg_dic = third_step(scanchain, group_bit, flow_data)
+    print('third step finished')
+    forth_step(reg_dic, register)
 
-
-def chack_chain(flow_data, chain):
-    tmp = []
-    for flow in flow_data:
-        t = []
-        for f in flow:
-            t.append(chain[f])
-        tmp.append(t)
-    return tmp
-
-
-def chain_end_remove(scanchain):
-    for scan in scanchain:
-        for s in scan:
-            s.pop(-1)
-    return scanchain
-
-
-def random_message(m):
-    li = []
-    for i in range(m):
-        word = ''
-        for tmp in range(4):
-            j = random.randint(0, 2)
-            if j == 0:
-                word += chr(random.randint(48, 57))
-            elif j == 1:
-                word += chr(random.randint(97, 122))
-            else:
-                word += chr(random.randint(65, 90))
-        li.append(word)
-    return li
 
 
 def main():
-    tmp = [1, 2, 4, 8, 16]
-    ans = []
+    print('start')
+    lines = make_message()
+    register = []
+    w = [0] * len(lines)
     flag = 0
-    for c in tmp:
-        for m in range(1, 21):
-            print('message, ' + str(m))
-            data_len = c * CHAIN
-            print(data_len)
-            # lines = make_message(1)
-            lines = random_message(m)
-            register = []
-            w = [0] * len(lines)
-            chain = shuffle_li(data_len)
-            # message = 'abc'
-            # reg = sha256_tests(message, flag)
-            # register.append(reg)
-            print('Analysis start')
-            # for count in range(13,  25):
-            for count in range(3, 30):
-                print('count' + str(count))
-                for i, message in enumerate(lines):
-                    reg, w[i] = sha256_tests(message, flag, count)
-                    new_reg = convert_chain(reg, chain)
-                    register.append(new_reg)
-                f = analysis(register, w, chain)
-                if f !=0:
-                    print(m, data_len, count)
-                    ans.append([m, data_len, count])
-                    break
-    print(ans)
+    for i, message in enumerate(lines):
+        reg, w[i] = sha256_tests(message, flag)
+        register.append(reg)
+        print(str(i) + 'time finish')
+    reg_li = analysis(register, w)
 
 
 if __name__=="__main__":

@@ -392,6 +392,9 @@ def and_ser_li(set_ser):
             matched_list = i
             print('init')
         else:
+            # src_set = set(i)
+            # tag_set = set(matched_list)
+            # matched_list = list(src_set.intersection(tag_set))
             matched_list = [tag for tag in i if tag in matched_list]
             print('and_ser_li')
     return matched_list
@@ -678,7 +681,8 @@ def random_message(m):
 
 
 def main():
-    tmp = [1, 2, 4, 8, 16]
+    # tmp = [1, 2, 4, 8, 16]
+    tmp = [16]
     ans = []
     flag = 0
     for c in tmp:
