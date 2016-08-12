@@ -4,6 +4,8 @@ import sys
 import binascii
 import hashlib
 import random
+import math
+import time
 
 
 WORD = 8
@@ -211,6 +213,39 @@ def sha256_tests(message, flag, count):
 # {{{
 
 
+def chack_chain(flow_data, chain):
+    tmp = []
+    for flow in flow_data:
+        t = []
+        for f in flow:
+            t.append(chain[f])
+        tmp.append(t)
+    return tmp
+
+
+def chain_end_remove(scanchain):
+    for scan in scanchain:
+        for s in scan:
+            s.pop(-1)
+    return scanchain
+
+
+def random_message(m):
+    li = []
+    for i in range(m):
+        word = ''
+        for tmp in range(4):
+            j = random.randint(0, 2)
+            if j == 0:
+                word += chr(random.randint(48, 57))
+            elif j == 1:
+                word += chr(random.randint(97, 122))
+            else:
+                word += chr(random.randint(65, 90))
+        li.append(word)
+    return li
+
+
 def shuffle_li(num):
     li = [i for i in range(num)]
     random.shuffle(li)
@@ -259,24 +294,20 @@ def split_str2int(s, n):
     return v
 
 
-def make_message(num, ):
-    # li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
-    li = ['1']
-    org = 'qqqq'
-    src = ''
-    dst = ''
-    tmp = ''
-    message = []
-    for i in range(num):
-        src += org
-        for j in range(1):
-        # for j in range(4):
-            for k in li:
-                dst = org[:j] + k + org[j+1:]
-                message.append(src)
-                message.append(tmp + dst)
-        dst += org
-        tmp += org
+def make_message(count):
+    word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
+    message = ['q' * 32]
+    pad_q = ''
+    for i in range(4):
+        for word in word_li:
+            pad_word = word.rjust(i+1, 'q')
+            pad_word = pad_word.ljust(4, 'q')
+            if word == '1':
+                for j in range(count):
+                    pad_q = 'qqqq' * j
+                    message.append(pad_q + pad_word)
+            else:
+                message.append(pad_word)
     return message
 
 
@@ -315,30 +346,17 @@ def convert(reg_list):
 
 
 # first_step {{{
-# def compare_reg(reg_list):
-#     series = []
-#     for i, src_reg in enumerate(reg_list):
-#         count = 0
-#         for j, dst_reg in enumerate(reg_list):
-#             if count < 2:
-#                 if src_reg[:-1] == dst_reg[1:]:
-#                     series.append([i, j])
-#                     count += 1
-#             else:
-#                 break
-#     return series
-
-
-def compare_reg(reg_list):
+def compare_reg(reg_list):# {{{
     series = []
     for i, src_reg in enumerate(reg_list):
         for j, dst_reg in enumerate(reg_list):
             if src_reg[:-1] == dst_reg[1:]:
                 series.append([i, j])
     return series
+# }}}
 
 
-def find_series(series):
+def find_series(series):# {{{
     fin_ser = []
     for ser in series:
         count = 0
@@ -357,165 +375,190 @@ def find_series(series):
                 count += 1
         fin_ser.append(ser)
     return fin_ser
+# }}}
 
 
-def reg_compare(reg_li):
-    if len(reg_li) == 0:
-        flag = 1
-    else:
-        org = reg_li[0]
-        flag = 0
-        for reg in reg_li:
-            if org != reg:
-                flag = 1
-    return flag
-
-
-# def first_step(reg):
-#     set_ser = []
-#     for i in reg:
-#         series = compare_reg(i)
-#         if len(series) ==192:
-#             ser = find_series(series)
-#             set_ser.append(ser)
-#         flag = reg_compare(set_ser)
-#     if flag:
-#         return 0
+# def reg_compare(reg_li):# {{{
+#     if len(reg_li) == 0:
+#         flag = 1
 #     else:
-#         return set_ser[0]
+#         org = reg_li[0]
+#         flag = 0
+#         for reg in reg_li:
+#             if org != reg:
+#                 flag = 1
+#     return flag
+# # }}}
 
 
-def and_ser_li(set_ser):
+def and_ser_li(set_ser):# {{{
     matched_list = []
     for i in set_ser:
         if len(matched_list) == 0:
             matched_list = i
-            print('init')
         else:
-            # src_set = set(i)
-            # tag_set = set(matched_list)
-            # matched_list = list(src_set.intersection(tag_set))
-            matched_list = [tag for tag in i if tag in matched_list]
-            print('and_ser_li')
+            matched_list = [tag for tag in matched_list if tag in i]
     return matched_list
+# }}}
 
 
 def first_step(reg):
     set_ser = []
     for i in reg:
         set_ser.append(compare_reg(i))
-        print('i')
-    ser_li = and_ser_li(set_ser)
-    if len(ser_li) ==192:
-        ser = find_series(ser_li)
-        set_ser.append(ser)
-        return ser_li
+    if len(set_ser) > 1:
+        set_li = and_ser_li(set_ser)
+    else:
+        set_li = set_ser[0]
+    if len(set_li) ==192:
+        ser = find_series(set_li)
+        return ser
     else:
         return 0
 # }}}
 
 
 # second_step {{{
-def extract_first_bit(register, flow_data):
-    first_bit_stream = []
-    stream_first = [x[0] for x in flow_data]
-    stream_first.sort()
+def find_first_bit(register, flow_data):# {{{
+    first_bit_li = []
+    ae_bit_num = [x[0] for x in flow_data]
     for reg in register:
-        tmp = [[cyc[i] for i in stream_first] for cyc in reg]
-        first_bit_stream.append(tmp)
-    return first_bit_stream, stream_first
+        first_bit = [reg[i] for i in ae_bit_num]
+        first_bit_li.append(first_bit)
+    return ae_bit_num, first_bit_li
+# }}}
 
 
-def com_list(orig_li, dst_li, stream_first):
-    diff_bit = []
-    for i, num in enumerate(stream_first):
-        if orig_li[i] != dst_li[i]:
-            diff_bit.append(num)
+def make_diff_bit_stream(message_li):# {{{
+    org = message_li[0]
+    diff_bit_stream = []
+    for scr in message_li:
+        if org != scr:
+            diff_bit = find_diff_bit(org, scr)
+            diff_bit_stream.append(diff_bit)
+    return diff_bit_stream
+
+
+# make_diff_bit_stream
+def find_diff_bit(org, scr):
+    diff_bit = 0
+    for i in range(len(scr)):
+        if org[i] != scr[i]:
+            diff_letter = i % 4
+            diff_bit = math.log2(ord(org[i]) ^ ord(scr[i]))
+            diff_bit = int(7 - diff_bit + diff_letter * 8)
+            break
     return diff_bit
+# }}}
 
 
-def com_double_list(orig_reg, dst_reg, stream_first):
-    diff_bit_class = []
-    for i in range(len(orig_reg)):
-        com = com_list(orig_reg[i], dst_reg[i], stream_first)
-        if len(com) != 0:
-            break
-    return com
+def make_diff_bit_li(first_bit_li, diff_bit_stream):# {{{
+    org = first_bit_li[0]
+    scr_li = first_bit_li[1:]
+    diff_bit_li = [[] for x in range(32)]
+    # diff_bit_li = [-1 for x in range(32)]
+    for i, scr in enumerate(scr_li):
+        diff_bit = diff_bit_stream[i]
+        tmp_li = compare_li(org, scr)
+        diff_bit_li[diff_bit].append(tmp_li)
+    return diff_bit_li
 
 
-def hamming(num_li0, num_li1):
-    for i in range(len(num_li0)):
-        xor = format(num_li0[i] ^ num_li1[i], 'b')
-        if xor != '0':
-            xor = xor.zfill(32)
-            for j, letter in enumerate(xor):
-                if letter == '1':
-                    num = j
-            break
-    return num
+#make_diff_bit_li
+def compare_li(org, scr):
+    flag = 1
+    count = 1
+    diff_bit_li = []
+    while flag:
+        for i in range(len(org)):
+            # print(i)
+            # print(org[i][:count])
+            # print(scr[i][:count])
+            # time.sleep(0.3)
+            if org[i][count] != scr[i][count]:
+                diff_bit_li.append(i)
+                flag = 0
+        count += 1
+    return diff_bit_li
+# }}}
 
 
-def find_reverse_bit(first_bit_stream, stream_first, bin_w):
-    diff_bit_class = [[j] for j in range(32)]
-    for i in range(0, len(first_bit_stream), 2):
-        origan = first_bit_stream[i]
-        destin = first_bit_stream[i+1]
-        num_hamming = hamming(bin_w[i], bin_w[i+1])
-        tmp = com_double_list(origan, destin, stream_first)
-        diff_bit_class[num_hamming].append(tmp)
-    return diff_bit_class
+def make_pair_li(diff_bit_li):# {{{
+    print(diff_bit_li)
+    finished_li = [i for i in range(64)]
+    pair_li = [0] * 32
+    for i in range(4):
+        other_set = set([])
+        for j in range(1, 8):
+            num = i * 8 + j
+            target = diff_bit_li[num]
+            determin_set, other_set = make_determin_li(target, other_set, pair_li)
+            determin_li, finished_li = check_li(finished_li, determin_set)
+            pair_li[num] = determin_li
+        other_li, finished_li = check_li(finished_li, other_set)
+        pair_li[i * 8] = other_li
+    return pair_li
 
 
-def second_step(register, flow_data, bin_w):
-    first_bit_stream, stream_first = extract_first_bit(register, flow_data)
-    diff_bit = find_reverse_bit(first_bit_stream, stream_first, bin_w)
-    g_bit = group(diff_bit)
-    g_bit_li = set2list(g_bit)
-    return g_bit_li
-
-
-def find_bit(diff_li, already_bit):
-    candidate_bit = set()
-    a_bit = already_bit
-    for d_li in diff_li:
-        d_set = set(d_li)
-        if len(candidate_bit) == 0:
-            candidate_bit = d_set
+#make_pair_diff
+def make_determin_li(target, other_set, pair_li):
+    determin_set = set([])
+    for tar in target:
+        tar_set = set(tar)
+        for pair in pair_li:
+            if type(pair) == type([]):
+                tar_set = tar_set - set(pair)
+                print(tar_set)
+        if len(determin_set) == 0:
+            determin_set = tar_set
         else:
-            candidate_bit = candidate_bit & d_set
-        a_bit = a_bit | d_set
-    return candidate_bit, a_bit
+            determin_set = determin_set & tar_set
+            other_set = other_set | tar_set ^ determin_set
+    return determin_set, other_set
 
 
-def find_else_bit(already_bit, group_bit):
-    else_bit = already_bit
-    for g_bit in group_bit:
-        if type(g_bit) == set:
-            else_bit -= g_bit
-    return else_bit
+def check_li(finished_li, determin_set):
+    de_li = list(determin_set)
+    tmp_li = []
+    for de in de_li:
+        if de in finished_li:
+            finished_li.remove(de)
+            tmp_li.append(de)
+    return tmp_li, finished_li
+
+# }}}
 
 
-def group(diff_li):
-    already_bit = set()
-    group_bit = ['0' for i in diff_li]
-    for diff in diff_li:
-        number = diff[0]
-        d_li = diff[1:]
-        if number % 8 != 0:
-            cnd_bit, already_bit = find_bit(d_li, already_bit)
-            group_bit[number] = cnd_bit
-            if (number + 1) % 8 == 0:
-                group_bit[number - 7] = find_else_bit(already_bit, group_bit)
-    return group_bit
+def check_len(target_li):
+    for target in target_li:
+        if len(target) != 2:
+            return 0
+    return 1
 
 
-def set2list(group_bit):
-    group = []
-    for i in group_bit:
-        tmp = list(i)
-        group.append(tmp)
-    # group.reverse()
-    return group
+def convert_li(pair_diff_li, ae_first_num):# {{{
+    determin_li = [0] * 32
+    for i, pair_set in enumerate(pair_diff_li):
+        det = []
+        pair_li = list(pair_set)
+        for pair in pair_li:
+            det.append(ae_first_num(pair))
+        determin_li[i] = det
+    return determin_li
+# }}}
+
+
+def second_step(signature_li, flow_data, message_li):
+    ae_first_num,  first_bit_li = find_first_bit(signature_li, flow_data)
+    diff_bit_stream = make_diff_bit_stream(message_li)
+    diff_bit_li = make_diff_bit_li(first_bit_li, diff_bit_stream)
+    pair_li = make_pair_li(diff_bit_li)
+    print(pair_li)
+    if check_len(pair_li):
+        determin_li = convert_li(pair_li, ae_first_num)
+        return determin_li
+    else:
+        return 0
 
 
 # }}}
@@ -626,10 +669,12 @@ def third_step(scan, group_li, flow_data):
 # }}}
 
 
-def analysis(register, bin_w, chain):
+def analysis(register, message, chain):
     scanchain = convert(register)
     # print('convert register data finished')
     flow_data = first_step(scanchain)
+    # print(flow_data)
+    determin_li = second_step(scanchain, flow_data, message)
     # for i in range(64, 0, -1):
     #     flow_data = first_step(scanchain)
     #     if flow_data == 0:
@@ -644,74 +689,34 @@ def analysis(register, bin_w, chain):
     # reg_li = third_step(scanchain[0], group_bit, flow_data)
     # print(reg_li)
     # print('third step finished')
-    return flow_data
-
-
-def chack_chain(flow_data, chain):
-    tmp = []
-    for flow in flow_data:
-        t = []
-        for f in flow:
-            t.append(chain[f])
-        tmp.append(t)
-    return tmp
-
-
-def chain_end_remove(scanchain):
-    for scan in scanchain:
-        for s in scan:
-            s.pop(-1)
-    return scanchain
-
-
-def random_message(m):
-    li = []
-    for i in range(m):
-        word = ''
-        for tmp in range(4):
-            j = random.randint(0, 2)
-            if j == 0:
-                word += chr(random.randint(48, 57))
-            elif j == 1:
-                word += chr(random.randint(97, 122))
-            else:
-                word += chr(random.randint(65, 90))
-        li.append(word)
-    return li
+    return determin_li
 
 
 def main():
     # tmp = [1, 2, 4, 8, 16]
-    tmp = [16]
+    tmp = [1]
     ans = []
     flag = 0
+    # スキャンチェイン長
     for c in tmp:
-        for m in range(1, 21):
-            print('message, ' + str(m))
+        # メッセージ個数
+        for i in range(1, 8):
+            message = make_message(i)
             data_len = c * CHAIN
-            print(data_len)
-            # lines = make_message(1)
-            lines = random_message(m)
-            register = []
-            w = [0] * len(lines)
+            w = [0] * len(message)
             chain = shuffle_li(data_len)
-            # message = 'abc'
-            # reg = sha256_tests(message, flag)
-            # register.append(reg)
             print('Analysis start')
-            # for count in range(13,  25):
-            for count in range(3, 30):
-                print('count' + str(count))
-                for i, message in enumerate(lines):
-                    reg, w[i] = sha256_tests(message, flag, count)
-                    new_reg = convert_chain(reg, chain)
-                    register.append(new_reg)
-                f = analysis(register, w, chain)
-                if f !=0:
-                    print(m, data_len, count)
-                    ans.append([m, data_len, count])
-                    break
-    print(ans)
+            # サイクル数
+            count = 15
+            register = []
+            for j, m in enumerate(message):
+                reg, w[j] = sha256_tests(m, flag, count)
+                # new_reg = convert_chain(reg, chain)
+                new_reg = reg
+                register.append(new_reg)
+            f = analysis(register, message, chain)
+            print(f)
+    # print(ans)
 
 
 if __name__=="__main__":

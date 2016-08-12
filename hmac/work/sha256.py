@@ -390,23 +390,27 @@ def and_ser_li(set_ser):
     for i in set_ser:
         if len(matched_list) == 0:
             matched_list = i
-            print('init')
+            # print('init')
         else:
-            matched_list = [tag for tag in i if tag in matched_list]
-            print('and_ser_li')
+            matched_list = [tag for tag in matched_list if tag in i]
+            # print('and_ser_li')
+        # print(matched_list)
     return matched_list
 
 
 def first_step(reg):
+    # print(reg)
     set_ser = []
     for i in reg:
         set_ser.append(compare_reg(i))
-        print('i')
-    ser_li = and_ser_li(set_ser)
-    if len(ser_li) ==192:
-        ser = find_series(ser_li)
-        set_ser.append(ser)
-        return ser_li
+        # print('i')
+    if len(set_ser) > 1:
+        set_li = and_ser_li(set_ser)
+    else:
+        set_li = set_ser[0]
+    if len(set_li) ==192:
+        ser = find_series(set_li)
+        return ser
     else:
         return 0
 # }}}
@@ -678,17 +682,19 @@ def random_message(m):
 
 
 def main():
-    tmp = [1, 2, 4, 8, 16]
+    # tmp = [1, 2, 4, 8, 16]
+    tmp = [16]
     ans = []
     flag = 0
+    # スキャンチェイン長
     for c in tmp:
+        # メッセージ個数
         for m in range(1, 21):
             print('message, ' + str(m))
             data_len = c * CHAIN
             print(data_len)
             # lines = make_message(1)
             lines = random_message(m)
-            register = []
             w = [0] * len(lines)
             chain = shuffle_li(data_len)
             # message = 'abc'
@@ -696,8 +702,11 @@ def main():
             # register.append(reg)
             print('Analysis start')
             # for count in range(13,  25):
-            for count in range(3, 30):
-                print('count' + str(count))
+            # サイクル数
+            for count in range(15, 30):
+                #
+                register = []
+                # print('count' + str(count))
                 for i, message in enumerate(lines):
                     reg, w[i] = sha256_tests(message, flag, count)
                     new_reg = convert_chain(reg, chain)
