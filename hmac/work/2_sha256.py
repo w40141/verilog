@@ -471,10 +471,6 @@ def compare_li(org, scr):
     diff_bit_li = []
     while flag:
         for i in range(len(org)):
-            # print(i)
-            # print(org[i][:count])
-            # print(scr[i][:count])
-            # time.sleep(0.3)
             if org[i][count] != scr[i][count]:
                 diff_bit_li.append(i)
                 flag = 0
@@ -484,15 +480,14 @@ def compare_li(org, scr):
 
 
 def make_pair_li(diff_bit_li):# {{{
-    print(diff_bit_li)
     finished_li = [i for i in range(64)]
     pair_li = [0] * 32
     for i in range(4):
         other_set = set([])
         for j in range(1, 8):
             num = i * 8 + j
-            target = diff_bit_li[num]
-            determin_set, other_set = make_determin_li(target, other_set, pair_li)
+            target_li = diff_bit_li[num]
+            determin_set, other_set = make_determin_li(target_li, other_set, pair_li)
             determin_li, finished_li = check_li(finished_li, determin_set)
             pair_li[num] = determin_li
         other_li, finished_li = check_li(finished_li, other_set)
@@ -508,7 +503,7 @@ def make_determin_li(target, other_set, pair_li):
         for pair in pair_li:
             if type(pair) == type([]):
                 tar_set = tar_set - set(pair)
-                print(tar_set)
+                # print(tar_set)
         if len(determin_set) == 0:
             determin_set = tar_set
         else:
