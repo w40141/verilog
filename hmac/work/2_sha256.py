@@ -480,55 +480,50 @@ def compare_li(org, scr):
 
 
 def make_pair_li(diff_bit_li):# {{{
-    finished_li = [i for i in range(64)]
+    # finished_li = [i for i in range(64)]
+    finish_set = set([])
     pair_li = [0] * 32
     for i in range(4):
         other_set = set([])
         for j in range(1, 8):
             num = i * 8 + j
             target_li = diff_bit_li[num]
-            determin_set, other_set = make_determin_li(target_li, other_set, pair_li)
-            determin_li, finished_li = check_li(finished_li, determin_set)
-            pair_li[num] = determin_li
-        other_li, finished_li = check_li(finished_li, other_set)
-        pair_li[i * 8] = other_li
+            determ_set, finish_set = make_determ_finish_set(target_li, finish_set)
+            print(determ_set)
+            pair_li[num] = determ_set
+            if pair_li[num-1] == 0:
+                pair_li[num-1] = get_pair(pair_li, finish_set)
     return pair_li
 
 
 #make_pair_diff
-def make_determin_li(target, other_set, pair_li):
-    determin_set = set([])
-    for tar in target:
+def make_determ_finish_set(target_li, finish_set):
+    determ_set = set([])
+    for tar in target_li:
         tar_set = set(tar)
-        for pair in pair_li:
-            if type(pair) == type([]):
-                tar_set = tar_set - set(pair)
-                # print(tar_set)
-        if len(determin_set) == 0:
-            determin_set = tar_set
+        if len(determ_set) == 0:
+            determ_set = tar_set
+            finish_set = tar_set
         else:
-            determin_set = determin_set & tar_set
-            other_set = other_set | tar_set ^ determin_set
-    return determin_set, other_set
+            determ_set = tar_set & determ_set
+            finish_set = tar_set | finish_set
+    return determ_set, finish_set
 
 
-def check_li(finished_li, determin_set):
-    de_li = list(determin_set)
-    tmp_li = []
-    for de in de_li:
-        if de in finished_li:
-            finished_li.remove(de)
-            tmp_li.append(de)
-    return tmp_li, finished_li
-
+def get_pair(pair_li, finish_set):
+    for target in pair_li:
+        if target != 0:
+            other_set = target ^ finish_set
+    return other_set
 # }}}
 
 
-def check_len(target_li):
+def check_len(target_li):# {{{
     for target in target_li:
         if len(target) != 2:
             return 0
     return 1
+# }}}
 
 
 def convert_li(pair_diff_li, ae_first_num):# {{{
