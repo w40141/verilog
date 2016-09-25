@@ -489,7 +489,7 @@ def make_pair_li(diff_bit_li):# {{{
             num = i * 8 + j
             target_li = diff_bit_li[num]
             determ_set, finish_set = make_determ_finish_set(target_li, finish_set)
-            print(determ_set)
+            # print(determ_set)
             pair_li[num] = determ_set
             if pair_li[num-1] == 0:
                 pair_li[num-1] = get_pair(pair_li, finish_set)
@@ -502,18 +502,22 @@ def make_determ_finish_set(target_li, finish_set):
     for tar in target_li:
         tar_set = set(tar)
         if len(determ_set) == 0:
-            determ_set = tar_set
-            finish_set = tar_set
+            determ_set = tar_set ^ finish_set
+            determ_set = tar_set & determ_set
         else:
             determ_set = tar_set & determ_set
-            finish_set = tar_set | finish_set
+        finish_set = tar_set | finish_set
     return determ_set, finish_set
 
 
 def get_pair(pair_li, finish_set):
+    other_set = set([])
     for target in pair_li:
         if target != 0:
-            other_set = target ^ finish_set
+            if len(other_set) == 0:
+                other_set = target ^ finish_set
+            else:
+                other_set = target ^ other_set
     return other_set
 # }}}
 
