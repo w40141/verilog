@@ -202,12 +202,6 @@ def int2bin(num):
 # }}}
 
 
-# m = 'abc'
-# [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
-def make_block(message):
-    return word_split(message_input(message))
-
-
 # def sha256_tests(message, flag, key):
 def sha256(block, flag, key):
     my_sha256 = SHA256();
@@ -221,9 +215,12 @@ def sha256(block, flag, key):
     return IV
 
 
+# m = 'abc'
+# [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
 def sha256_tests(message, flag, key):
-    block = make_block(message)
-    print(block)
+    m = message_input(message)
+    # block = word_split(message_input(message))
+    block = word_split(m)
     IV = sha256(block, flag, key)
     return IV
 
@@ -243,15 +240,17 @@ def make_kin_out(key, pad):
     k_hex = hex(k_pad)
     k_list = [k_hex[2:]]
     block = word_split(k_list)
-    print(block)
-    k0 = sha256(k_list, 0, 0)
+    k0 = sha256(block, 0, 0)
     return k0
 
 
 def hmac_sha256_tests(message, key):
-    kin = make_kin(k0, ipad)
+    kin = make_kin_out(key, '36')
+    print(kin)
     h_n = sha256_tests(message, 1, kin)
-    kout = make_kout(k0, opad)
+    print(h_n)
+    kout = make_kin_out(key, '5c')
+    print(kout)
     hmac = sha256_tests(h_n, 1, kout)
     return hmac
 
@@ -731,32 +730,30 @@ def main():
     ans = []
     flag = 0
     # m = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
-    key = 0
+    key = 'a'
     m = 'abc'
+    hmac = hmac_sha256_tests(m, key)
     # IV = sha256_tests(m, flag, key)
     # print(IV)
-    k = 'abc'
-    kin = make_kin_out(k, '5c')
-    print(kin)
     # スキャンチェイン長# {{{
-    for c in tmp:
-        # メッセージ個数
-        for i in range(1, 8):
-            message = make_message(i)
-            data_len = c * CHAIN
-            w = [0] * len(message)
-            chain = shuffle_li(data_len)
-            print('Analysis start')
-            # サイクル数
-            count = 15
-            register = []
-            for j, m in enumerate(message):
-                reg, w[j] = sha256_tests(m, flag, count)
-                # new_reg = convert_chain(reg, chain)
-                new_reg = reg
-                register.append(new_reg)
-            f = analysis(register, message, chain)
-            print(f)
+    # for c in tmp:
+    #     # メッセージ個数
+    #     for i in range(1, 8):
+    #         message = make_message(i)
+    #         data_len = c * CHAIN
+    #         w = [0] * len(message)
+    #         chain = shuffle_li(data_len)
+    #         print('Analysis start')
+    #         # サイクル数
+    #         count = 15
+    #         register = []
+    #         for j, m in enumerate(message):
+    #             reg, w[j] = sha256_tests(m, flag, count)
+    #             # new_reg = convert_chain(reg, chain)
+    #             new_reg = reg
+    #             register.append(new_reg)
+    #         f = analysis(register, message, chain)
+    #         print(f)
     # print(ans)
 # }}}
 
