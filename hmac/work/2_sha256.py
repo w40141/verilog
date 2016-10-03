@@ -233,9 +233,11 @@ def change_message_hex(message):
 def change_message(m_init, m_len):
     m_len_hex = hex(m_len).replace('x', '').zfill(LENGTH)
     m_tmp = m_init + '80'
-    count = (m_len // 448 + 1)
-    m_len = BS4 * count - LENGTH
-    m_pad = m_tmp.ljust(m_len, '0') + m_len_hex
+    if len(m_tmp + m_len_hex) > 128:
+        m_pad_len = BS4 * 2 - LENGTH
+    else:
+        m_pad_len = BS4 - LENGTH
+    m_pad = m_tmp.ljust(m_pad_len, '0') + m_len_hex
     return m_pad
 
 
@@ -263,9 +265,13 @@ def make_kin_out(key, flag):
 
 # flag: 0=>input, 1=>output
 def key_message_input(key, flag, message):
-    m_init, m_len = change_message_hex(message)
-    k_pad = make_kin_out(key, flag)
+    if flag:
+        m_init = message
+        m_len = 256
+    else:
+        m_init, m_len = change_message_hex(message)
     m_len = m_len + BLOCKSIZE
+    k_pad = make_kin_out(key, flag)
     m_pad = change_message(m_init, m_len)
     k_m_pad= k_pad + m_pad
     return k_m_pad
@@ -276,10 +282,11 @@ def key_message_input(key, flag, message):
 # m = 'abc'
 # [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
 # def sha256(block, flag, key):
-def sha256_tests(message):
+def sha256_func(message):
     my_sha256 = SHA256();
-    m_pad = message_input(message)
-    block = word_split(split_str(m_pad, BS4))
+    # m_pad = message_input(message)
+    # print(m_pad)
+    block = word_split(split_str(message, BS4))
     for b in block:
         IV = my_sha256.rotation(b)
     IV = my_sha256.get_digest()
@@ -287,11 +294,18 @@ def sha256_tests(message):
 
 
 def hmac_sha256_tests(message, key):
-    kin_m = key_message_input(key, 1, message)
-    h_n = sha256_tests(kin_m)
+    kin_m = key_message_input(key, 0, message)
+    # print(kin_m)
+    h_n = sha256_func(kin_m)
     kout_m = key_message_input(key, 1, h_n)
-    hmac = sha256_tests(kout_m)
+    hmac = sha256_func(kout_m)
     return hmac
+
+
+def sha256_tests(message):
+    m_pad = message_input(message)
+    IV = sha256_func(m_pad)
+    return IV
 
 
 # {{{
@@ -731,8 +745,8 @@ def main():
     ans = []
     flag = 0
     # m = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
-    key = ''
-    m = ''
+    key = 'abc'
+    m = 'abc'
     hmac = hmac_sha256_tests(m, key)
     print(hmac)
     # IV = sha256_tests(m)
