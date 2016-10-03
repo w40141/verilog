@@ -62,14 +62,6 @@ class SHA256(): # {{{
         return reg
 
 
-    # def get_IV(self, flag, key):
-    #     if flag :
-    #         self.value_IV = key
-    #     else:
-    #         self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
-    #                          0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
-
-
     def rotation(self, block):
         self._W_schedule(block)
         self._input_digest()
@@ -193,18 +185,16 @@ class SHA256(): # {{{
         list_reg = split_str2int(reg, 1)
         self.register.append(list_reg)
     # }}}
+# }}}
 
 
+# SHA256 function{{{
 def int2bin(num):
     num_bin = format(num, 'b')
     num_zero = num_bin.zfill(32)
     return num_zero
 
 
-# }}}
-
-
-# {{{
 def word_split(m):
     vi = []
     for i in m:
@@ -253,7 +243,7 @@ def make_kin_out(key, flag):
     if k_len <= BLOCKSIZE:
         k = k_init.ljust(BS4, '0')
     else:
-        k_tmp = sha256_tests(key, 0, 0)
+        k_tmp = sha256_tests(key)
         k = k_tmp.ljust(BS4, '0')
     k_int = int(k, 16)
     pad_chr = pad[flag] * 64
@@ -276,12 +266,7 @@ def key_message_input(key, flag, message):
     k_m_pad= k_pad + m_pad
     return k_m_pad
 
-# }}}
 
-
-# m = 'abc'
-# [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
-# def sha256(block, flag, key):
 def sha256_func(message):
     my_sha256 = SHA256();
     # m_pad = message_input(message)
@@ -306,6 +291,7 @@ def sha256_tests(message):
     m_pad = message_input(message)
     IV = sha256_func(m_pad)
     return IV
+# }}}
 
 
 # {{{
@@ -397,17 +383,16 @@ def convert(reg_list):
 
 # Analysis {{{
 # first_step {{{
-def compare_reg(reg_list):# {{{
+def compare_reg(reg_list):
     series = []
     for i, src_reg in enumerate(reg_list):
         for j, dst_reg in enumerate(reg_list):
             if src_reg[:-1] == dst_reg[1:]:
                 series.append([i, j])
     return series
-# }}}
 
 
-def find_series(series):# {{{
+def find_series(series):
     fin_ser = []
     for ser in series:
         count = 0
@@ -426,7 +411,6 @@ def find_series(series):# {{{
                 count += 1
         fin_ser.append(ser)
     return fin_ser
-# }}}
 
 
 # def reg_compare(reg_li):# {{{
@@ -442,7 +426,7 @@ def find_series(series):# {{{
 # # }}}
 
 
-def and_ser_li(set_ser):# {{{
+def and_ser_li(set_ser):
     matched_list = []
     for i in set_ser:
         if len(matched_list) == 0:
@@ -450,7 +434,6 @@ def and_ser_li(set_ser):# {{{
         else:
             matched_list = [tag for tag in matched_list if tag in i]
     return matched_list
-# }}}
 
 
 def first_step(reg):
