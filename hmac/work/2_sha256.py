@@ -10,8 +10,8 @@ import time
 
 WORD = 8
 LENGTH = 16
-M_LENGTH = 128
 CHAIN = 256
+BS4 = 128
 BLOCKSIZE = 512
 # }}}
 
@@ -50,22 +50,24 @@ class SHA256(): # {{{
                   0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
                   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
                   0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]
+        self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
+                         0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
         self.register = []
 
 
     def get_digest(self):
-        iv = ''
+        reg = ''
         for i in self.value_IV:
-            iv = iv + hex(i)[2:].zfill(8)
-        return iv
+            reg = reg + hex(i)[2:].zfill(8)
+        return reg
 
 
-    def get_IV(self, flag, key):
-        if flag :
-            self.value_IV = key
-        else:
-            self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
-                             0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
+    # def get_IV(self, flag, key):
+    #     if flag :
+    #         self.value_IV = key
+    #     else:
+    #         self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
+    #                          0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
 
 
     def rotation(self, block):
@@ -202,72 +204,7 @@ def int2bin(num):
 # }}}
 
 
-# def sha256_tests(message, flag, key):
-def sha256(block, flag, key):
-    my_sha256 = SHA256();
-    # block = word_split(message_input(message))
-    my_sha256.get_IV(flag, key)
-    for b in block:
-        IV = my_sha256.rotation(b)
-        # my_sha256._W_schedule(b)
-    # return my_sha256.register, my_sha256.W
-    # return IV, my_sha256.register
-    return IV
-
-
-# m = 'abc'
-# [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
-def sha256_tests(message, flag, key):
-    m = message_input(message)
-    # block = word_split(message_input(message))
-    block = word_split(m)
-    IV = sha256(block, flag, key)
-    return IV
-
-
-def make_kin_out(key, pad):
-    k_len = len(key) * 8
-    k_init = str(binascii.hexlify(key.encode()))[2:-1]
-    if k_len <= BLOCKSIZE:
-        k = k_init.ljust(128, '0')
-    else:
-        k_tmp = sha256_tests(key, 0, 0)
-        k = k_tmp.ljust(128, '0')
-    k_int = int(k, 16)
-    pad_chr = pad * 64
-    pad_int = int(pad_chr, 16)
-    k_pad = k_int ^ pad_int
-    k_hex = hex(k_pad)
-    k_list = [k_hex[2:]]
-    block = word_split(k_list)
-    k0 = sha256(block, 0, 0)
-    return k0
-
-
-def hmac_sha256_tests(message, key):
-    kin = make_kin_out(key, '36')
-    print(kin)
-    h_n = sha256_tests(message, 1, kin)
-    print(h_n)
-    kout = make_kin_out(key, '5c')
-    print(kout)
-    hmac = sha256_tests(h_n, 1, kout)
-    return hmac
-
-
-def message_input(m):
-    m_init = str(binascii.hexlify(m.encode()))[2:]
-    m_len = len(m) * 8
-    m_hex = hex(m_len).replace('x', '').zfill(LENGTH)
-    m_tmp = m_init.replace("'", '80')
-    count = (m_len // 448 + 1)
-    m_len = M_LENGTH * count - LENGTH
-    m_padded = m_tmp.ljust(m_len, '0')
-    m_fin = m_padded + m_hex
-    m_list = split_str(m_fin, M_LENGTH)
-    return m_list
-
-
+# {{{
 def word_split(m):
     vi = []
     for i in m:
@@ -285,6 +222,76 @@ def split_str(s, n):
 def split_str2int(s, n):
     v = [int(s[i:i+n], 16) for i in range(0, len(s), n)]
     return v
+
+
+def change_message_hex(message):
+    m_init = str(binascii.hexlify(message.encode()))[2:-1]
+    m_len = len(message) * 8
+    return m_init, m_len
+
+
+def change_message(m_init, m_len):
+    m_len_hex = hex(m_len).replace('x', '').zfill(LENGTH)
+    m_tmp = m_init + '80'
+    count = (m_len // 448 + 1)
+    m_len = BS4 * count - LENGTH
+    m_pad = m_tmp.ljust(m_len, '0') + m_len_hex
+    return m_pad
+
+
+def message_input(message):
+    m_init, m_len = change_message_hex(message)
+    m_pad = change_message(m_init, m_len)
+    return m_pad
+
+
+def make_kin_out(key, flag):
+    pad = ['36', '5c']
+    k_init, k_len = change_message_hex(key)
+    if k_len <= BLOCKSIZE:
+        k = k_init.ljust(BS4, '0')
+    else:
+        k_tmp = sha256_tests(key, 0, 0)
+        k = k_tmp.ljust(BS4, '0')
+    k_int = int(k, 16)
+    pad_chr = pad[flag] * 64
+    pad_int = int(pad_chr, 16)
+    k_pad = k_int ^ pad_int
+    k_hex = hex(k_pad)[2:]
+    return k_hex
+
+
+# flag: 0=>input, 1=>output
+def key_message_input(key, flag, message):
+    m_init, m_len = change_message_hex(message)
+    k_pad = make_kin_out(key, flag)
+    m_len = m_len + BLOCKSIZE
+    m_pad = change_message(m_init, m_len)
+    k_m_pad= k_pad + m_pad
+    return k_m_pad
+
+# }}}
+
+
+# m = 'abc'
+# [[1633837952, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24]]
+# def sha256(block, flag, key):
+def sha256_tests(message):
+    my_sha256 = SHA256();
+    m_pad = message_input(message)
+    block = word_split(split_str(m_pad, BS4))
+    for b in block:
+        IV = my_sha256.rotation(b)
+    IV = my_sha256.get_digest()
+    return IV
+
+
+def hmac_sha256_tests(message, key):
+    kin_m = key_message_input(key, 1, message)
+    h_n = sha256_tests(kin_m)
+    kout_m = key_message_input(key, 1, h_n)
+    hmac = sha256_tests(kout_m)
+    return hmac
 
 
 # {{{
@@ -342,12 +349,6 @@ def convert_chain(reg_li, rand_li):
                 scan_li.append(random.randint(0, 1))
         scan_li_li.append(scan_li)
     return scan_li_li
-
-
-def make_hash(m):
-    h = hashlib.sha256(m.encode()).hexdigest()
-    list_h = split_str2int(h, 8)
-    return list_h
 
 
 def make_message(count):
@@ -730,10 +731,11 @@ def main():
     ans = []
     flag = 0
     # m = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
-    key = 'a'
-    m = 'abc'
+    key = ''
+    m = ''
     hmac = hmac_sha256_tests(m, key)
-    # IV = sha256_tests(m, flag, key)
+    print(hmac)
+    # IV = sha256_tests(m)
     # print(IV)
     # スキャンチェイン長# {{{
     # for c in tmp:
