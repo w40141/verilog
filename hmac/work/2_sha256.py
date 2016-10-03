@@ -53,6 +53,7 @@ class SHA256(): # {{{
         self.value_IV = [0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xa54FF53A,
                          0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19]
         self.register = []
+        self.set_reg = []
 
 
     def get_digest(self):
@@ -65,9 +66,11 @@ class SHA256(): # {{{
     def rotation(self, block):
         self._W_schedule(block)
         self._input_digest()
+        self.register = []
         for i in range(64):
             self._restore_reg()
             self._sha256_round(i)
+        self.set_reg.append(self.register)
         self._update_digest()
         return self.value_IV
 
@@ -275,16 +278,17 @@ def sha256_func(message):
     for b in block:
         IV = my_sha256.rotation(b)
     IV = my_sha256.get_digest()
-    return IV
+    # return IV, my_sha256.register
+    return IV, my_sha256.set_reg
 
 
 def hmac_sha256_tests(message, key):
     kin_m = key_message_input(key, 0, message)
-    # print(kin_m)
-    h_n = sha256_func(kin_m)
+    h_n, reg_kin = sha256_func(kin_m)
     kout_m = key_message_input(key, 1, h_n)
-    hmac = sha256_func(kout_m)
-    return hmac
+    hmac, reg_kout = sha256_func(kout_m)
+    reg = reg_kin + reg_kout
+    return reg
 
 
 def sha256_tests(message):
@@ -294,7 +298,7 @@ def sha256_tests(message):
 # }}}
 
 
-# {{{
+# attack {{{
 # {{{
 
 
@@ -372,11 +376,12 @@ def convert(reg_list):
     orig = []
     for reg_li in reg_list:
         scanchain = [[0 for i in reg_li] for j in reg_li[0]]
-        for i, cyc_reg in enumerate(reg_li):
-            for j, one_reg in enumerate(cyc_reg):
+        for i, reg in enumerate(reg_li):
+            for j, one_reg in enumerate(reg):
                 scanchain[j][i] = int(one_reg)
         orig.append(scanchain)
     return orig
+
 
 # }}}
 
@@ -413,19 +418,6 @@ def find_series(series):
     return fin_ser
 
 
-# def reg_compare(reg_li):# {{{
-#     if len(reg_li) == 0:
-#         flag = 1
-#     else:
-#         org = reg_li[0]
-#         flag = 0
-#         for reg in reg_li:
-#             if org != reg:
-#                 flag = 1
-#     return flag
-# # }}}
-
-
 def and_ser_li(set_ser):
     matched_list = []
     for i in set_ser:
@@ -439,6 +431,7 @@ def and_ser_li(set_ser):
 def first_step(reg):
     set_ser = []
     for i in reg:
+        # print(i)
         set_ser.append(compare_reg(i))
     if len(set_ser) > 1:
         set_li = and_ser_li(set_ser)
@@ -701,8 +694,9 @@ def analysis(register, message, chain):
     scanchain = convert(register)
     # print('convert register data finished')
     flow_data = first_step(scanchain)
-    # print(flow_data)
+    print(flow_data)
     determin_li = second_step(scanchain, flow_data, message)
+    print(determin_li)
     # for i in range(64, 0, -1):
     #     flow_data = first_step(scanchain)
     #     if flow_data == 0:
@@ -717,7 +711,7 @@ def analysis(register, message, chain):
     # reg_li = third_step(scanchain[0], group_bit, flow_data)
     # print(reg_li)
     # print('third step finished')
-    return determin_li
+    # return determin_li
 # }}}
 # }}}
 
@@ -726,14 +720,12 @@ def main():
     # tmp = [1, 2, 4, 8, 16]
     tmp = [1]
     ans = []
-    flag = 0
-    # m = 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
     key = 'abc'
     m = 'abc'
-    hmac = hmac_sha256_tests(m, key)
-    print(hmac)
-    # IV = sha256_tests(m)
-    # print(IV)
+    reg = hmac_sha256_tests(m, key)
+    chain = [i for i in range(256)]
+    new_reg = convert_chain(reg, chain)
+    f = analysis(reg, m, chain)
     # スキャンチェイン長# {{{
     # for c in tmp:
     #     # メッセージ個数
