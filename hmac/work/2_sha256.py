@@ -272,13 +272,11 @@ def key_message_input(key, flag, message):
 
 def sha256_func(message):
     my_sha256 = SHA256();
-    # m_pad = message_input(message)
-    # print(m_pad)
     block = word_split(split_str(message, BS4))
     for b in block:
         IV = my_sha256.rotation(b)
     IV = my_sha256.get_digest()
-    # return IV, my_sha256.register
+    print(IV)
     return IV, my_sha256.set_reg
 
 
@@ -319,30 +317,13 @@ def chain_end_remove(scanchain):
     return scanchain
 
 
-def random_message(m):
-    li = []
-    for i in range(m):
-        word = ''
-        for tmp in range(4):
-            j = random.randint(0, 2)
-            if j == 0:
-                word += chr(random.randint(48, 57))
-            elif j == 1:
-                word += chr(random.randint(97, 122))
-            else:
-                word += chr(random.randint(65, 90))
-        li.append(word)
-    return li
+def make_rand_li(num):
+    rand_li = [i for i in range(num)]
+    random.shuffle(rand_li)
+    return rand_li
 
 
-def shuffle_li(num):
-    li = [i for i in range(num)]
-    random.shuffle(li)
-    rand = li
-    return rand
-
-
-def convert_chain(reg_li, rand_li):
+def convert_rand_chain(reg_li, rand_li):
     scan_li_li = []
     for r in reg_li:
         scan_li = []
@@ -355,9 +336,9 @@ def convert_chain(reg_li, rand_li):
     return scan_li_li
 
 
-def make_message(count):
+def make_message_li(count):
     word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
-    message = ['q' * 32]
+    message_li = ['q' * 32]
     pad_q = ''
     for i in range(4):
         for word in word_li:
@@ -366,13 +347,13 @@ def make_message(count):
             if word == '1':
                 for j in range(count):
                     pad_q = 'qqqq' * j
-                    message.append(pad_q + pad_word)
+                    message_li.append(pad_q + pad_word)
             else:
-                message.append(pad_word)
-    return message
+                message_li.append(pad_word)
+    return message_li
 
 
-def convert(reg_list):
+def transpose_reg(reg_list):
     orig = []
     for reg_li in reg_list:
         scanchain = [[0 for i in reg_li] for j in reg_li[0]]
@@ -428,10 +409,9 @@ def and_ser_li(set_ser):
     return matched_list
 
 
-def first_step(reg):
+def first_step(reg_li):
     set_ser = []
-    for i in reg:
-        # print(i)
+    for i in reg_li:
         set_ser.append(compare_reg(i))
     if len(set_ser) > 1:
         set_li = and_ser_li(set_ser)
@@ -446,22 +426,23 @@ def first_step(reg):
 
 
 # second_step {{{
+# find a, e reg number and a, e bit data
 def find_first_bit(register, flow_data):# {{{
     first_bit_li = []
-    ae_bit_num = [x[0] for x in flow_data]
+    ae_reg_num = [x[0] for x in flow_data]
     for reg in register:
-        first_bit = [reg[i] for i in ae_bit_num]
+        first_bit = [reg[i] for i in ae_reg_num]
         first_bit_li.append(first_bit)
-    return ae_bit_num, first_bit_li
+    return ae_reg_num, first_bit_li
 # }}}
 
 
 def make_diff_bit_stream(message_li):# {{{
-    org = message_li[0]
+    org_message = message_li[0]
     diff_bit_stream = []
-    for scr in message_li:
-        if org != scr:
-            diff_bit = find_diff_bit(org, scr)
+    for scr_message in message_li:
+        if org_message != scr_message:
+            diff_bit = find_diff_bit(org_message, scr_message)
             diff_bit_stream.append(diff_bit)
     return diff_bit_stream
 
@@ -557,26 +538,26 @@ def check_len(target_li):# {{{
 # }}}
 
 
-def convert_li(pair_diff_li, ae_first_num):# {{{
+def convert_li(pair_diff_li, ae_reg_num):# {{{
     determin_li = [0] * 32
     for i, pair_set in enumerate(pair_diff_li):
         det = []
         pair_li = list(pair_set)
         for pair in pair_li:
-            det.append(ae_first_num(pair))
+            # det.append(ae_reg_num(pair))
+            det.append(ae_reg_num[pair])
         determin_li[i] = det
     return determin_li
 # }}}
 
 
 def second_step(signature_li, flow_data, message_li):
-    ae_first_num,  first_bit_li = find_first_bit(signature_li, flow_data)
+    ae_reg_num,  first_bit_li = find_first_bit(signature_li, flow_data)
     diff_bit_stream = make_diff_bit_stream(message_li)
     diff_bit_li = make_diff_bit_li(first_bit_li, diff_bit_stream)
-    pair_li = make_pair_li(diff_bit_li)
-    print(pair_li)
-    if check_len(pair_li):
-        determin_li = convert_li(pair_li, ae_first_num)
+    pair_diff_li = make_pair_li(diff_bit_li)
+    if check_len(pair_diff_li):
+        determin_li = convert_li(pair_diff_li, ae_reg_num)
         return determin_li
     else:
         return 0
@@ -586,44 +567,22 @@ def second_step(signature_li, flow_data, message_li):
 
 
 # third_step{{{
-def find_flow(bit_num, flow_data):
-    for f in flow_data:
-        if bit_num == f[0]:
-            break
-    return f
+
+# }}}
+
+# {{{
+# }}}
+# }}}
+# }}}
 
 
-def get_scan(i, scan):
-    return scan[i]
-
-
-def maj(a_li, b_li, c_li):
-    maj = []
-    for a, b, c in zip(a_li, b_li, c_li):
-        maj.append((a & b) ^ (a & c) ^ (b & c))
-    return maj
-
-
-def sigma(s2_li, s13_li, s22_li):
-    sigma_li = []
-    for s2, s13, s22 in zip(s2_li, s13_li, s22_li):
-        sigma_li.append(s2 ^ s13 ^ s22)
-    return sigma_li
-
-
-def t1(sigma_li, maj_li):
-    t1_li = []
-    for s, m in zip(sigma_li, maj_li):
-        t1_li.append(s + m)
-    return t1_li
-
-
-def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):
+def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):# {{{
     a_group = group_li[bit_num]
     for i in range(2):
         a_bit = a_group[i]
         a_bit_flow = find_flow(a_bit, flow_data)
-        dic_abcd = make_abcd(scan, a_bit_flow)
+        # dic_abcd = make_dic_abcd(scan, a_bit_flow)
+        dic_abcd = make_dic_abcd(a_bit_flow, scan)
         e_bit = a_group[1-i]
         e_li = get_scan(e_bit, scan)
         ad_li, ad_carry_li = cal_add(dic_abcd['a'], dic_abcd['d'], carry_dic['ad'])
@@ -648,13 +607,26 @@ def cal_digit(reg_li, bit_num, group_li, flow_data, scan, carry_dic):
     return reg_li, carry_dic
 
 
-def make_abcd(scan, flow_data):
-    a = get_scan(flow_data[0], scan)
-    b = get_scan(flow_data[1], scan)
-    c = get_scan(flow_data[2], scan)
-    d = get_scan(flow_data[3], scan)
-    dic_abcd = {'a': a, 'b': b, 'c': c, 'd': d}
-    return dic_abcd
+# cal {{{
+def maj(a_li, b_li, c_li):
+    maj = []
+    for a, b, c in zip(a_li, b_li, c_li):
+        maj.append((a & b) ^ (a & c) ^ (b & c))
+    return maj
+
+
+def sigma(s2_li, s13_li, s22_li):
+    sigma_li = []
+    for s2, s13, s22 in zip(s2_li, s13_li, s22_li):
+        sigma_li.append(s2 ^ s13 ^ s22)
+    return sigma_li
+
+
+def t1(sigma_li, maj_li):
+    t1_li = []
+    for s, m in zip(sigma_li, maj_li):
+        t1_li.append(s + m)
+    return t1_li
 
 
 def get_s(num, i, group_li):
@@ -676,27 +648,81 @@ def cal_add(one_li, two_li, carry):
         cal = one + two + c
         add_li.append(cal & 1)
         carry_li.append((cal & 6) >> 1)
-    return add_li, carry_li
+    return add_li, carry_li# }}}
 
 
-def third_step(scan, group_li, flow_data):
+def find_flow(bit_num, flow_data):
+    for f in flow_data:
+        if bit_num == f[0]:
+            break
+    return f
+
+
+def get_scan(i, scan):
+    return scan[i]
+
+
+def make_dic_abcd(flow_data, scan):
+    a = get_scan(flow_data[0], scan)
+    b = get_scan(flow_data[1], scan)
+    c = get_scan(flow_data[2], scan)
+    d = get_scan(flow_data[3], scan)
+    dic_abcd = {'a': a, 'b': b, 'c': c, 'd': d}
+    return dic_abcd
+
+# }}}
+
+
+def get_flow(g, flow_data):
+    for flow in flow_data:
+        if g == flow[0]:
+            return flow
+
+
+def restore_reg(reg_li, flow_data, group_li):
+    num_li = [-1] * 256
+    for i in range(len(reg_li)):
+        group = group_li[i]
+        for g in group:
+            if reg_li[i] == g:
+                i_tmp = i
+            else:
+                i_tmp = i + 128
+            flow = get_flow(g, flow_data)
+            for k in range(4):
+                num_li[i_tmp + 32 * k] = flow[k]
+    return num_li
+
+
+def get_scanchain(num_li, scanchain):
+    ans = ''
+    for num in num_li:
+        ans = ans + str(scanchain[num][0])
+    ans_li = [hex(int(ans[i:i+32], 2)) for i in range(0, len(ans), 32)]
+    return ans_li
+
+
+def third_step(scanchain, flow_data, group_li):
     reg_li = [0] * 32
     ad_carry_li = [0] * 63
     et_carry_li = [0] * 63
     carry_dic = {'ad':ad_carry_li, 'et':et_carry_li}
-    for i in range(len(group_li)-1, -1, -1):
-        reg_li, carry_dic = cal_digit(reg_li, i, group_li, flow_data, scan, carry_dic)
-    return reg_li
-# }}}
+    for bit_num in range(len(group_li)-1, -1, -1):
+        reg_li, carry_dic = cal_digit(reg_li, bit_num, group_li, flow_data, scanchain, carry_dic)
+    num_li = restore_reg(reg_li, flow_data, group_li)
+    ans_li = get_scanchain(num_li, scanchain)
+    return ans_li
 
 
-def analysis(register, message, chain):
-    scanchain = convert(register)
-    # print('convert register data finished')
+def analysis(reg_li, message_li, chain):
+    scanchain = transpose_reg(reg_li)
+    print('convert register data finished')
     flow_data = first_step(scanchain)
-    print(flow_data)
-    determin_li = second_step(scanchain, flow_data, message)
-    print(determin_li)
+    print('first step finish')
+    group_li = second_step(scanchain, flow_data, message_li)
+    print('second step finish')
+    ans_li = third_step(scanchain[0], flow_data, group_li)
+    print(ans_li)
     # for i in range(64, 0, -1):
     #     flow_data = first_step(scanchain)
     #     if flow_data == 0:
@@ -712,20 +738,23 @@ def analysis(register, message, chain):
     # print(reg_li)
     # print('third step finished')
     # return determin_li
-# }}}
-# }}}
 
 
 def main():
+    test_message = 5
     # tmp = [1, 2, 4, 8, 16]
     tmp = [1]
-    ans = []
+    reg_li = []
     key = 'abc'
-    m = 'abc'
-    reg = hmac_sha256_tests(m, key)
+    # message = 'abc'
     chain = [i for i in range(256)]
-    new_reg = convert_chain(reg, chain)
-    f = analysis(reg, m, chain)
+    # f = analysis(reg, m, chain)
+    message_li = make_message_li(test_message)
+    for message in message_li:
+        one_reg = hmac_sha256_tests(message, key)
+        reg_li.append(one_reg[1])
+    f = analysis(reg_li, message_li, chain)
+    # new_reg = convert_rand_chain(reg, chain)
     # スキャンチェイン長# {{{
     # for c in tmp:
     #     # メッセージ個数
@@ -740,7 +769,7 @@ def main():
     #         register = []
     #         for j, m in enumerate(message):
     #             reg, w[j] = sha256_tests(m, flag, count)
-    #             # new_reg = convert_chain(reg, chain)
+    #             # new_reg = convert_rand_chain(reg, chain)
     #             new_reg = reg
     #             register.append(new_reg)
     #         f = analysis(register, message, chain)
