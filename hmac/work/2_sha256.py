@@ -276,7 +276,6 @@ def sha256_func(message):
     for b in block:
         IV = my_sha256.rotation(b)
     IV = my_sha256.get_digest()
-    print(IV)
     return IV, my_sha256.set_reg
 
 
@@ -723,20 +722,6 @@ def analysis(reg_li, message_li, chain):
     print('second step finish')
     ans_li = third_step(scanchain[0], flow_data, group_li)
     print(ans_li)
-    # for i in range(64, 0, -1):
-    #     flow_data = first_step(scanchain)
-    #     if flow_data == 0:
-    #         print(i+1)
-    #         break
-    #     scanchain = chain_end_remove(scanchain)
-    # print('first step finished')
-    # print(chack_chain(flow_data, chain))
-    # group_bit = second_step(register, flow_data, bin_w)
-    # print('second step finished')
-    # # print(group_bit)
-    # reg_li = third_step(scanchain[0], group_bit, flow_data)
-    # print(reg_li)
-    # print('third step finished')
     # return determin_li
 
 
@@ -746,9 +731,9 @@ def main():
     tmp = [1]
     reg_li = []
     key = 'abc'
-    # message = 'abc'
+    message = 'abc'
     chain = [i for i in range(256)]
-    # f = analysis(reg, m, chain)
+    # one_reg = hmac_sha256_tests(message, key)
     message_li = make_message_li(test_message)
     for message in message_li:
         one_reg = hmac_sha256_tests(message, key)
