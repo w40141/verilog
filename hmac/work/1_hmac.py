@@ -326,7 +326,7 @@ def make_rand_message(n):
 
 def make_message_li(count):
     word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
-    message_li = ['q' * 4 * (count + 1)]
+    message_li = ['q' * 4 * count]
     pad_q = ''
     for i in range(4):
         for word in word_li:
@@ -705,54 +705,72 @@ def analysis(reg_li, message_li, chain):
     flow_data = first_step(scanchain)
     group_li = second_step(scanchain, flow_data, message_li)
     if group_li:
-        ans_li = third_step(scanchain[0], flow_data, group_li)
-        return ans_li
+        # ans_li = third_step(scanchain[0], flow_data, group_li)
+        # return ans_li
+        return group_li
     else:
         return 0
 
 
 def main():
     # test_message = 5
-    c_li = [i for i in range(1, 15)]
-    key = make_rand_message(10)
-    print(key)
+    c_li = [i for i in range(1, 100)]
     # key = 'abc'
-    # message = 'abc'
-    # chain = make_rand_li(512)
-    # chain = [i for i in range(256)]
-    # message_li = make_message_li(test_message)
-    # for message in message_li:
-    #     one_reg = hmac_sha256_tests(message, key)
-    #     reg_li.append(one_reg[1])
-    # f = analysis(reg_li, message_li, chain)
-    for c in c_li:
-        chain = make_rand_li(c * 256)
-        print(len(chain))
-        if c == 1:
-            for test_message in range(4, 20):
-                reg_li = []
-                message_li = make_message_li(test_message)
-                for message in message_li:
-                    one_reg = hmac_sha256_tests(message, key)
-                    li = convert_rand_chain(one_reg[1], chain)
-                    reg_li.append(li)
-                    # reg_li.append(one_reg[1])
-                ans = analysis(reg_li, message_li, chain)
-                if ans:
-                    print(test_message)
-                    print(ans)
-                    break
-        else:
+    # key = make_rand_message(256)
+    num = 10
+    chain = [i for i in range(256)]
+    average = 0
+    mi = 100
+    ma = 0
+    for i in range(num):
+        key = make_rand_message(5)
+        print(key)
+        for test_message in range(4, 15):
+            print(test_message)
             reg_li = []
             message_li = make_message_li(test_message)
             for message in message_li:
                 one_reg = hmac_sha256_tests(message, key)
-                li = convert_rand_chain(one_reg[1], chain)
-                reg_li.append(li)
+                reg_li.append(one_reg[1])
             ans = analysis(reg_li, message_li, chain)
             if ans:
-                print(test_message)
-                print(ans)
+                if mi > test_message:
+                    mi = test_message
+                if test_message > ma:
+                    ma = test_message
+                break
+    average = average / num
+    print(average)
+    print(mi)
+    print(ma)
+    # for c in c_li:
+    #     chain = make_rand_li(c * 256)
+    #     print(len(chain))
+    #     if c == 1:
+    #         for test_message in range(4, 20):
+    #             reg_li = []
+    #             message_li = make_message_li(test_message)
+    #             for message in message_li:
+    #                 one_reg = hmac_sha256_tests(message, key)
+    #                 li = convert_rand_chain(one_reg[1], chain)
+    #                 reg_li.append(li)
+    #                 # reg_li.append(one_reg[1])
+    #             ans = analysis(reg_li, message_li, chain)
+    #             if ans:
+    #                 print(test_message)
+    #                 print(ans)
+    #                 break
+    #     else:
+    #         reg_li = []
+    #         message_li = make_message_li(test_message)
+    #         for message in message_li:
+    #             one_reg = hmac_sha256_tests(message, key)
+    #             li = convert_rand_chain(one_reg[1], chain)
+    #             reg_li.append(li)
+    #         ans = analysis(reg_li, message_li, chain)
+    #         if ans:
+    #             print(test_message)
+    #             print(ans)
 
 
 if __name__=="__main__":
