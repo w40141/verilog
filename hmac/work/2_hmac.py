@@ -69,6 +69,9 @@ class SHA256(): # {{{
         for i in range(64):
             self._restore_reg()
             self._sha256_round(i)
+            # if i <= 1:
+            #     print(self.w)
+            #     self._print_reg()
         self.set_reg.append(self.register)
         self._update_digest()
         return self.value_IV
@@ -239,7 +242,7 @@ def message_input(message):
     return m_pad
 
 
-def make_kin_out(key, flag):
+def make_kin_kout(key, flag):
     pad = ['36', '5c']
     k_init, k_len = change_message_hex(key)
     if k_len <= BLOCKSIZE:
@@ -252,6 +255,7 @@ def make_kin_out(key, flag):
     pad_int = int(pad_chr, 16)
     k_pad = k_int ^ pad_int
     k_hex = hex(k_pad)[2:]
+    k_hex = k_hex.zfill(128)
     return k_hex
 
 
@@ -263,7 +267,7 @@ def key_message_input(key, flag, message):
     else:
         m_init, m_len = change_message_hex(message)
     m_len = m_len + BLOCKSIZE
-    k_pad = make_kin_out(key, flag)
+    k_pad = make_kin_kout(key, flag)
     m_pad = change_message(m_init, m_len)
     k_m_pad= k_pad + m_pad
     return k_m_pad
@@ -289,8 +293,8 @@ def hmac_sha256_tests(message, key):
 
 def sha256_tests(message):
     m_pad = message_input(message)
-    IV = sha256_func(m_pad)
-    return IV
+    IV ,reg = sha256_func(m_pad)
+    return IV, reg
 # }}}
 
 
@@ -324,8 +328,27 @@ def make_rand_message(n):
     return random_str
 
 
-def make_message_li(count):
+def make_message_li_v(count):
+    # word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
+    word_li = ['6', 'V', 'f', '~', 'r', 't', 'w']
+    message_li = ['v' * 4 * count]
+    pad_q = ''
+    for i in range(4):
+        for word in word_li:
+            pad_word = word.rjust(i+1, 'v')
+            pad_word = pad_word.ljust(4, 'v')
+            if word == '6':
+                for j in range(count):
+                    pad_q = 'vvvv' * j
+                    message_li.append(pad_q + pad_word)
+            else:
+                message_li.append(pad_word)
+    return message_li
+
+
+def make_message_li_q(count):
     word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
+    # word_li = ['6', 'V', 'f', '~', 'r', 't', 'w']
     message_li = ['q' * 4 * count]
     pad_q = ''
     for i in range(4):
@@ -452,7 +475,7 @@ def make_diff_bit_li(first_bit_li, diff_bit_stream):# {{{
     org = first_bit_li[0]
     scr_li = first_bit_li[1:]
     diff_bit_li = [[] for x in range(32)]
-    # diff_bit_li = [-1 for x in range(32)]
+    # for i, scr in enumerate(scr_li):
     for i, scr in enumerate(scr_li):
         diff_bit = diff_bit_stream[i]
         tmp_li = compare_li(org, scr)
@@ -463,14 +486,14 @@ def make_diff_bit_li(first_bit_li, diff_bit_stream):# {{{
 #make_diff_bit_li
 def compare_li(org, scr):
     flag = 1
-    count = 1
+    cycle = 0
     diff_bit_li = []
     while flag:
-        for i in range(len(org)):
-            if org[i][count] != scr[i][count]:
-                diff_bit_li.append(i)
+        for num in range(len(org)):
+            if org[num][cycle] != scr[num][cycle]:
+                diff_bit_li.append(num)
                 flag = 0
-        count += 1
+        cycle += 1
     return diff_bit_li
 # }}}
 
@@ -485,7 +508,6 @@ def make_pair_li(diff_bit_li):# {{{
             num = i * 8 + j
             target_li = diff_bit_li[num]
             determ_set, finish_set = make_determ_finish_set(target_li, finish_set)
-            # print(determ_set)
             pair_li[num] = determ_set
             if pair_li[num-1] == 0:
                 pair_li[num-1] = get_pair(pair_li, finish_set)
@@ -542,6 +564,7 @@ def convert_li(pair_diff_li, ae_reg_num):# {{{
 def second_step(signature_li, flow_data, message_li):
     ae_reg_num, first_bit_li = find_first_bit(signature_li, flow_data)
     diff_bit_stream = make_diff_bit_stream(message_li)
+    # 変更
     diff_bit_li = make_diff_bit_li(first_bit_li, diff_bit_stream)
     pair_diff_li = make_pair_li(diff_bit_li)
     if check_len(pair_diff_li):
@@ -713,64 +736,45 @@ def analysis(reg_li, message_li, chain):
 
 
 def main():
-    # test_message = 5
-    c_li = [i for i in range(1, 100)]
-    # key = 'abc'
-    # key = make_rand_message(256)
-    num = 10
+    num = 10000
+    # chain = make_rand_li(256)
     chain = [i for i in range(256)]
     average = 0
     mi = 100
     ma = 0
+    count = 0
+    key_li = ['aaaa', '123']
+    # for key in key_li:
     for i in range(num):
+        print(i)
         key = make_rand_message(5)
         print(key)
-        for test_message in range(4, 15):
-            print(test_message)
+        for message_num in range(3, 30):
             reg_li = []
-            message_li = make_message_li(test_message)
+            if message_num < 17:
+                message_li = make_message_li_q(message_num)
+            else:
+                message_num = message_num - 14
+                message_li = make_message_li_v(message_num)
             for message in message_li:
                 one_reg = hmac_sha256_tests(message, key)
-                reg_li.append(one_reg[1])
+                tmp = one_reg[1]
+                # tmp = convert_rand_chain(one_reg[1], chain)
+                reg_li.append(tmp)
             ans = analysis(reg_li, message_li, chain)
             if ans:
-                if mi > test_message:
-                    mi = test_message
-                if test_message > ma:
-                    ma = test_message
+                count += 1
+                average = average + message_num
+                if mi > message_num:
+                    mi = message_num
+                if message_num > ma:
+                    ma = message_num
                 break
-    average = average / num
+    average = average / count
+    print(count)
     print(average)
     print(mi)
-    print(ma)
-    # for c in c_li:
-    #     chain = make_rand_li(c * 256)
-    #     print(len(chain))
-    #     if c == 1:
-    #         for test_message in range(4, 20):
-    #             reg_li = []
-    #             message_li = make_message_li(test_message)
-    #             for message in message_li:
-    #                 one_reg = hmac_sha256_tests(message, key)
-    #                 li = convert_rand_chain(one_reg[1], chain)
-    #                 reg_li.append(li)
-    #                 # reg_li.append(one_reg[1])
-    #             ans = analysis(reg_li, message_li, chain)
-    #             if ans:
-    #                 print(test_message)
-    #                 print(ans)
-    #                 break
-    #     else:
-    #         reg_li = []
-    #         message_li = make_message_li(test_message)
-    #         for message in message_li:
-    #             one_reg = hmac_sha256_tests(message, key)
-    #             li = convert_rand_chain(one_reg[1], chain)
-    #             reg_li.append(li)
-    #         ans = analysis(reg_li, message_li, chain)
-    #         if ans:
-    #             print(test_message)
-    #             print(ans)
+    print(ma)# }}}
 
 
 if __name__=="__main__":

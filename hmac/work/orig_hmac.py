@@ -252,6 +252,7 @@ def make_kin_out(key, flag):
     pad_int = int(pad_chr, 16)
     k_pad = k_int ^ pad_int
     k_hex = hex(k_pad)[2:]
+    k_hex = k_hex.zfill(128)
     return k_hex
 
 
@@ -724,6 +725,7 @@ def main():
     ma = 0
     for i in range(num):
         key = make_rand_message(5)
+        key = '1'+key
         print(key)
         for test_message in range(4, 15):
             print(test_message)
