@@ -69,7 +69,8 @@ class SHA256(): # {{{
         for i in range(64):
             self._restore_reg()
             self._sha256_round(i)
-        self.set_reg.append(self.register)
+        # self.set_reg.append(self.register)
+        self.set_reg = self._noise() + self.register
         self._update_digest()
         return self.value_IV
 
@@ -186,6 +187,17 @@ class SHA256(): # {{{
         reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str2int(reg, 1)
         self.register.append(list_reg)
+
+
+    def _noise(self):
+        noise_li_li = []
+        num = random.randint(2, 100)
+        for i in range(num):
+            noise_li = []
+            for j in range(256):
+                noise_li.append(random.randint(2, 4))
+            noise_li_li.append(noise_li)
+        return noise_li_li
     # }}}
 # }}}
 
@@ -277,6 +289,7 @@ def sha256_func(message):
         IV = my_sha256.rotation(b)
     IV = my_sha256.get_digest()
     return IV, my_sha256.set_reg
+    # return IV, my_sha256.register
 
 
 def hmac_sha256_tests(message, key):
@@ -285,6 +298,10 @@ def hmac_sha256_tests(message, key):
     kout_m = key_message_input(key, 1, h_n)
     hmac, reg_kout = sha256_func(kout_m)
     reg = reg_kin + reg_kout
+    print(len(reg_kin))
+    print(len(reg_kout))
+    print(len(reg))
+    print(len(reg[0]))
     return reg
 
 
@@ -292,6 +309,8 @@ def sha256_tests(message):
     m_pad = message_input(message)
     IV = sha256_func(m_pad)
     return IV
+
+
 # }}}
 
 
@@ -714,65 +733,73 @@ def analysis(reg_li, message_li, chain):
 
 
 def main():
-    # test_message = 5
-    c_li = [i for i in range(1, 100)]
-    # key = 'abc'
-    # key = make_rand_message(256)
-    num = 10
-    chain = [i for i in range(256)]
-    average = 0
-    mi = 100
-    ma = 0
+    key = 'abc'
+    num = 2
+    message = '111'
     for i in range(num):
-        key = make_rand_message(5)
-        key = '1' + key
-        print(key)
-        for test_message in range(4, 15):
-            print(test_message)
-            reg_li = []
-            message_li = make_message_li(test_message)
-            for message in message_li:
-                one_reg = hmac_sha256_tests(message, key)
-                reg_li.append(one_reg[1])
-            ans = analysis(reg_li, message_li, chain)
-            if ans:
-                if mi > test_message:
-                    mi = test_message
-                if test_message > ma:
-                    ma = test_message
-                break
-    average = average / num
-    print(average)
-    print(mi)
-    print(ma)
-    # for c in c_li:
-    #     chain = make_rand_li(c * 256)
-    #     print(len(chain))
-    #     if c == 1:
-    #         for test_message in range(4, 20):
-    #             reg_li = []
-    #             message_li = make_message_li(test_message)
-    #             for message in message_li:
-    #                 one_reg = hmac_sha256_tests(message, key)
-    #                 li = convert_rand_chain(one_reg[1], chain)
-    #                 reg_li.append(li)
-    #                 # reg_li.append(one_reg[1])
-    #             ans = analysis(reg_li, message_li, chain)
-    #             if ans:
-    #                 print(test_message)
-    #                 print(ans)
-    #                 break
-    #     else:
-    #         reg_li = []
-    #         message_li = make_message_li(test_message)
-    #         for message in message_li:
-    #             one_reg = hmac_sha256_tests(message, key)
-    #             li = convert_rand_chain(one_reg[1], chain)
-    #             reg_li.append(li)
-    #         ans = analysis(reg_li, message_li, chain)
-    #         if ans:
-    #             print(test_message)
-    #             print(ans)
+        reg = hmac_sha256_tests(message, key)
+        print('---')
+
+
+# def main():
+#     # test_message = 5
+#     c_li = [i for i in range(1, 100)]
+#     # key = 'abc'
+#     # key = make_rand_message(256)
+#     num = 2
+#     chain = [i for i in range(256)]
+#     average = 0
+#     mi = 1
+#     ma = 0
+#     for i in range(num):
+#         key = make_rand_message(5)
+#         print(key)
+#         for test_message in range(4, 15):
+#             print(test_message)
+#             reg_li = []
+#             message_li = make_message_li(test_message)
+#             for message in message_li:
+#                 one_reg = hmac_sha256_tests(message, key)
+#                 reg_li.append(one_reg[1])
+#             ans = analysis(reg_li, message_li, chain)
+#             if ans:
+#                 if mi > test_message:
+#                     mi = test_message
+#                 if test_message > ma:
+#                     ma = test_message
+#                 break
+#     average = average / num
+#     print(average)
+#     print(mi)
+#     print(ma)
+#     # for c in c_li:
+#     #     chain = make_rand_li(c * 256)
+#     #     print(len(chain))
+#     #     if c == 1:
+#     #         for test_message in range(4, 20):
+#     #             reg_li = []
+#     #             message_li = make_message_li(test_message)
+#     #             for message in message_li:
+#     #                 one_reg = hmac_sha256_tests(message, key)
+#     #                 li = convert_rand_chain(one_reg[1], chain)
+#     #                 reg_li.append(li)
+#     #                 # reg_li.append(one_reg[1])
+#     #             ans = analysis(reg_li, message_li, chain)
+#     #             if ans:
+#     #                 print(test_message)
+#     #                 print(ans)
+#     #                 break
+#     #     else:
+#     #         reg_li = []
+#     #         message_li = make_message_li(test_message)
+#     #         for message in message_li:
+#     #             one_reg = hmac_sha256_tests(message, key)
+#     #             li = convert_rand_chain(one_reg[1], chain)
+#     #             reg_li.append(li)
+#     #         ans = analysis(reg_li, message_li, chain)
+#     #         if ans:
+#     #             print(test_message)
+#     #             print(ans)
 
 
 if __name__=="__main__":
