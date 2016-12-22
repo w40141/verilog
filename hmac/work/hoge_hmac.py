@@ -73,6 +73,7 @@ class SHA256(): # {{{
             self._sha256_round(i)
         # self.set_reg.append(self.register)
         n = self._noise()
+        print(len(n))
         self.set_reg = self.set_reg + n + self.register
         # self.set_reg = self._noise() + self.register
         self._update_digest()
@@ -432,12 +433,11 @@ def first_step(reg_li):
     fin_ser_li = []
     reg_len = len(reg_li[0])
     for i in range(0, reg_len, 33):
-        # print(i)
         series = compare_reg(reg_li, i)
         if len(series) == 192:
             sha_li = out_j(reg_li, i, series)
-            fin_ser = find_series(series)
             sha_run_li.append(sha_li)
+            fin_ser = find_series(series)
             fin_ser_li.append(fin_ser)
     fin_ser = and_ser_li(fin_ser_li)
     return fin_ser, sha_run_li
@@ -496,7 +496,7 @@ def make_diff_bit_li(first_bit_li, diff_bit_stream):# {{{
 #make_diff_bit_li
 def compare_li(org, scr):
     flag = 1
-    count = 1
+    count = 0
     diff_bit_li = []
     while flag:
         for i in range(len(org)):
@@ -576,7 +576,9 @@ def second_step(signature_li, flow_data, message_li):
     ae_reg_num, first_bit_li = find_first_bit(signature_li, flow_data)
     diff_bit_stream = make_diff_bit_stream(message_li)
     diff_bit_li = make_diff_bit_li(first_bit_li, diff_bit_stream)
+    # print(diff_bit_li)
     pair_diff_li = make_pair_li(diff_bit_li)
+    # print(pair_diff_li)
     if check_len(pair_diff_li):
         determin_li = convert_li(pair_diff_li, ae_reg_num)
         return determin_li
@@ -741,16 +743,20 @@ def make_data(key, message, chain):
 
 
 def experience(c):
-    num = 2
+    num = 10
     ex_time = []
     for i in range(num):
+    # for key in key_li:
+        ci = 1
+        chain = make_rand_li(ci * 256)
         key = make_rand_message(16)
+        # key = '1234'
+        print(c, key)
         # key = 'abc'
-        chain = make_rand_li(c * 256)
-        ex_time.append(len(chain))
+        # ex_time.append(len(chain))
         # chain = [x for x in range(256)]
         start = time.time()
-        for test_message in range(15, 16):
+        for test_message in range(13, 19):
             run_li_li = []
             ans = 0
             message_li = make_message_li(test_message)
@@ -764,63 +770,29 @@ def experience(c):
                 else:
                     if ans != flow_data:
                         print('error')
+            # print(ans)
             second_li = [x[1] for x in run_li_li]
-            group_li = second_step(second_li, flow_data, message_li)
+            third_li = [x[0] for x in run_li_li]
+            group_li = second_step(second_li, ans, message_li)
+            # print(group_li)
             if group_li:
-                third_li = [x[0] for x in run_li_li]
-                ans_li = third_step(third_li[0], flow_data, group_li)
+                ans_li = third_step(third_li[0], ans, group_li)
+                print(key, ans_li)
             else:
                 ans_li = 0
             if ans_li != 0:
-                elapsed_time = time.time() - start
-                ex_time.append(elapsed_time)
                 break
+        elapsed_time = time.time() - start
+        ex_time.append(elapsed_time)
     return ex_time
 
 
 def main():
-    # c_num = 1
-    # pool = mp.Pool(c_num)
-    # time_li = pool.map(experience, range(1, c_num))
-    time_li = experience(20)
+    c_num = 1
+    pool = mp.Pool(c_num)
+    time_li = pool.map(experience, range(0, c_num))
+    # time_li = experience(0)
     print(time_li)
-    # for c in range(1, c_num):
-    #     for i in range(num):
-    #         key = make_rand_message(16)
-    #         print(key)
-    #         chain = make_rand_li(c * 256)
-    #         start = time.time()
-    #         for test_message in range(5, 16):
-    #             run_li_li = []
-    #             ans = 0
-    #             message_li = make_message_li(test_message)
-    #             for message in message_li:
-    #                 print(message)
-    #                 scanchain = make_data(key, message, chain)
-    #                 flow_data, sha_run_li = first_step(scanchain)
-    #                 run_li_li.append(sha_run_li)
-    #                 if ans == 0:
-    #                     ans = flow_data
-    #                 else:
-    #                     if ans != flow_data:
-    #                         print('error')
-    #             # print(flow_data)
-    #             # print('finish first')
-    #             second_li = [x[1] for x in run_li_li]
-    #             group_li = second_step(second_li, flow_data, message_li)
-    #             # print(group_li)
-    #             if group_li:
-    #                 # print('finish second')
-    #                 third_li = [x[0] for x in run_li_li]
-    #                 ans_li = third_step(third_li[0], flow_data, group_li)
-    #                 print(ans_li)
-    #             else:
-    #                 ans_li = 0
-    #             if ans_li != 0:
-    #                 elapsed_time = time.time() - start
-    #                 print(elapsed_time)
-    #                 return elapsed_time
-    #                 break
 
 
 if __name__=="__main__":
