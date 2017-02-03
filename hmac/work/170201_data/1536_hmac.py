@@ -784,11 +784,11 @@ def make_data(key, message, chain):
 
 
 def experience(c):
-    num = 10
+    num = 5
     ex_time = []
     for i in range(num):
     # for key in key_li:
-        ci = 1
+        ci = 6
         chain = make_rand_li(ci * 256)
         # chain = make_rand_li(i * 256)
         key = make_rand_message(16)
@@ -807,9 +807,9 @@ def experience(c):
                 # test_message = 13
                 run_li_li = []
                 message_li = tmp_make_message_li(test_message, moji)
-                print(message_li)
+                # print(message_li)
                 for message in message_li:
-                    print(i, message)
+                    # print(i, message)
                     scanchain = make_data(key, message, chain)
                     flow_data, sha_run_li = first_step(scanchain)
                     run_li_li.append(sha_run_li)
@@ -837,7 +837,7 @@ def experience(c):
 
 
 def main():
-    c_num = 2
+    c_num = 10
     pool = mp.Pool(c_num)
     time_li = pool.map(experience, range(0, c_num))
     # time_li = experience(0)

@@ -784,11 +784,11 @@ def make_data(key, message, chain):
 
 
 def experience(c):
-    num = 10
+    num = 5
     ex_time = []
     for i in range(num):
     # for key in key_li:
-        ci = 1
+        ci = 7
         chain = make_rand_li(ci * 256)
         # chain = make_rand_li(i * 256)
         key = make_rand_message(16)
@@ -837,7 +837,7 @@ def experience(c):
 
 
 def main():
-    c_num = 2
+    c_num = 10
     pool = mp.Pool(c_num)
     time_li = pool.map(experience, range(0, c_num))
     # time_li = experience(0)
