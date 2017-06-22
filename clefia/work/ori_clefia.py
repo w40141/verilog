@@ -1,14 +1,5 @@
 #!/usr/bin/python3
-#
-# Author: Joao H de A Franco (jhafranco@acm.org)
-#
-# Description: CLEFIA implementation in Python 3
-#
-# Date: 2012-02-03
-#
-# License: Attribution-NonCommercial-ShareAlike 3.0 Unported
-#          (CC BY-NC-SA 3.0)
-#===========================================================
+
 import sys
 from time import time
  
@@ -284,7 +275,7 @@ def f1(rk, x32):
     """F1 function"""
     t8 = _32To8(rk ^ x32)
     t8 = s1[t8[0]], s0[t8[1]], s1[t8[2]], s0[t8[3]]
-    print(t8)
+    # print(t8)
     return _8To32(multm1(t8))
  
 def gfn4(x32, n):
@@ -294,7 +285,7 @@ def gfn4(x32, n):
         t32[1] ^= f0(rk[i], t32[0])
         t32[3] ^= f1(rk[i + 1], t32[2])
         t32 = t32[1:] + t32[:1]
-        print(t32)
+        # print(t32)
     return t32[3:] + t32[:3]
  
 def gfn4i(x32, n):
@@ -404,6 +395,13 @@ def setKey(key, keySize):
     nrk = nrkTable[keySize]
     if keySize == "SIZE_128":
         setKey128(key)
+        tmp = 0
+        print(len(rk))
+        print(rk)
+        for i in rk:
+            # print(tmp)
+            # print(hex(i))
+            tmp += 1
     elif keySize == "SIZE_192":
         setKey192(key)
     elif keySize == "SIZE_256":
