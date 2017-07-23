@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+from random import randint
 import sys
 
 reg_li=[]
@@ -320,19 +320,41 @@ def tmp_encrypt(key, keySize, ptext):
 
 # }}}
 
+# decrypt{{{
+def decrypt(ctext):
+    """Decrypt a block"""
+    t32 = _128To32(ctext)
+    t32[1] ^= wk[2]
+    t32[3] ^= wk[3]
+    t32 = gfn4i(t32, nr)
+    t32[1] ^= wk[0]
+    t32[3] ^= wk[1]
+    return _32To128(t32)
+
+
+def gfn4i(x32, n):
+    """4-branch Generalized Feistel Network inverse function"""
+    t32 = x32[:]
+    for i in reversed(range(0, n << 1, 2)):
+        t32[1] ^= f0(rk[i], t32[0])
+        t32[3] ^= f1(rk[i + 1], t32[2])
+        t32 = t32[3:] + t32[:3]
+    return t32[1:] + t32[:1]
+# }}}
+
 
 def gfn4(x32, n):
     """4-branch Generalized Feistel Network function"""
     t32 = x32[:]
     p128 = _32To128(t32)
     reg_li.append(p128)
-    print(hex(p128))
+    # print(hex(p128))
     for i in range(0, n << 1, 2):
         t32[1] ^= f0(rk[i], t32[0])
         t32[3] ^= f1(rk[i + 1], t32[2])
         t32 = t32[1:] + t32[:1]
         p128 = _32To128(t32)
-        print(hex(p128))
+        # print(hex(p128))
         reg_li.append(p128)
     t32 = t32[3:] + t32[:3]
     return t32
@@ -356,65 +378,49 @@ def encrypt(ptext):
 # }}}
 
 
-# decrypt{{{
-def decrypt(ctext):
-    """Decrypt a block"""
-    t32 = _128To32(ctext)
-    t32[1] ^= wk[2]
-    t32[3] ^= wk[3]
-    t32 = gfn4i(t32, nr)
-    t32[1] ^= wk[0]
-    t32[3] ^= wk[1]
-    return _32To128(t32)
-
-
-def gfn4i(x32, n):
-    """4-branch Generalized Feistel Network inverse function"""
-    t32 = x32[:]
-    for i in reversed(range(0, n << 1, 2)):
-        t32[1] ^= f0(rk[i], t32[0])
-        t32[3] ^= f1(rk[i + 1], t32[2])
-        t32 = t32[3:] + t32[:3]
-    return t32[1:] + t32[:1]
-# }}}
-
 def checkTestVector(key, keySize, plaintext):
-    ctext = tmp_encrypt(key, keySize, plaintext)
+    # ctext = tmp_encrypt(key, keySize, plaintext)
     # print('-----')
-    # setKey(key, keySize)
-    # ctext = encrypt(plaintext)
+    # reg_li.append(plaintext)
+    setKey(key, keySize)
+    ctext = encrypt(plaintext)
     reg_li[-1] = ctext
     return ctext
+
+
+def make_message():
+    message = ''
+    chars = 'abcdef0123456789'
+    l = len(chars)
+    for i in range(32):
+        m = randint(0, l - 1)
+        message += chars[m]
+    return int(message, 16)
 
 
 if __name__ == "__main__":
     argvs = sys.argv
     ptext = 0x000102030405060708090a0b0c0d0e0f
-    test = 0x80000000000000000000000000000000
+    test =  0xffffffffffffffffffffffffffffffff
     key1 = 0xffeeddccbbaa99887766554433221100
-    for i in range(128):
-        ctext = checkTestVector(key1, "SIZE_128", test)
-        # if i == 31:
-        #     test = test >> 32
-        test = test >> 1
+    # txt_li = [make_message() for i in range(128)]
+    txt_li = [test >> i for i in range(128)]
     f = open(argvs[1], 'w')
+    for txt in txt_li:
+        f.write(str(txt) + '\n')
+        # f.write(hex(reg) + '\n')
+    f.flush()
+    f.close()
+    for txt in txt_li:
+        # txt = make_message()
+        ctext = checkTestVector(key1, "SIZE_128", txt)
+        # test = test >> 1
+    f = open(argvs[2], 'w')
     for reg in reg_li:
         f.write(str(reg) + '\n')
         # f.write(hex(reg) + '\n')
     f.flush()
     f.close()
-    ctext = checkTestVector(key1, "SIZE_128", ptext)
-    ctext1 = 0xde2bf2fd9b74aacdf1298555459494fd
-    if ctext == ctext1:
-        # f = open(argvs[1], 'w')
-        # for reg in reg_li:
-        #     f.write(str(reg) + '\n')
-        #     # f.write(hex(reg) + '\n')
-        # f.flush()
-        # f.close()
-        # for i in reg_li:
-            # print(hex(i))
-        print("All tests passed!")
     sys.exit()
 
 
