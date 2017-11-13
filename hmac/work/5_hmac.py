@@ -33,7 +33,8 @@ class SHA256(): # {{{
         self.g = 0
         self.h = 0
         self.w = 0
-        self.W = [0] * 64
+        # self.W = [0] * 64
+        self.W = [0] * 16
         self.k = 0
         self.K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
                   0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -71,12 +72,9 @@ class SHA256(): # {{{
         for i in range(64):
             self._restore_reg()
             self._sha256_round(i)
-        # self.set_reg.append(self.register)
-        n = self._noise()
-        # print(len(n))
-        self.set_reg = self.set_reg + n + self.register
-        # self.set_reg = self._noise() + self.register
+        self.set_reg.append(self.register)
         self._update_digest()
+        # self.set_reg = self.set_reg + self.register
         return self.value_IV
 
 
@@ -158,15 +156,28 @@ class SHA256(): # {{{
         self.value_IV[7] = (self.value_IV[7] + self.h) & 0xffffffff
 
 
+    # def _next_w(self, round):
+    #     if (round < 16):
+    #         return self.W[round]
+    #     else:
+    #         self.W[round] = (self._delta1(self.W[round - 2]) + \
+    #                          self.W[round - 7] + \
+    #                          self._delta0(self.W[round -15]) + \
+    #                          self.W[round - 16]) & 0xffffffff
+    #         return self.W[round]
+
+
     def _next_w(self, round):
         if (round < 16):
             return self.W[round]
         else:
-            self.W[round] = (self._delta1(self.W[round - 2]) + \
-                             self.W[round - 7] + \
-                             self._delta0(self.W[round -15]) + \
-                             self.W[round - 16]) & 0xffffffff
-            return self.W[round]
+            tmp =   (self._delta1(self.W[14]) + \
+                    self.W[9] + \
+                    self._delta0(self.W[1]) + \
+                    self.W[0]) & 0xffffffff
+            self.W[:-1] = self.W[1:]
+            self.W[15] = tmp
+            return self.W[15]
 
 
     def _W_schedule(self, block):
@@ -181,6 +192,12 @@ class SHA256(): # {{{
 
 
     def _restore_reg(self):
+        wreg = ''
+        for w in self.W:
+            wreg = wreg + int2bin(w)
+        iv = ''
+        for i in self.value_IV:
+            iv = iv + int2bin(i)
         bin_a = int2bin(self.a)
         bin_b = int2bin(self.b)
         bin_c = int2bin(self.c)
@@ -189,6 +206,7 @@ class SHA256(): # {{{
         bin_f = int2bin(self.f)
         bin_g = int2bin(self.g)
         bin_h = int2bin(self.h)
+        # reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h + wreg + iv
         reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str2int(reg, 1)
         self.register.append(list_reg)
@@ -295,12 +313,11 @@ def sha256_func(message):
     block = word_split(split_str(message, BS4))
     for b in block:
         IV = my_sha256.rotation(b)
-    IV = my_sha256.get_digest()
+        IV = my_sha256.get_digest()
     return IV, my_sha256.set_reg
-    # return IV, my_sha256.register
 
 
-def hmac_sha256_tests(message, key):
+def hmac_sha256_test(message, key):
     kin_m = key_message_input(key, 0, message)
     h_n, reg_kin = sha256_func(kin_m)
     kout_m = key_message_input(key, 1, h_n)
@@ -309,179 +326,10 @@ def hmac_sha256_tests(message, key):
     return reg
 
 
-def sha256_tests(message):
+def sha256_test(message):
     m_pad = message_input(message)
     IV = sha256_func(m_pad)
     return IV
-
-
-# }}}
-
-
-# attack {{{
-# {{{
-
-
-def make_rand_li(num):
-    rand_li = [i for i in range(num)]
-    random.shuffle(rand_li)
-    return rand_li
-
-
-# add noise bit to scan chain
-def convert_rand_chain(reg_li, rand_li):
-    scan_li_li = []
-    for r in reg_li:
-        scan_li = []
-        for i in rand_li:
-            if 0 <= i and i < len(r):
-                scan_li.append(r[i])
-            else:
-                scan_li.append(random.randint(0, 1))
-        scan_li_li.append(scan_li)
-    return scan_li_li
-
-
-def make_rand_message(n):
-    s = string.ascii_letters + string.digits
-    random_str = ''.join([random.choice(s) for i in range(n)])
-    return random_str
-
-
-def fuga(moji):
-    huff = 0b01000000
-    moji_li = []
-    moji_ord = ord(moji)
-    for i in range(7):
-        num = moji_ord ^ huff
-        if num < 33 or 126 < num:
-            break
-        moji_tmp = chr(num)
-        moji_li.append(moji_tmp)
-        huff = huff >> 1
-    return moji_li
-
-
-def tmp_make_message_li(count, moji):
-    # print(moji)
-    moji_li = fuga(moji)
-    # print(moji_li)
-    message_li = [moji * 4 * count]
-    pad_q = ''
-    for i in range(4):
-        for w in range(len(moji_li)):
-        # for word in word_li:
-            # pad_word = word.rjust(i+1, 'q')
-            pad_word = moji_li[w].rjust(i+1, moji)
-            pad_word = pad_word.ljust(4, moji)
-            # if word == '1':
-            if w == 0:
-                for j in range(count):
-                    pad_q = moji * 4 * j
-                    message_li.append(pad_q + pad_word)
-            else:
-                message_li.append(pad_word)
-    return message_li
-
-
-def make_message_li(count):
-    word_li = ['1', 'Q', 'a', 'y', 'u', 's', 'p']
-    message_li = ['q' * 4 * count]
-    pad_q = ''
-    for i in range(4):
-        for w in range(len(word_li)):
-        # for word in word_li:
-            # pad_word = word.rjust(i+1, 'q')
-            pad_word = word_li[w].rjust(i+1, 'q')
-            pad_word = pad_word.ljust(4, 'q')
-            # if word == '1':
-            if w == 0:
-                for j in range(count):
-                    pad_q = 'qqqq' * j
-                    message_li.append(pad_q + pad_word)
-            else:
-                message_li.append(pad_word)
-    return message_li
-
-
-def tmp_transpose_reg(reg_li):
-    scanchain = [[0 for i in reg_li] for j in reg_li[0]]
-    for i, reg in enumerate(reg_li):
-        for j, one_reg in enumerate(reg):
-            scanchain[j][i] = int(one_reg)
-    return scanchain
-
-
-# }}}
-
-
-# Analysis {{{
-# first_step {{{
-def find_series(series):
-    fin_ser = []
-    for ser in series:
-        count = 0
-        while count < len(series):
-            if ser[-1] == series[count][0]:
-                ser = ser + series[count]
-                ser.remove(series[count][0])
-                series.remove(series[count])
-                count = 0
-            elif ser[0] == series[count][-1]:
-                ser = series[count] + ser
-                ser.remove(series[count][-1])
-                series.remove(series[count])
-                count = 0
-            else:
-                count += 1
-        fin_ser.append(ser)
-    return fin_ser
-
-
-def and_ser_li(set_ser):
-    matched_list = []
-    for i in set_ser:
-        if len(matched_list) == 0:
-            matched_list = i
-        else:
-            matched_list = [tag for tag in matched_list if tag in i]
-    return matched_list
-
-
-def compare_reg(reg_list, num):
-    series = []
-    for i, src_reg in enumerate(reg_list):
-        for j, dst_reg in enumerate(reg_list):
-            if src_reg[num:num+31] == dst_reg[num+1:num+32]:
-                series.append([i, j])
-    return series
-
-
-def out_j(reg_li, i, series):
-    for j in range(i, 0, -1):
-        scr = series[0][0]
-        dst = series[0][1]
-        if reg_li[scr][j:j+31] != reg_li[dst][j+1:j+32]:
-            j = j + 1
-            sha_run_li = [x[j:j+64] for x in reg_li]
-            break
-    return sha_run_li
-
-
-def first_step(reg_li):
-    ans = 0
-    sha_run_li = []
-    fin_ser_li = []
-    reg_len = len(reg_li[0])
-    for i in range(0, reg_len, 33):
-        series = compare_reg(reg_li, i)
-        if len(series) == 192:
-            sha_li = out_j(reg_li, i, series)
-            sha_run_li.append(sha_li)
-            fin_ser = find_series(series)
-            fin_ser_li.append(fin_ser)
-    fin_ser = and_ser_li(fin_ser_li)
-    return fin_ser, sha_run_li
 
 
 # }}}
@@ -526,7 +374,6 @@ def make_diff_bit_li(first_bit_li, diff_bit_stream):# {{{
     org = first_bit_li[0]
     scr_li = first_bit_li[1:]
     diff_bit_li = [[] for x in range(32)]
-    # diff_bit_li = [-1 for x in range(32)]
     for i, scr in enumerate(scr_li):
         diff_bit = diff_bit_stream[i]
         tmp_li = compare_li(org, scr)
@@ -541,6 +388,9 @@ def compare_li(org, scr):
     diff_bit_li = []
     while flag:
         for i in range(len(org)):
+            print(org[i])
+            print(scr[i])
+            m=input()
             if org[i][count] != scr[i][count]:
                 diff_bit_li.append(i)
                 flag = 0
@@ -614,17 +464,146 @@ def convert_li(pair_diff_li, ae_reg_num):# {{{
 
 
 def second_step(signature_li, flow_data, message_li):
-    ae_reg_num, first_bit_li = find_first_bit(signature_li, flow_data)
     diff_bit_stream = make_diff_bit_stream(message_li)
+    print(diff_bit_stream)
+    ae_reg_num, first_bit_li = find_first_bit(signature_li, flow_data)
     diff_bit_li = make_diff_bit_li(first_bit_li, diff_bit_stream)
-    # print(diff_bit_li)
+    print(diff_bit_li)
+    m= input()
     pair_diff_li = make_pair_li(diff_bit_li)
-    # print(pair_diff_li)
     if check_len(pair_diff_li):
         determin_li = convert_li(pair_diff_li, ae_reg_num)
         return determin_li
     else:
         return 0
+
+
+# }}}
+
+
+# attack {{{
+# {{{
+
+
+def make_rand_li(num):
+    rand_li = [i for i in range(num)]
+    random.shuffle(rand_li)
+    return rand_li
+
+
+# add noise bit to scan chain
+def convert_rand_chain(reg_li, rand_li):
+    scan_li_li = []
+    for r in reg_li:
+        scan_li = []
+        for i in rand_li:
+            if 0 <= i and i < len(r):
+                scan_li.append(r[i])
+            else:
+                scan_li.append(random.randint(0, 1))
+        scan_li_li.append(scan_li)
+    return scan_li_li
+
+
+def make_rand_message(n):
+    s = string.ascii_letters + string.digits
+    random_str = ''.join([random.choice(s) for i in range(n)])
+    return random_str
+
+
+def fuga(moji):
+    huff = 0b01000000
+    moji_li = []
+    moji_ord = ord(moji)
+    for i in range(7):
+        num = moji_ord ^ huff
+        if num < 33 or 126 < num:
+            break
+        moji_tmp = chr(num)
+        moji_li.append(moji_tmp)
+        huff = huff >> 1
+    return moji_li
+
+
+def make_message_li(count, moji):
+    moji_li = fuga(moji)
+    message_li = [moji * 4 * count]
+    pad_q = ''
+    for i in range(4):
+        for w in range(len(moji_li)):
+            pad_word = moji_li[w].rjust(i+1, moji)
+            pad_word = pad_word.ljust(4, moji)
+            if w == 0:
+                for j in range(count):
+                    pad_q = moji * 4 * j
+                    message_li.append(pad_q + pad_word)
+            else:
+                message_li.append(pad_word)
+    return message_li
+
+
+def trans_li(reg_li):
+    return list(map(list, zip(*reg_li)))
+
+
+# }}}
+
+
+# Analysis {{{
+# first step {{{
+def first_step(reg_li):
+    ans = 0
+    tran_li = []
+    reg_len = len(reg_li[0])
+    for i in range(0, reg_len, 64):
+        tran_li.append(compare_reg(reg_li, i))
+    matched_li = and_ser_li(tran_li)
+    return matched_li
+
+
+def compare_reg(reg_list, num):
+    series = []
+    for i, src0 in enumerate(reg_list):
+        flag = 0
+        for j, src1 in enumerate(reg_list):
+            if src0[num:num+60] == src1[num+1:num+61]:
+                if flag or i == j:
+                    flag += 1
+                    break
+                else:
+                    s1 = j
+                    flag = 1
+        if flag == 1:
+            for k, src2 in enumerate(reg_list):
+                if reg_list[s1][num+1:num+61] == src2[num+2:num+62]:
+                    if flag == 2 or i == k or s1 == k:
+                        flag += 1
+                        break
+                    else:
+                        s2 = k
+                        flag += 1
+        if flag == 2:
+            for l, src3 in enumerate(reg_list):
+                if reg_list[s2][num+2:num+62] == src3[num+3:num+63]:
+                    if flag == 3 or i == s2 or s1 == s2 or s2 == l:
+                        flag += 1
+                        break
+                    else:
+                        s = [i, s1, s2, l]
+                        flag += 1
+        if flag == 3:
+            series.append(s)
+    return series
+
+
+def and_ser_li(t_li):
+    matched_list = []
+    for i in t_li:
+        if len(matched_list) == 0:
+            matched_list = i
+        else:
+            matched_list = [tag for tag in matched_list if tag in i]
+    return matched_list
 
 
 # }}}
@@ -776,72 +755,60 @@ def third_step(scanchain, flow_data, group_li):
 # }}}
 
 
-def make_data(key, message, chain):
-    reg = hmac_sha256_tests(message, key)
+def make_data(message, key, chain):
+    reg = hmac_sha256_test(message, key)
     li = convert_rand_chain(reg, chain)
-    scanchain = tmp_transpose_reg(li)
+    # scanchain = tmp_transpose_reg(li)
+    scanchain = trans_li(li)
     return scanchain
 
 
 def experience(c):
-    num = 10
-    ex_time = []
-    for i in range(num):
-    # for key in key_li:
-        ci = 1
-        chain = make_rand_li(ci * 256)
-        # chain = make_rand_li(i * 256)
-        key = make_rand_message(16)
-        # key = 'abc'
-        # key = '1234'
-        print(len(chain), key)
-        # key = 'abc'
-        # ex_time.append(len(chain))
-        # chain = [x for x in range(256)]
-        start = time.time()
-        moji_li = [chr(x) for x in range(97, 127)]
-        for moji in moji_li:
-            flag = 0
-            ans = 0
-            for test_message in range(3, 14):
-                # test_message = 13
-                run_li_li = []
-                message_li = tmp_make_message_li(test_message, moji)
-                print(message_li)
-                for message in message_li:
-                    print(i, message)
-                    scanchain = make_data(key, message, chain)
-                    flow_data, sha_run_li = first_step(scanchain)
-                    run_li_li.append(sha_run_li)
-                    if ans == 0:
-                        ans = flow_data
-                    else:
-                        if ans != flow_data:
-                            print('error')
-                second_li = [x[1] for x in run_li_li]
-                group_li = second_step(second_li, ans, message_li)
-                if group_li:
-                    third_li = [x[0] for x in run_li_li]
-                    ans_li = third_step(third_li[0], ans, group_li)
-                else:
-                    ans_li = 0
-                if ans_li != 0:
-                    break
-            if ans_li != 0:
-                break
-        elapsed_time = time.time() - start
-        tmp = [key, elapsed_time]
-        # ex_time.append(elapsed_time)
-        ex_time.append(tmp)
-    return ex_time
+    ci = 1
+    # chain = make_rand_li(ci * 1024)
+    # chain = [i for i in range(1024)]
+    chain = [i for i in range(256)]
+    key = 'abc'
+    # ex_time.append(len(chain))
+    # chain = [x for x in range(256)]
+    start = time.time()
+    moji_li = [chr(x) for x in range(97, 127)]
+    for moji in moji_li:
+        ans = 0
+        test_message = 5
+        scanchain_li = []
+        matched_li = []
+        message_li = make_message_li(test_message, moji)
+        for message in message_li:
+            print(message)
+            tmp
+            scanchain_li.append(make_data(key, message, chain)[1])
+        matched_li = first_step(scanchain_li[0])
+        print(matched_li)
+        # second_li = [ [ s[64:128] for s in scan ] for scan in scanchain_li ]
+        # second_li = [ [ s[:64] for s in scan ] for scan in scanchain_li ]
+        # group_li = second_step(second_li, matched_li, message_li)
+        group_li = second_step(scanchain_li, matched_li, message_li)
+        print(group_li)
+    #     if group_li:
+    #         third_li = [x[0] for x in run_li_li]
+    #         ans_li = third_step(third_li[0], ans, group_li)
+    #     else:
+    #         ans_li = 0
+    #     if ans_li != 0:
+    #         break
+    # if ans_li != 0:
+    #     elapsed_time = time.time() - start
+    # tmp = [key, elapsed_time]
+    # # ex_time.append(elapsed_time)
+    # ex_time.append(tmp)
+    # return ex_time
 
 
 def main():
-    c_num = 2
-    pool = mp.Pool(c_num)
-    time_li = pool.map(experience, range(0, c_num))
-    # time_li = experience(0)
-    print(time_li)
+    time_li = experience(0)
+    # test = sha256_test('abc')
+
 
 
 if __name__=="__main__":

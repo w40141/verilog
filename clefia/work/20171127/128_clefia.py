@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-from random import randint
+
 import sys
 
-reg_li=[]
+reg_li = []
 
 # constant{{{
 # Key sizes supported
@@ -125,13 +125,15 @@ con128 = [0xf56b7aeb, 0x994a8a42, 0x96a4bd75, 0xfa854521,
 # }}}
 
 # divide word{{{
+
+
 def int2bin(num):
     return format(num, 'b').zfill(128)
 
 
 def _8To32(x32):
     """Convert a 4-byte list to a 32-bit integer"""
-    return (((((x32[0] << 8) + x32[1]) << 8) + x32[2]) << 8) + x32[3]    
+    return (((((x32[0] << 8) + x32[1]) << 8) + x32[2]) << 8) + x32[3]
 
 
 def _32To8(x32):
@@ -150,6 +152,8 @@ def _128To32(x128):
 # }}}
 
 # mult{{{
+
+
 def mult(p1, p2):
     """Multiply two polynomials in GF(2^8)
        (the irreducible polynomial used in this
@@ -168,6 +172,7 @@ def mult(p1, p2):
 def memoize(f):
     """Memoization function"""
     memo = {}
+
     def helper(x):
         if x not in memo:
             memo[x] = f(x)
@@ -208,6 +213,8 @@ def x10(y):
 # }}}
 
 # function0{{{
+
+
 def f0(rk, x32):
     """F0 function"""
     t8 = _32To8(rk ^ x32)
@@ -220,10 +227,12 @@ def multm0(t32):
     return [   t32[0]  ^ x2(t32[1]) ^ x4(t32[2]) ^ x6(t32[3]),
             x2(t32[0]) ^    t32[1]  ^ x6(t32[2]) ^ x4(t32[3]),
             x4(t32[0]) ^ x6(t32[1]) ^    t32[2]  ^ x2(t32[3]),
-            x6(t32[0]) ^ x4(t32[1]) ^ x2(t32[2]) ^    t32[3]]    
+            x6(t32[0]) ^ x4(t32[1]) ^ x2(t32[2]) ^    t32[3]]
 # }}}
 
 # function1{{{
+
+
 def f1(rk, x32):
     """F1 function"""
     t8 = _32To8(rk ^ x32)
@@ -236,10 +245,12 @@ def multm1(t32):
     return [    t32[0]  ^  x8(t32[1]) ^  x2(t32[2]) ^ x10(t32[3]),
              x8(t32[0]) ^     t32[1]  ^ x10(t32[2]) ^  x2(t32[3]),
              x2(t32[0]) ^ x10(t32[1]) ^     t32[2]  ^  x8(t32[3]),
-            x10(t32[0]) ^ x2(t32[1])  ^  x8(t32[2]) ^     t32[3]]      
+            x10(t32[0]) ^ x2(t32[1])  ^  x8(t32[2]) ^     t32[3]]
 # }}}
 
 # sigma {{{
+
+
 def sigma(x128):
     """The double-swap function sigma (used in key scheduling)"""
     return [(x128[0] << 7) & 0xffffff80  | (x128[1] >> 25),
@@ -249,6 +260,8 @@ def sigma(x128):
 # }}}
 
 # setKey {{{
+
+
 def setKey(key, keySize):
     """Generate round/whitening keys from the given key"""
     global nr, nrk
@@ -270,6 +283,8 @@ def setKey(key, keySize):
 # }}}
 
 # run_reg {{{
+
+
 def run_reg(key, keySize, p32):
     """Generate round/whitening keys from the given key"""
     global nr, nrk
@@ -290,7 +305,6 @@ def run_reg(key, keySize, p32):
         for j in range(i, i + 4, 2):
             p128 = _32To128(p32)
             reg_li.append(p128)
-            print(hex(p128))
             p32[1] ^= f0(rk[j], p32[0])
             p32[3] ^= f1(rk[j + 1], p32[2])
             p32 = p32[1:] + p32[:1]
@@ -298,7 +312,7 @@ def run_reg(key, keySize, p32):
                 1+1
             elif i & 0b100:
                 p32[1] ^= wk[j % 4 + 1]
-                p32[3] ^= wk[(j + 1) % 4 -1]
+                p32[3] ^= wk[(j + 1) % 4 - 1]
             else:
                 p32[1] ^= wk[j % 4]
                 p32[3] ^= wk[(j + 1) % 4]
@@ -307,18 +321,45 @@ def run_reg(key, keySize, p32):
     p32[3] ^= wk[3]
     p128 = _32To128(p32)
     reg_li.append(p128)
-    # print(hex(p128))
     return p32
 
 
 def tmp_encrypt(key, keySize, ptext):
     t32 = _128To32(ptext)
     c = run_reg(key, keySize, t32)
-    # print(c)
     return _32To128(c)
 
 
 # }}}
+
+
+def gfn4(x32, n):
+    """4-branch Generalized Feistel Network function"""
+    t32 = x32[:]
+    p128 = _32To128(t32)
+    reg_li.append(p128)
+    for i in range(0, n << 1, 2):
+        t32[1] ^= f0(rk[i], t32[0])
+        t32[3] ^= f1(rk[i + 1], t32[2])
+        t32 = t32[1:] + t32[:1]
+        p128 = _32To128(t32)
+        reg_li.append(p128)
+    t32 = t32[3:] + t32[:3]
+    return t32
+
+
+# encrypt {{{
+def encrypt(ptext):
+    """Encrypt a block"""
+    t32 = _128To32(ptext)
+    t32[1] ^= wk[0]
+    t32[3] ^= wk[1]
+    t32 = gfn4(t32, nr)
+    t32[1] ^= wk[2]
+    t32[3] ^= wk[3]
+    return _32To128(t32)
+# }}}
+
 
 # decrypt{{{
 def decrypt(ctext):
@@ -343,84 +384,33 @@ def gfn4i(x32, n):
 # }}}
 
 
-def gfn4(x32, n):
-    """4-branch Generalized Feistel Network function"""
-    t32 = x32[:]
-    p128 = _32To128(t32)
-    reg_li.append(p128)
-    # print(hex(p128))
-    for i in range(0, n << 1, 2):
-        t32[1] ^= f0(rk[i], t32[0])
-        t32[3] ^= f1(rk[i + 1], t32[2])
-        t32 = t32[1:] + t32[:1]
-        p128 = _32To128(t32)
-        # print(hex(p128))
-        reg_li.append(p128)
-    t32 = t32[3:] + t32[:3]
-    return t32
+# {{{
+def int2bin(num):
+    return format(num, 'b').zfill(128)
 
 
-# encrypt {{{
-def encrypt(ptext):
-    """Encrypt a block"""
-    t32 = _128To32(ptext)
-    t32[1] ^= wk[0]
-    t32[3] ^= wk[1]
-    t32 = gfn4(t32, nr)
-    t32[1] ^= wk[2]
-    t32[3] ^= wk[3]
-    p128 = _32To128(t32)
-    l = p128
-    # l = '0x' + format(p128, 'x').zfill(32)
-    # print('0x' + format(p128, 'x').zfill(32))
-    # print(hex(p128))
-    return _32To128(t32)
+def split_str(string):
+    return [int(string[i:i + 1]) for i in range(0, len(string), 1)]
 # }}}
 
 
 def checkTestVector(key, keySize, plaintext):
-    ctext = tmp_encrypt(key, keySize, plaintext)
-    # print('-----')
-    # reg_li.append(plaintext)
-    # setKey(key, keySize)
-    # ctext = encrypt(plaintext)
+    # ctext = tmp_encrypt(key, keySize, plaintext)
+    setKey(key, keySize)
+    ctext = encrypt(plaintext)
     reg_li[-1] = ctext
     return ctext
 
 
-def make_message():
-    message = ''
-    chars = 'abcdef0123456789'
-    l = len(chars)
-    for i in range(32):
-        m = randint(0, l - 1)
-        message += chars[m]
-    return int(message, 16)
-
-
 if __name__ == "__main__":
-    argvs = sys.argv
     ptext = 0x000102030405060708090a0b0c0d0e0f
-    test =  0xffffffffffffffffffffffffffffffff
+    zero = 0x00000000000000000000000000000000
+    test = 0x80000000000000000000000000000000
     key1 = 0xffeeddccbbaa99887766554433221100
-    # txt_li = [make_message() for i in range(128)]
-    txt_li = [test >> i for i in range(128)]
-    f = open(argvs[1], 'w')
-    for txt in txt_li:
-        f.write(str(txt) + '\n')
-        # f.write(hex(reg) + '\n')
-    f.flush()
-    f.close()
-    for txt in txt_li:
-        # txt = make_message()
-        ctext = checkTestVector(key1, "SIZE_128", txt)
-        # test = test >> 1
-    f = open(argvs[2], 'w')
-    for reg in reg_li:
-        f.write(str(reg) + '\n')
-        # f.write(hex(reg) + '\n')
-    f.flush()
-    f.close()
+    c = checkTestVector(key1, "SIZE_128", ptext)
+    # ctext0 = checkTestVector(key1, "SIZE_128", zero)
+    # ctext1 = checkTestVector(key1, "SIZE_128", test)
+    print(len(reg_li))
+    for i in range(len(reg_li)):
+        print(split_str(int2bin(reg_li[i])))
     sys.exit()
-
-

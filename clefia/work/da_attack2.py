@@ -7,20 +7,17 @@ LENGTH = 128
 BLOCK = 32
 # }}}
 
+
 # {{{
 # init {{{
 def init_data(num):
     arg = sys.argv
     message_li = read_data(arg[1])
-    print('message_li')
     data_li = read_data(arg[2])
-    print('data_li')
     rand_li = make_rand_li(num)
-    print('rand_li')
+    # rand_li = [i for i in range(LENGTH)]
     data_li = make_scan_li(data_li, rand_li)
-    print('2data_li')
     m_li_li = make_message(message_li)
-    print(init_data)
     return m_li_li, data_li
 
 
@@ -74,7 +71,6 @@ def trans_li(reg_li):
 
 
 def make_scan(data, rand_li):
-    print('make_scan')
     org_li = split_str(int2bin(data))
     return convert_rand_chain(org_li, rand_li)
 
@@ -105,7 +101,12 @@ def convert_rand_chain(reg_li, rand_li):# {{{
 # first_step {{{
 def first_step(text_li_li, p0p2_li_li, p1p3_li_li):
     p0p2 = find_tran(text_li_li, p0p2_li_li)
-    p1p3 = find_tran(text_li_li, p1p3_li_li)
+    p1p2xor_li_li = xor_lili(text_li_li[32:64], text_li_li[64:96])
+    p0p3xor_li_li = xor_lili(text_li_li[0:32], text_li_li[96:128])
+    xordata_li_li = xor_lili(p0p2_li_li, p1p3_li_li)
+    p1 = find_tran(p1p2xor_li_li, xordata_li_li)
+    p3 = find_tran(p0p3xor_li_li, xordata_li_li)
+    p1p3 = p1 + p3
     return p0p2, p1p3
 
 
@@ -118,11 +119,20 @@ def find_tran(org_li, scr_li):
                 ans_li[org_c].append(scr_c)
     return ans_li
 # }}}
+
+
+def xor_li(org_li, scr_li):
+    return [ org ^ scr for (org, scr) in zip(org_li, scr_li) ]
+
+
+def xor_lili(org_lili, scr_lili):
+    return [ xor_li(org_li, scr_li) for (org_li, scr_li) in zip(org_lili, scr_lili) ]
+
+
 # }}}
 
 
-# {{{
-def find_key(data_li, p0p2, p1p3):
+def find_key(data_li, p0p2, p1p3):# {{{
     key_num = [0 for i in range(128)]
     key_num = find_p0p2(key_num, p0p2)
     key_num = find_p1p3(key_num, p1p3)
@@ -145,11 +155,13 @@ def find_p0p2(key, p0p2):
 
 def find_p1p3(key, p1p3):
     for i in range(int(LENGTH/4)):
-        key[i + 32] = p1p3[i + 64]
-        key[i + 96] = p1p3[i]
+        key[i + 32] = p1p3[i]
+        key[i + 96] = p1p3[i + 128]
     return key
 # }}}
 # }}}
+
+
 # }}}
 
 
@@ -179,13 +191,13 @@ def attcks():
 
 
 def main():
-    print(attck(1024))
-    # num = 50
-    # time_li_li = [attcks() for i in range(num)]
-    # # pool = mp.Pool(num)
-    # # time_li_li = pool.map(attcks, range(num))
-    # # pool.close()
-    # print(make_ave(time_li_li))
+    # print(attck(1000))
+    num = 50
+    time_li_li = [attcks() for i in range(num)]
+    # pool = mp.Pool(num)
+    # time_li_li = pool.map(attcks, range(num))
+    # pool.close()
+    print(make_ave(time_li_li))
 
 
 if __name__=="__main__":

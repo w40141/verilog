@@ -32,7 +32,8 @@ class SHA256(): # {{{
         self.g = 0
         self.h = 0
         self.w = 0
-        self.W = [0] * 64
+        # self.W = [0] * 64
+        self.W = [0] * 16
         self.k = 0
         self.K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
                   0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -72,6 +73,7 @@ class SHA256(): # {{{
             self._sha256_round(i)
         self.set_reg.append(self.register)
         self._update_digest()
+        # self.set_reg = self.set_reg + self.register
         return self.value_IV
 
 
@@ -153,15 +155,28 @@ class SHA256(): # {{{
         self.value_IV[7] = (self.value_IV[7] + self.h) & 0xffffffff
 
 
+    # def _next_w(self, round):
+    #     if (round < 16):
+    #         return self.W[round]
+    #     else:
+    #         self.W[round] = (self._delta1(self.W[round - 2]) + \
+    #                          self.W[round - 7] + \
+    #                          self._delta0(self.W[round -15]) + \
+    #                          self.W[round - 16]) & 0xffffffff
+    #         return self.W[round]
+
+
     def _next_w(self, round):
         if (round < 16):
             return self.W[round]
         else:
-            self.W[round] = (self._delta1(self.W[round - 2]) + \
-                             self.W[round - 7] + \
-                             self._delta0(self.W[round -15]) + \
-                             self.W[round - 16]) & 0xffffffff
-            return self.W[round]
+            tmp =   (self._delta1(self.W[14]) + \
+                    self.W[9] + \
+                    self._delta0(self.W[1]) + \
+                    self.W[0]) & 0xffffffff
+            self.W[:-1] = self.W[1:]
+            self.W[15] = tmp
+            return self.W[15]
 
 
     def _W_schedule(self, block):
@@ -176,6 +191,12 @@ class SHA256(): # {{{
 
 
     def _restore_reg(self):
+        wreg = ''
+        for w in self.W:
+            wreg = wreg + int2bin(w)
+        iv = ''
+        for i in self.value_IV:
+            iv = iv + int2bin(i)
         bin_a = int2bin(self.a)
         bin_b = int2bin(self.b)
         bin_c = int2bin(self.c)
@@ -184,9 +205,23 @@ class SHA256(): # {{{
         bin_f = int2bin(self.f)
         bin_g = int2bin(self.g)
         bin_h = int2bin(self.h)
-        reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
+        reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h + wreg + iv
+        # reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h + wreg
+        # reg = bin_a + bin_b + bin_c + bin_d + bin_e + bin_f + bin_g + bin_h
         list_reg = split_str2int(reg, 1)
         self.register.append(list_reg)
+
+
+    def _noise(self):
+        noise_li_li = []
+        num = random.randint(2, 100)
+        # num = 60
+        for i in range(num):
+            noise_li = []
+            for j in range(256):
+                noise_li.append(random.randint(2, 4))
+            noise_li_li.append(noise_li)
+        return noise_li_li
     # }}}
 # }}}
 
@@ -358,40 +393,118 @@ def transpose_reg(reg_list):
 
 
 # Analysis {{{
-# first_step {{{
-def compare_reg(reg_list):
+# # first_step {{{
+# def compare_reg(reg_list):
+#     series = []
+#     for i, src_reg in enumerate(reg_list):
+#         for j, dst_reg in enumerate(reg_list):
+#             if src_reg[:-1] == dst_reg[1:]:
+#                 series.append([i, j])
+#     return series
+#
+#
+# def find_series(series):
+#     fin_ser = []
+#     for ser in series:
+#         count = 0
+#         while count < len(series):
+#             if ser[-1] == series[count][0]:
+#                 ser = ser + series[count]
+#                 ser.remove(series[count][0])
+#                 series.remove(series[count])
+#                 count = 0
+#             elif ser[0] == series[count][-1]:
+#                 ser = series[count] + ser
+#                 ser.remove(series[count][-1])
+#                 series.remove(series[count])
+#                 count = 0
+#             else:
+#                 count += 1
+#         fin_ser.append(ser)
+#     return fin_ser
+#
+#
+# def and_ser_li(set_ser):
+#     matched_list = []
+#     for i in set_ser:
+#         if len(matched_list) == 0:
+#             matched_list = i
+#         else:
+#             matched_list = [tag for tag in matched_list if tag in i]
+#     return matched_list
+#
+#
+# def first_step(reg_li):
+#     set_ser = []
+#     for i in reg_li:
+#         set_ser.append(compare_reg(i))
+#     if len(set_ser) > 1:
+#         set_li = and_ser_li(set_ser)
+#     else:
+#         set_li = set_ser[0]
+#     if len(set_li) ==192:
+#         ser = find_series(set_li)
+#         return ser
+#     else:
+#         return 0
+# # }}}
+#
+# first step {{{
+def first_step(reg_li):
+    ans = 0
+    tran_li = []
+    # print(len(reg_li))
+    # print(len(reg_li[0]))
+    # print(len(reg_li[0][0]))
+    # n = input()
+    # reg_len = len(reg_li[0])
+    # for i in range(0, reg_len, 64):
+    for reg in reg_li:
+        # tran_li.append(compare_reg(reg_li, i))
+        tran_li.append(compare_reg(reg, 0))
+    matched_li = and_ser_li(tran_li)
+    return matched_li
+
+
+def compare_reg(reg_list, num):
     series = []
-    for i, src_reg in enumerate(reg_list):
-        for j, dst_reg in enumerate(reg_list):
-            if src_reg[:-1] == dst_reg[1:]:
-                series.append([i, j])
+    for i, src0 in enumerate(reg_list):
+        flag = 0
+        for j, src1 in enumerate(reg_list):
+            if src0[num:num+60] == src1[num+1:num+61]:
+                if flag or i == j:
+                    flag += 1
+                    break
+                else:
+                    s1 = j
+                    flag = 1
+        if flag == 1:
+            for k, src2 in enumerate(reg_list):
+                if reg_list[s1][num+1:num+61] == src2[num+2:num+62]:
+                    if flag == 2 or i == k or s1 == k:
+                        flag += 1
+                        break
+                    else:
+                        s2 = k
+                        flag += 1
+        if flag == 2:
+            for l, src3 in enumerate(reg_list):
+                if reg_list[s2][num+2:num+62] == src3[num+3:num+63]:
+                    if flag == 3 or i == s2 or s1 == s2 or s2 == l:
+                        flag += 1
+                        break
+                    else:
+                        s = [i, s1, s2, l]
+                        flag += 1
+        if flag == 3:
+            series.append(s)
+    # print(series)
     return series
 
 
-def find_series(series):
-    fin_ser = []
-    for ser in series:
-        count = 0
-        while count < len(series):
-            if ser[-1] == series[count][0]:
-                ser = ser + series[count]
-                ser.remove(series[count][0])
-                series.remove(series[count])
-                count = 0
-            elif ser[0] == series[count][-1]:
-                ser = series[count] + ser
-                ser.remove(series[count][-1])
-                series.remove(series[count])
-                count = 0
-            else:
-                count += 1
-        fin_ser.append(ser)
-    return fin_ser
-
-
-def and_ser_li(set_ser):
+def and_ser_li(t_li):
     matched_list = []
-    for i in set_ser:
+    for i in t_li:
         if len(matched_list) == 0:
             matched_list = i
         else:
@@ -399,19 +512,6 @@ def and_ser_li(set_ser):
     return matched_list
 
 
-def first_step(reg_li):
-    set_ser = []
-    for i in reg_li:
-        set_ser.append(compare_reg(i))
-    if len(set_ser) > 1:
-        set_li = and_ser_li(set_ser)
-    else:
-        set_li = set_ser[0]
-    if len(set_li) ==192:
-        ser = find_series(set_li)
-        return ser
-    else:
-        return 0
 # }}}
 
 
@@ -469,6 +569,9 @@ def compare_li(org, scr):
     diff_bit_li = []
     while flag:
         for i in range(len(org)):
+            # print(org[i])
+            # print(scr[i])
+            # n =input()
             if org[i][count] != scr[i][count]:
                 diff_bit_li.append(i)
                 flag = 0
@@ -705,45 +808,42 @@ def analysis(reg_li, message_li, chain):
     scanchain = transpose_reg(reg_li)
     start = time.time()
     flow_data = first_step(scanchain)
+    # print(flow_data)
     group_li = second_step(scanchain, flow_data, message_li)
+    # print(group_li)
     if group_li:
         ans_li = third_step(scanchain[0], flow_data, group_li)
+        print(ans_li)
         elapsed_time = time.time() - start
         print(len(reg_li[0][0]), elapsed_time)
-        return ans_li
+        return ans_li, elapsed_time
     else:
         return 0
 
 
 def main():
+    t = 0
     for i in range(10):
-        c_li = [i for i in range(1, 30)]
-        key = '1abc'
-        for c in c_li:
-            chain = make_rand_li(c * 256)
-            # if c == 1:
-            for test_message in range(5, 20):
-                reg_li = []
-                message_li = make_message_li(test_message)
-                for message in message_li:
-                    one_reg = hmac_sha256_tests(message, key)
-                    li = convert_rand_chain(one_reg[1], chain)
-                    reg_li.append(li)
-                ans = analysis(reg_li, message_li, chain)
-                if ans:
-                    # print(len(chain), test_message)
-                    break
-        # else:
-        #     reg_li = []
-        #     message_li = make_message_li(test_message)
-        #     for message in message_li:
-        #         one_reg = hmac_sha256_tests(message, key)
-        #         li = convert_rand_chain(one_reg[1], chain)
-        #         reg_li.append(li)
-        #     ans = analysis(reg_li, message_li, chain)
-        #     if ans:
-        #         print(test_message)
-        #         print(ans)
+        print(i)
+        key = 'abc'
+        # chain = make_rand_li(300)
+        chain = [i for i in range(2527)]
+        # if c == 1:
+        for test_message in range(13, 20):
+            # print(test_message)
+            reg_li = []
+            message_li = make_message_li(test_message)
+            # print(message_li)
+            # print(len(message_li))
+            for message in message_li:
+                one_reg = hmac_sha256_tests(message, key)
+                li = convert_rand_chain(one_reg[1], chain)
+                reg_li.append(li)
+            ans, elapsed_time = analysis(reg_li, message_li, chain)
+            if ans:
+                t += elapsed_time
+                break
+    print(t)
 
 
 if __name__=="__main__":
