@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 import sys
-
+# {{{
 reg_li = []
-
+# {{{
 # constant{{{
 # Key sizes supported
 ksTable = {"SIZE_128": 16}
@@ -347,7 +347,7 @@ def gfn4(x32, n):
     t32 = t32[3:] + t32[:3]
     return t32
 
-
+# }}}
 # encrypt {{{
 def encrypt(ptext):
     """Encrypt a block"""
@@ -384,16 +384,6 @@ def gfn4i(x32, n):
 # }}}
 
 
-# {{{
-def int2bin(num):
-    return format(num, 'b').zfill(128)
-
-
-def split_str(string):
-    return [int(string[i:i + 1]) for i in range(0, len(string), 1)]
-# }}}
-
-
 def checkTestVector(key, keySize, plaintext):
     # ctext = tmp_encrypt(key, keySize, plaintext)
     setKey(key, keySize)
@@ -401,16 +391,84 @@ def checkTestVector(key, keySize, plaintext):
     reg_li[-1] = ctext
     return ctext
 
+# }}}
+
+
+# sub{{{
+def int2bin(num):
+    return format(num, 'b').zfill(128)
+
+
+def split_str(string, num):
+    return [string[i:i + num] for i in range(0, len(string), num)]
+
+
+def split_str2int(string, num):
+    return [int(string[i:i + num], 2) for i in range(0, len(string), num)]
+
+
+def tmp_f0(rk, p0, p1):
+    """F0 function"""
+    p0 = _128To32(p0)
+    t8_0 = _32To8(rk ^ p0[0])
+    t8_0 = [s0[t8_0[0]], s1[t8_0[1]], s0[t8_0[2]], s1[t8_0[3]]]
+    p1 = _128To32(p1)
+    t8_1 = _32To8(rk ^ p1[0])
+    t8_1 = [s0[t8_1[0]], s1[t8_1[1]], s0[t8_1[2]], s1[t8_1[3]]]
+    t8 = [t8_0[i] ^ t8_1[i] for i in range(4)]
+    # print(t8)
+    tmp = multm0(t8)
+    # print(tmp)
+    return _8To32(tmp)
+
+
+def cal_f0(ptext, rk):
+    p_li = _128To32(ptext)
+    return f0(rk, p_li[0])
+
+
+# def reg_xor(z_li, r_li, num):
+def reg_xor(r_li, num):
+    zer = split_str2int(int2bin(r_li[num]), 32)
+    scr = split_str2int(int2bin(r_li[num + 32]), 32)
+    return [zer[i] ^ scr[i] for i in range(4)]
+
+
+def cal_rk(r_li, num, p0, p1):
+    org = reg_xor(r_li, 14)
+    rk = 0x00000000
+    t = 24 - 8 * num
+    one = 0x00000001
+    for i in range(256):
+        # fp0 = cal_f0(p0, rk)
+        # fp1 = cal_f0(p1, rk)
+        # f = fp0 ^ fp1
+        f = tmp_f0(rk, p0, p1)
+        if f == org[0]:
+            print(_32To8(rk))
+            # return rk
+            # break
+        rk += (one << t)
+# }}}
+
 
 if __name__ == "__main__":
-    ptext = 0x000102030405060708090a0b0c0d0e0f
     zero = 0x00000000000000000000000000000000
-    test = 0x80000000000000000000000000000000
+    text = 0x80000000000000000000000000000000
     key1 = 0xffeeddccbbaa99887766554433221100
-    c = checkTestVector(key1, "SIZE_128", ptext)
-    # ctext0 = checkTestVector(key1, "SIZE_128", zero)
-    # ctext1 = checkTestVector(key1, "SIZE_128", test)
+    for i in range(129):
+        print(format(text, 'b').zfill(128))
+        c = checkTestVector(key1, "SIZE_128", text)
+        text = text >> 1
     print(len(reg_li))
-    for i in range(len(reg_li)):
-        print(split_str(int2bin(reg_li[i])))
+    # for i in reg_li:
+    #     print(i)
+    # print(int2bin(reg_li[i]))
+    # print(int2bin(reg_li[i + 32]))
+    # for i in range(14, 15):
+    #     print(split_str(int2bin(reg_li[i]), 32))
+    #     print(split_str(int2bin(reg_li[i + 32]), 32))
+    # cal_rk(reg_li, 0, zero, test)
+    # for i in range(len(reg_li)):
+    #     print(split_str(int2bin(reg_li[i])))
     sys.exit()
