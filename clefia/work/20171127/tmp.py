@@ -2,7 +2,6 @@
 
 import sys
 # clefia {{{
-reg_li = []
 # {{{
 # constant{{{
 # Key sizes supported
@@ -28,6 +27,8 @@ rk = [None] * 2 * nrTable[max(nrTable)]
 
 # Whitening keys
 wk = [None] * 4
+
+reg_li = []
 
 # First S-Box{{{
 s0 = [0x57, 0x49, 0xd1, 0xc6, 0x2f, 0x33, 0x74, 0xfb,
@@ -125,6 +126,14 @@ con128 = [0xf56b7aeb, 0x994a8a42, 0x96a4bd75, 0xfa854521,
 # }}}
 
 # divide word{{{
+
+
+def split_str(string, num):
+    return [string[i:i + num] for i in range(0, len(string), num)]
+
+
+def split_str2int(string, num):
+    return [int(string[i:i + num], 2) for i in range(0, len(string), num)]
 
 
 def int2bin(num):
@@ -282,56 +291,6 @@ def setKey(key, keySize):
             rk[i:i + 4] = t32
 # }}}
 
-# run_reg {{{
-
-
-def run_reg(key, keySize, p32):
-    """Generate round/whitening keys from the given key"""
-    global nr, nrk
-    nr = nrTable[keySize]
-    nrk = nrkTable[keySize]
-    k32 = _128To32(key)
-    for i in range(len(con128) - nrk):
-        rk[i] = con128[i]
-    l = gfn4(k32, 12)
-    for i in range(nwk):
-        wk[i] = k32[i]
-    p32[1] ^= wk[0]
-    p32[3] ^= wk[1]
-    for i in range(0, nrk, 4):
-        t32 = [r ^ s for r, s in zip(l, con128[i + 24:i + 28])]
-        l = sigma(l)
-        rk[i:i + 4] = t32
-        for j in range(i, i + 4, 2):
-            p128 = _32To128(p32)
-            reg_li.append(p128)
-            p32[1] ^= f0(rk[j], p32[0])
-            p32[3] ^= f1(rk[j + 1], p32[2])
-            p32 = p32[1:] + p32[:1]
-            if i & 32:
-                1+1
-            elif i & 0b100:
-                p32[1] ^= wk[j % 4 + 1]
-                p32[3] ^= wk[(j + 1) % 4 - 1]
-            else:
-                p32[1] ^= wk[j % 4]
-                p32[3] ^= wk[(j + 1) % 4]
-    p32 = p32[3:] + p32[:3]
-    p32[1] ^= wk[2]
-    p32[3] ^= wk[3]
-    p128 = _32To128(p32)
-    reg_li.append(p128)
-    return p32
-
-
-def tmp_encrypt(key, keySize, ptext):
-    t32 = _128To32(ptext)
-    c = run_reg(key, keySize, t32)
-    return _32To128(c)
-
-
-# }}}
-
 
 def gfn4(x32, n):
     """4-branch Generalized Feistel Network function"""
@@ -389,51 +348,27 @@ def checkTestVector(key, keySize, plaintext):
     setKey(key, keySize)
     ctext = encrypt(plaintext)
     reg_li[-1] = ctext
-    return ctext
+    # return ctext
 
 
 def run_circuit():
     key = 0xffeeddccbbaa99887766554433221100
     text = 0x80000000000000000000000000000000
-    # for i in range(129):
-    for i in range(3):
-        c = checkTestVector(key, "SIZE_128", text)
+    # for i in range(3):
+    for i in range(129):
+        # c = checkTestVector(key, "SIZE_128", text)
+        checkTestVector(key, "SIZE_128", text)
         text = text >> 1
 # }}}
 
 
 # sub{{{
-def int2bin(num):
-    return format(num, 'b').zfill(128)
-
-
-def split_str(string, num):
-    return [string[i:i + num] for i in range(0, len(string), num)]
-
-
-def split_str2int(string, num):
-    return [int(string[i:i + num], 2) for i in range(0, len(string), num)]
-
-
 def format_reg_li(r_li):
     l = int(len(r_li) / 32) - 1
     r_li = [_128To32(i) for i in r_li]
     t_li = [r_li[i * 32 + 13: (i + 1) * 32] for i in range(l)]
-    z_li = r_li[-32:]
+    z_li = r_li[-19:]
     return t_li, z_li
-
-
-def tmp_f0(rk, p0, p1):
-    """F0 function"""
-    p0 = _128To32(p0)
-    t8_0 = _32To8(rk ^ p0[0])
-    t8_0 = [s0[t8_0[0]], s1[t8_0[1]], s0[t8_0[2]], s1[t8_0[3]]]
-    p1 = _128To32(p1)
-    t8_1 = _32To8(rk ^ p1[0])
-    t8_1 = [s0[t8_1[0]], s1[t8_1[1]], s0[t8_1[2]], s1[t8_1[3]]]
-    t8 = [t8_0[i] ^ t8_1[i] for i in range(4)]
-    tmp = multm0(t8)
-    return _8To32(tmp)
 
 
 def cal_f0(ptext, rk):
@@ -441,44 +376,53 @@ def cal_f0(ptext, rk):
     return f0(rk, p_li[0])
 
 
-def reg_xor(r_li, num):
-    zer = split_str2int(int2bin(r_li[num]), 32)
-    scr = split_str2int(int2bin(r_li[num + 32]), 32)
-    return [zer[i] ^ scr[i] for i in range(4)]
+def cal_f1(ptext, rk):
+    p_li = _128To32(ptext)
+    return f1(rk, p_li[2])
+
+
+def cal_out_f0(p0, p1, rk):
+    fp0 = cal_f0(p0, rk)
+    fp1 = cal_f0(p1, rk)
+    return fp0 ^ fp1
+
+
+def cal_out_f1(p0, p1, rk):
+    fp0 = cal_f1(p0, rk)
+    fp1 = cal_f1(p1, rk)
+    return fp0 ^ fp1
 
 
 def reg_xor(z_li, t_li, num):
-    return [z_li[num][i] ^ t_li[num][i] for i in range(4)]
+    return [z_li[num][i] ^ t_li[0][num][i] for i in range(4)]
 
 
-def cal_rk(r_li, num, p0, p1):
-    org = reg_xor(r_li, 14)
-    rk = 0x00000000
+def cal_rk(z_li, t_li, num, p0, p1):
+    print(z_li[1])
+    print(t_li[0][1])
+    org = reg_xor(z_li, t_li, 1)
+    print(org)
+    rk = 0
     t = 24 - 8 * num
-    one = 0x00000001
     for i in range(256):
-        fp0 = cal_f0(p0, rk)
-        fp1 = cal_f0(p1, rk)
-        f = fp0 ^ fp1
-        # f = tmp_f0(rk, p0, p1)
-        if f == org[0]:
+        out_f0 = cal_out_f0(p0, p1, rk)
+        out_f1 = cal_out_f0(p0, p1, rk)
+        if out_f0 == org[0]:
+            print('rk0')
             print(_32To8(rk))
             # return rk
             # break
-        rk += (one << t)
+        if out_f1 == org[2]:
+            print('rk1')
+            print(_32To8(rk))
+        rk += (1 << t)
 # }}}
 
 
 if __name__ == "__main__":
     run_circuit()
-    # ptext = 0x000102030405060708090a0b0c0d0e0f
-    # key = 0xffeeddccbbaa99887766554433221100
-    # # c = checkTestVector(key, "SIZE_128", ptext)
-    # text = 0x80000000000000000000000000000000
-    # # for i in range(129):
-    # for i in range(3):
-    #     c = checkTestVector(key, "SIZE_128", text)
-    #     text = text >> 1
     text_li, zero_li = format_reg_li(reg_li)
-    print(text_li)
+    zero = 0x00000000000000000000000000000000
+    text = 0x80000000000000000000000000000000
+    cal_rk(zero_li, text_li, 0, zero, text)
     sys.exit()
