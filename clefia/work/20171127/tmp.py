@@ -399,18 +399,21 @@ def reg_xor(z_li, t_li, num):
 # }}}
 
 
-def cal_rk(z_li, t_li, num, p0, p1):
-    org = reg_xor(z_li, t_li, 1)
-    print(org)
-    rk = 0
-    t = 24 - 8 * num
+def cal_r(z_li, t_li, num, bit, p0, p1):
+    org = reg_xor(z_li, t_li, num)
+    r = 0
+    r_li = []
+    t = 24 - 8 * bit
     for i in range(256):
-        out_f0 = cal_out_f0(p0, p1, rk)
+        out_f0 = cal_out_f0(p0, p1, r)
         if out_f0 == org[0]:
-            print(_32To8(rk))
-            # return rk
-            # break
-        rk += (1 << t)
+            e = _32To8(r)
+            r_li.append(e[bit])
+        r += (1 << t)
+    return r_li
+
+
+def cal_rk():
 
 
 if __name__ == "__main__":
@@ -418,9 +421,10 @@ if __name__ == "__main__":
     text_li_li, zero_li = format_reg_li(reg_li)
     zero = 0x00000000000000000000000000000000
     text = 0x80000000000000000000000000000000
-    for i in range(9):
-        num = 0
+    for i in range(33):
+        num = 1
+        bit = int(i / 8)
         text_li = text_li_li[i]
-        cal_rk(zero_li, text_li, num, zero, text)
+        print(cal_r(zero_li, text_li, num, bit, zero, text))
         text = text >> 1
     sys.exit()
