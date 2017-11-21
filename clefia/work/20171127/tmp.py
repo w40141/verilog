@@ -394,35 +394,33 @@ def cal_out_f1(p0, p1, rk):
 
 
 def reg_xor(z_li, t_li, num):
-    return [z_li[num][i] ^ t_li[0][num][i] for i in range(4)]
+    # return [z_li[num][i] ^ t_li[0][num][i] for i in range(4)]
+    return [z_li[num][i] ^ t_li[num][i] for i in range(4)]
+# }}}
 
 
 def cal_rk(z_li, t_li, num, p0, p1):
-    print(z_li[1])
-    print(t_li[0][1])
     org = reg_xor(z_li, t_li, 1)
     print(org)
     rk = 0
     t = 24 - 8 * num
     for i in range(256):
         out_f0 = cal_out_f0(p0, p1, rk)
-        out_f1 = cal_out_f0(p0, p1, rk)
         if out_f0 == org[0]:
-            print('rk0')
             print(_32To8(rk))
             # return rk
             # break
-        if out_f1 == org[2]:
-            print('rk1')
-            print(_32To8(rk))
         rk += (1 << t)
-# }}}
 
 
 if __name__ == "__main__":
     run_circuit()
-    text_li, zero_li = format_reg_li(reg_li)
+    text_li_li, zero_li = format_reg_li(reg_li)
     zero = 0x00000000000000000000000000000000
     text = 0x80000000000000000000000000000000
-    cal_rk(zero_li, text_li, 0, zero, text)
+    for i in range(9):
+        num = 0
+        text_li = text_li_li[i]
+        cal_rk(zero_li, text_li, num, zero, text)
+        text = text >> 1
     sys.exit()
