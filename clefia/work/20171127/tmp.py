@@ -356,6 +356,7 @@ def run_circuit():
     text = 0x80000000000000000000000000000000
     # for i in range(3):
     for i in range(129):
+        reg_li.append(text)
         # c = checkTestVector(key, "SIZE_128", text)
         checkTestVector(key, "SIZE_128", text)
         text = text >> 1
@@ -364,26 +365,27 @@ def run_circuit():
 
 # sub{{{
 def format_reg_li(r_li):
-    l = int(len(r_li) / 32) - 1
+    num = 33
+    l = int(len(r_li) / num) - 1
     r_li = [_128To32(i) for i in r_li]
-    t_li = [r_li[i * 32 + 13: (i + 1) * 32] for i in range(l)]
-    z_li = r_li[-19:]
+    t_li = [[r_li[i * num]] + r_li[i * num + 14: (i + 1) * num] for i in range(l)]
+    z_li = [r_li[-33]] + r_li[-19:]
     return t_li, z_li
 
 
-def cal_f0(ptext, rk):
+def cal_f0(ptext, rk, num):
     p_li = _128To32(ptext)
-    return f0(rk, p_li[0])
+    return f0(rk, p_li[num])
 
 
-def cal_f1(ptext, rk):
+def cal_f1(ptext, rk, num):
     p_li = _128To32(ptext)
-    return f1(rk, p_li[2])
+    return f1(rk, p_li[num])
 
 
-def cal_out_f0(p0, p1, rk):
-    fp0 = cal_f0(p0, rk)
-    fp1 = cal_f0(p1, rk)
+def cal_out_f0(p0, p1, rk, num):
+    fp0 = cal_f0(p0, rk, num)
+    fp1 = cal_f0(p1, rk, num)
     return fp0 ^ fp1
 
 
@@ -394,18 +396,57 @@ def cal_out_f1(p0, p1, rk):
 
 
 def reg_xor(z_li, t_li, num):
-    # return [z_li[num][i] ^ t_li[0][num][i] for i in range(4)]
+    num += 1
     return [z_li[num][i] ^ t_li[num][i] for i in range(4)]
 # }}}
 
 
-def cal_r(z_li, t_li, num, bit, p0, p1):
+# {{{
+def tmp_cal_r(z_li, t_li, num, bit):
+    p0 = _32To128(z_li[0])
+    p1 = _32To128(t_li[0])
     org = reg_xor(z_li, t_li, num)
     r = 0
     r_li = []
     t = 24 - 8 * bit
     for i in range(256):
-        out_f0 = cal_out_f0(p0, p1, r)
+        out_f0 = cal_out_f0(p0, p1, r, 0)
+        if out_f0 == org[0]:
+            e = _32To8(r)
+            r_li.append(e[bit])
+        r += (1 << t)
+    return r_li
+
+
+# }}}
+
+
+def check_bit(p):
+    for i in range(8):
+        if p & 1:
+            return i
+        else:
+            p >> 1
+
+
+def check(p1):
+    for i in range(4):
+        if p1[i] > 0:
+            b = check_bit(p[i])
+            p = _32To128(p1)
+            return i % 2, b, p
+
+
+def cal_r(z_li, t_li):
+    p0 = _32To128(z_li[0])
+    num, bit, p1 = check(t_li[0])
+    # p1 = _32To128(t_li[0])
+    org = reg_xor(z_li, t_li, num)
+    r = 0
+    r_li = []
+    t = 24 - 8 * bit
+    for i in range(256):
+        out_f0 = cal_out_f0(p0, p1, r, num)
         if out_f0 == org[0]:
             e = _32To8(r)
             r_li.append(e[bit])
@@ -414,17 +455,17 @@ def cal_r(z_li, t_li, num, bit, p0, p1):
 
 
 def cal_rk():
+    LEN = 33
+    text_li_li, zero_li = format_reg_li(reg_li)
+    for i in range(LEN):
+        bit = int(i / 8)
+        num = 1
+        text_li = text_li_li[i]
+        print(tmp_cal_r(zero_li, text_li, num, bit))
+        # print(cal_r(zero_li, text_li))
 
 
 if __name__ == "__main__":
     run_circuit()
-    text_li_li, zero_li = format_reg_li(reg_li)
-    zero = 0x00000000000000000000000000000000
-    text = 0x80000000000000000000000000000000
-    for i in range(33):
-        num = 1
-        bit = int(i / 8)
-        text_li = text_li_li[i]
-        print(cal_r(zero_li, text_li, num, bit, zero, text))
-        text = text >> 1
+    cal_rk()
     sys.exit()
