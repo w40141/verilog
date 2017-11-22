@@ -368,7 +368,8 @@ def format_reg_li(r_li):
     num = 33
     l = int(len(r_li) / num) - 1
     r_li = [_128To32(i) for i in r_li]
-    t_li = [[r_li[i * num]] + r_li[i * num + 14: (i + 1) * num] for i in range(l)]
+    t_li = [[r_li[i * num]] +
+            r_li[i * num + 14: (i + 1) * num] for i in range(l)]
     z_li = [r_li[-33]] + r_li[-19:]
     return t_li, z_li
 
@@ -389,15 +390,34 @@ def cal_out_f0(p0, p1, rk, num):
     return fp0 ^ fp1
 
 
-def cal_out_f1(p0, p1, rk):
-    fp0 = cal_f1(p0, rk)
-    fp1 = cal_f1(p1, rk)
+def cal_out_f1(p0, p1, rk, num):
+    fp0 = cal_f1(p0, rk, num)
+    fp1 = cal_f1(p1, rk, num)
     return fp0 ^ fp1
 
 
 def reg_xor(z_li, t_li, num):
     num += 1
     return [z_li[num][i] ^ t_li[num][i] for i in range(4)]
+
+
+def check_bit(p):
+    t = 0x80000000
+    for i in range(32):
+        if p & t:
+            return int(i / 8)
+        else:
+            t = t >> 1
+
+
+def check(p1):
+    for i in range(4):
+        if p1[i] > 0:
+            b = check_bit(p1[i])
+            p = _32To128(p1)
+            return i, b, p
+
+
 # }}}
 
 
@@ -418,36 +438,42 @@ def tmp_cal_r(z_li, t_li, num, bit):
     return r_li
 
 
+def tmp_cal_r(z_li, t_li):
+    p0 = _32To128(z_li[0])
+    num, bit, p1 = check(t_li[0])
+    n = num % 2 + 1
+    org = reg_xor(z_li, t_li, n)
+    r = 0
+    r_li = []
+    t = 24 - 8 * bit
+    for i in range(256):
+        out_f = cal_out_f0(p0, p1, r, num)
+        if out_f == org[0]:
+            e = _32To8(r)
+            r_li.append(e[bit])
+        r += (1 << t)
+    return r_li
+
+
 # }}}
-
-
-def check_bit(p):
-    for i in range(8):
-        if p & 1:
-            return i
-        else:
-            p >> 1
-
-
-def check(p1):
-    for i in range(4):
-        if p1[i] > 0:
-            b = check_bit(p[i])
-            p = _32To128(p1)
-            return i % 2, b, p
 
 
 def cal_r(z_li, t_li):
     p0 = _32To128(z_li[0])
     num, bit, p1 = check(t_li[0])
-    # p1 = _32To128(t_li[0])
-    org = reg_xor(z_li, t_li, num)
+    n = num % 2 + 1
+    org = reg_xor(z_li, t_li, n)
     r = 0
     r_li = []
     t = 24 - 8 * bit
     for i in range(256):
-        out_f0 = cal_out_f0(p0, p1, r, num)
-        if out_f0 == org[0]:
+        if num < 2:
+            out_f = cal_out_f0(p0, p1, r, num)
+            tmp = 0
+        else:
+            out_f = cal_out_f1(p0, p1, r, num)
+            tmp = 2
+        if out_f == org[tmp]:
             e = _32To8(r)
             r_li.append(e[bit])
         r += (1 << t)
@@ -455,14 +481,26 @@ def cal_r(z_li, t_li):
 
 
 def cal_rk():
-    LEN = 33
+    LEN = 129
+    counter = 0
+    rk = [[[] for i in range(4)] for j in range(4)]
     text_li_li, zero_li = format_reg_li(reg_li)
     for i in range(LEN):
-        bit = int(i / 8)
-        num = 1
+        j = int(i / 32)
+        k = int(i / 8) % 4
+        if counter != j:
+            rk[j - 1] = [r[0] for r in rk[j-1]]
+            rk[j - 1] = hex(_8To32(rk[j - 1]))
+            counter += 1
+            if counter == 4:
+                break
         text_li = text_li_li[i]
-        print(tmp_cal_r(zero_li, text_li, num, bit))
-        # print(cal_r(zero_li, text_li))
+        tmp_rk = cal_r(zero_li, text_li)
+        if not rk[j][k]:
+            rk[j][k] = tmp_rk
+        else:
+            rk[j][k] = [t for t in tmp_rk if t in rk[counter][k]]
+    print(rk)
 
 
 if __name__ == "__main__":
