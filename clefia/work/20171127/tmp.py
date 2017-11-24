@@ -374,13 +374,11 @@ def format_reg_li(r_li):
     return t_li, z_li
 
 
-def cal_f0(ptext, rk, num):
-    p_li = _128To32(ptext)
+def cal_f0(p_li, rk, num):
     return f0(rk, p_li[num])
 
 
-def cal_f1(ptext, rk, num):
-    p_li = _128To32(ptext)
+def cal_f1(p_li, rk, num):
     return f1(rk, p_li[num])
 
 
@@ -414,33 +412,40 @@ def check(p1):
     for i in range(4):
         if p1[i] > 0:
             b = check_bit(p1[i])
-            p = _32To128(p1)
-            return i, b, p
+            return i, b
 
 
-# }}}
-
-
-def cal_r(z_li, t_li):
-    p0 = _32To128(z_li[0])
-    num, bit, p1 = check(t_li[0])
+def cal_r(z_li, t_li, rk, wk):
+    # wk0 = 0xffeeddcc
+    # wk1 = 0xbbaa9988
+    wk0 = wk[0]
+    wk1 = wk[2]
+    z0 = z_li[0]
+    p1 = t_li[0]
+    num, bit = check(p1)
     n = num % 2 + 1
     org = reg_xor(z_li, t_li, n)
     r = 0
     r_li = []
     t = 24 - 8 * bit
+    tmp_p1 = [0, 0, 0, 0]
+    tmp_z0 = [0, 0, 0, 0]
     for i in range(256):
         if num == 0:
-            out_f = cal_out_f0(p0, p1, r, num)
+            out_f = cal_out_f0(z0, p1, r, num)
             tmp = 0
         elif num == 1:
-            out_f = cal_out_f0(p0, p1, r, num)
+            tmp_p1[num] = p1[num] ^ wk0 ^ f0(int(rk[num - 1], 16), 0)
+            tmp_z0[num] = wk0 ^ f0(int(rk[num - 1], 16), 0)
+            out_f = cal_out_f0(tmp_z0, tmp_p1, r, num)
             tmp = 0
         elif num == 2:
-            out_f = cal_out_f1(p0, p1, r, num)
+            out_f = cal_out_f1(z0, p1, r, num)
             tmp = 2
         else:
-            out_f = cal_out_f1(p0, p1, r, num)
+            tmp_p1[num] = p1[num] ^ wk1 ^ f1(int(rk[num - 1], 16), 0)
+            tmp_z0[num] = wk1 ^ f1(int(rk[num - 1], 16), 0)
+            out_f = cal_out_f1(tmp_z0, tmp_p1, r, num)
             tmp = 2
         if out_f == org[tmp]:
             e = _32To8(r)
@@ -449,18 +454,31 @@ def cal_r(z_li, t_li):
     return r_li
 
 
+# }}}
+
+
+def cal_wk(z_li, rk, i):
+    if i == 1:
+        wk = z_li[2][0] ^ f0(int(rk, 16), 0)
+    elif i == 3:
+        wk = z_li[2][2] ^ f1(int(rk, 16), 0)
+    else:
+        wk = 0
+    return wk
+
+
 def cal_rk():
     LEN = 129
     counter = 0
     rk = [[[] for i in range(4)] for j in range(4)]
+    wk = [0 for i in range(4)]
     text_li_li, zero_li = format_reg_li(reg_li)
     for i in range(LEN):
-        print(rk)
         j = int(i / 32)
         k = int(i / 8) % 4
         if counter != j:
-            rk[j - 1] = [r[0] for r in rk[j - 1]]
-            rk[j - 1] = hex(_8To32(rk[j - 1]))
+            rk[j - 1] = hex(_8To32([r[0] for r in rk[j - 1]]))
+            wk[counter] = cal_wk(zero_li, rk[j - 1], j)
             counter += 1
             if counter == 4:
                 k = rk[2]
@@ -468,12 +486,13 @@ def cal_rk():
                 rk[1] = k
                 break
         text_li = text_li_li[i]
-        tmp_rk = cal_r(zero_li, text_li)
+        tmp_rk = cal_r(zero_li, text_li, rk, wk)
         if not rk[j][k]:
             rk[j][k] = tmp_rk
         else:
             rk[j][k] = [t for t in tmp_rk if t in rk[j][k]]
     print(rk)
+    print([hex(i) for i in wk])
 
 
 if __name__ == "__main__":
