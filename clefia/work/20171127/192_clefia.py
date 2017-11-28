@@ -6,14 +6,19 @@ import time
 # {{{
 # constant{{{
 # Key sizes supported
-ksTable = {"SIZE_128": 16}
+ksTable = {"SIZE_128": 16,
+           "SIZE_192": 24,
+           "SIZE_256": 32}
 
 # Number of rounds related to key size
-nrTable = {"SIZE_128": 18}
+nrTable = {"SIZE_128": 18,
+           "SIZE_192": 22,
+           "SIZE_256": 26}
 
 # Number of round keys related to key size
-nrkTable = {"SIZE_128": 36}
-
+nrkTable = {"SIZE_128": 36,
+            "SIZE_192": 44,
+            "SIZE_256": 52}
 # Number of rounds
 nr = None
 
@@ -30,6 +35,7 @@ rk = [None] * 2 * nrTable[max(nrTable)]
 wk = [None] * 4
 
 reg_li = []
+LEN = 129
 
 # First S-Box{{{
 s0 = [0x57, 0x49, 0xd1, 0xc6, 0x2f, 0x33, 0x74, 0xfb,
@@ -123,6 +129,53 @@ con128 = [0xf56b7aeb, 0x994a8a42, 0x96a4bd75, 0xfa854521,
           0xd37b36cb, 0xbf5a9a64, 0x85ac9b65, 0xe98d4d32,
           0x7adf6582, 0x16fe3ecd, 0xd17e32c1, 0xbd5f9f66,
           0x50b63150, 0x3c9757e7, 0x1052b098, 0x7c73b3a7]
+
+con192 = [0xc6d61d91, 0xaaf73771, 0x5b6226f8, 0x374383ec,
+          0x15b8bb4c, 0x799959a2, 0x32d5f596, 0x5ef43485,
+          0xf57b7acb, 0x995a9a42, 0x96acbd65, 0xfa8d4d21,
+          0x735f7682, 0x1f7ebec4, 0xd5be3b41, 0xb99f5f62,
+          0x52d63590, 0x3ef737e5, 0x1162b2f8, 0x7d4383a6,
+          0x30b8f14c, 0x5c995987, 0x2055d096, 0x4c74b497,
+          0xfc3b684b, 0x901ada4b, 0x920cb425, 0xfe2ded25,
+          0x710f7222, 0x1d2eeec6, 0xd4963911, 0xb8b77763,
+          0x524234b8, 0x3e63a3e5, 0x1128b26c, 0x7d09c9a6,
+          0x309df106, 0x5cbc7c87, 0xf45f7883, 0x987ebe43,
+          0x963ebc41, 0xfa1fdf21, 0x73167610, 0x1f37f7c4,
+          0x01829338, 0x6da363b6, 0x38c8e1ac, 0x54e9298f,
+          0x246dd8e6, 0x484c8c93, 0xfe276c73, 0x9206c649,
+          0x9302b639, 0xff23e324, 0x7188732c, 0x1da969c6,
+          0x00cd91a6, 0x6cec2cb7, 0xec7748d3, 0x8056965b,
+          0x9a2aa469, 0xf60bcb2d, 0x751c7a04, 0x193dfdc2,
+          0x02879532, 0x6ea666b5, 0xed524a99, 0x8173b35a,
+          0x4ea00d7c, 0x228141f9, 0x1f59ae8e, 0x7378b8a8,
+          0xe3bd5747, 0x8f9c5c54, 0x9dcfaba3, 0xf1ee2e2a,
+          0xa2f6d5d1, 0xced71715, 0x697242d8, 0x055393de,
+          0x0cb0895c, 0x609151bb, 0x3e51ec9e, 0x5270b089]
+ 
+con256 = [0x0221947e, 0x6e00c0b5, 0xed014a3f, 0x8120e05a,
+          0x9a91a51f, 0xf6b0702d, 0xa159d28f, 0xcd78b816,
+          0xbcbde947, 0xd09c5c0b, 0xb24ff4a3, 0xde6eae05,
+          0xb536fa51, 0xd917d702, 0x62925518, 0x0eb373d5,
+          0x094082bc, 0x6561a1be, 0x3ca9e96e, 0x5088488b,
+          0xf24574b7, 0x9e64a445, 0x9533ba5b, 0xf912d222,
+          0xa688dd2d, 0xcaa96911, 0x6b4d46a6, 0x076cacdc,
+          0xd9b72353, 0xb596566e, 0x80ca91a9, 0xeceb2b37,
+          0x786c60e4, 0x144d8dcf, 0x043f9842, 0x681edeb3,
+          0xee0e4c21, 0x822fef59, 0x4f0e0e20, 0x232feff8,
+          0x1f8eaf20, 0x73af6fa8, 0x37ceffa0, 0x5bef2f80,
+          0x23eed7e0, 0x4fcf0f94, 0x29fec3c0, 0x45df1f9e,
+          0x2cf6c9d0, 0x40d7179b, 0x2e72ccd8, 0x42539399,
+          0x2f30ce5c, 0x4311d198, 0x2f91cf1e, 0x43b07098,
+          0xfbd9678f, 0x97f8384c, 0x91fdb3c7, 0xfddc1c26,
+          0xa4efd9e3, 0xc8ce0e13, 0xbe66ecf1, 0xd2478709,
+          0x673a5e48, 0x0b1bdbd0, 0x0b948714, 0x67b575bc,
+          0x3dc3ebba, 0x51e2228a, 0xf2f075dd, 0x9ed11145,
+          0x417112de, 0x2d5090f6, 0xcca9096f, 0xa088487b,
+          0x8a4584b7, 0xe664a43d, 0xa933c25b, 0xc512d21e,
+          0xb888e12d, 0xd4a9690f, 0x644d58a6, 0x086cacd3,
+          0xde372c53, 0xb216d669, 0x830a9629, 0xef2beb34,
+          0x798c6324, 0x15ad6dce, 0x04cf99a2, 0x68ee2eb3]
+ 
 # }}}
 # }}}
 
@@ -159,6 +212,15 @@ def _32To128(x32):
 def _128To32(x128):
     """Convert a 128-bit integer to a 32-bit 4-element list"""
     return [(x128 >> 32 * i) & 0xffffffff for i in reversed(range(4))]
+
+def _192To32(x192):
+    """Convert a 192-bit integer to a 32-bit 6-element list"""
+    return [(x192 >> 32 * i) & 0xffffffff for i in reversed(range(6))]
+ 
+def _256To32(x256):
+    """Convert a 256-bit integer to a 32-bit 8-element list"""
+    return [(x256 >> 32 * i) & 0xffffffff for i in reversed(range(8))]
+ 
 # }}}
 
 # mult{{{
@@ -275,22 +337,44 @@ def sigma(x128):
 def setKey(key, keySize):
     """Generate round/whitening keys from the given key"""
     global nr, nrk
+    try:
+        assert keySize in ksTable
+    except AssertionError:
+        print("Key size identifier not valid")
+        sys.exit("ValueError")
+    try:
+        assert isinstance(key, int)
+    except AssertionError:
+        print("Invalid key")
+        sys.exit("ValueError")
+    try:
+        assert key.bit_length() // 8 <= ksTable[keySize]
+    except AssertionError:
+        print("Key size mismatch")
+        sys.exit("ValueError")
     nr = nrTable[keySize]
     nrk = nrkTable[keySize]
-    k32 = _128To32(key)
-    for i in range(len(con128) - nrk):
-        rk[i] = con128[i]
-    l = gfn4(k32, 12)
-    for i in range(nwk):
-        wk[i] = k32[i]
-    for i in range(0, nrk, 4):
-        t32 = [r ^ s for r, s in zip(l, con128[i + 24:i + 28])]
-        l = sigma(l)
-        if i & 0b100:
-            rk[i:i + 4] = [r ^ s for r, s in zip(t32, wk)]
-        else:
-            rk[i:i + 4] = t32
-# }}}
+    if keySize == "SIZE_128":
+        setKey128(key)
+    elif keySize == "SIZE_192":
+        setKey192(key)
+    elif keySize == "SIZE_256":
+        setKey256(key)
+    else:
+        sys.exit("Invalid key size identifier")
+
+
+def gfn4i(x32, n):
+    """4-branch Generalized Feistel Network inverse function"""
+    t32 = x32[:]
+    p128 = _32To128(t32)
+    reg_li.append(p128)
+    for i in reversed(range(0, n << 1, 2)):
+        t32[1] ^= f0(rk[i], t32[0])
+        t32[3] ^= f1(rk[i + 1], t32[2])
+        t32 = t32[3:] + t32[:3]
+        reg_li.append(p128)
+    return t32[1:] + t32[:1]
 
 
 def gfn4(x32, n):
@@ -307,8 +391,91 @@ def gfn4(x32, n):
     t32 = t32[3:] + t32[:3]
     return t32
 
+
+def gfn8(x32, n):
+    """8-branch Generalized Feistel Network function"""
+    t32 = x32[:]
+    for i in range(0, n << 2, 4):
+        t32[1] ^= f0(rk[i], t32[0])
+        t32[3] ^= f1(rk[i + 1], t32[2])
+        t32[5] ^= f0(rk[i + 2], t32[4])
+        t32[7] ^= f1(rk[i + 3], t32[6])
+        t32 = t32[1:] + t32[:1]
+    return t32[7:] + t32[:7]
+
+
+def setKey128(k128):
+    """Generate round/whitening keys from a 128-bit key"""
+    k32 = _128To32(k128)
+    for i in range(len(con128) - nrk):
+        rk[i] = con128[i]
+    l = gfn4(k32, 12)
+    for i in range(nwk):
+        wk[i] = k32[i]
+    for i in range(0, nrk, 4):
+        t32 = [r ^ s for r, s in zip(l, con128[i + 24:i + 28])]
+        l = sigma(l)
+        if i & 0b100:
+            rk[i:i + 4] = [r ^ s for r, s in zip(t32, k32)]
+        else:
+            rk[i:i + 4] = t32
+
+
+def setKey192(k192):
+    """Generate round/whitening keys from a 192-bit key"""
+    k32 = _192To32(k192)
+    kl = k32[:4]
+    kr = k32[4:6] + [k32[0] ^ 0xffffffff] + [k32[1] ^ 0xffffffff]
+    for i in range(len(con192) - nrk):
+        rk[i] = con192[i]
+    l = gfn8(kl + kr, 10)
+    ll, lr = l[:4], l[4:]
+    kk = [r ^ s for r, s in zip(kl, kr)]
+    for i in range(nwk):
+        wk[i] = kk[i]
+    for i in range(0, nrk, 4):
+        if i & 0b1100 < 8:
+            t32 = [r ^ s for r, s in zip(ll, con192[i + 40:i + 44])]
+            ll = sigma(ll)
+            if i & 0b100:
+                t32 = [r ^ s for r, s in zip(t32, kr)]
+        else:
+            t32 = [r ^ s for r, s in zip(lr, con192[i + 40:i + 44])]
+            lr = sigma(lr)
+            if i & 0b100:
+                t32 = [r ^ s for r, s in zip(t32, kl)]
+        rk[i:i + 4] = t32
+
+
+def setKey256(k256):
+    """Generate round/whitening keys from a 256-bit key"""
+    k32 = _256To32(k256)
+    kl, kr = k32[:4], k32[4:]
+    for i in range(len(con256) - nrk):
+        rk[i] = con256[i]
+    l = gfn8(kl + kr, 10)
+    ll, lr = l[:4], l[4:]
+    kk = [r ^ s for r, s in zip(kl, kr)]
+    for i in range(nwk):
+        wk[i] = kk[i]
+    for i in range(0, nrk, 4):
+        if i & 0b1100 < 8:
+            t32 = [r ^ s for r, s in zip(ll, con256[i + 40:i + 44])]
+            ll = sigma(ll)
+            if i & 0b100:
+                t32 = [r ^ s for r, s in zip(t32, kr)]
+        else:
+            t32 = [r ^ s for r, s in zip(lr, con256[i + 40:i + 44])]
+            lr = sigma(lr)
+            if i & 0b100:
+                t32 = [r ^ s for r, s in zip(t32, kl)]
+        rk[i:i + 4] = t32
+
 # }}}
+
 # encrypt {{{
+
+
 def encrypt(ptext):
     """Encrypt a block"""
     t32 = _128To32(ptext)
@@ -320,8 +487,9 @@ def encrypt(ptext):
     return _32To128(t32)
 # }}}
 
-
 # decrypt{{{
+
+
 def decrypt(ctext):
     """Decrypt a block"""
     t32 = _128To32(ctext)
@@ -333,45 +501,57 @@ def decrypt(ctext):
     return _32To128(t32)
 
 
-def gfn4i(x32, n):
-    """4-branch Generalized Feistel Network inverse function"""
-    t32 = x32[:]
-    for i in reversed(range(0, n << 1, 2)):
-        t32[1] ^= f0(rk[i], t32[0])
-        t32[3] ^= f1(rk[i + 1], t32[2])
-        t32 = t32[3:] + t32[:3]
-    return t32[1:] + t32[:1]
+# }}}
+
 # }}}
 
 
 def checkTestVector(key, keySize, plaintext):
-    # ctext = tmp_encrypt(key, keySize, plaintext)
     setKey(key, keySize)
     ctext = encrypt(plaintext)
     reg_li[-1] = ctext
     # return ctext
 
 
-def run_circuit():
-    key = 0xffeeddccbbaa99887766554433221100
+def run_circuit(mode):
     text = 0x80000000000000000000000000000000
-    # for i in range(3):
-    for i in range(129):
+    if mode == 'SIZE_128':
+        key = 0xffeeddccbbaa99887766554433221100
+        # ctext1 = 0xde2bf2fd9b74aacdf1298555459494fd
+    elif mode == 'SIZE_192':
+        key = 0xffeeddccbbaa99887766554433221100f0e0d0c0b0a09080
+        # ctext2 = 0xe2482f649f028dc480dda184fde181ad
+    elif mode == 'SIZE_256':
+        key = 0xffeeddccbbaa99887766554433221100f0e0d0c0b0a090807060504030201000
+        # ctext3 = 0xa1397814289de80c10da46d1fa48b38a
+    # for i in range(129):
+    for i in range(LEN):
         reg_li.append(text)
         # c = checkTestVector(key, "SIZE_128", text)
-        checkTestVector(key, "SIZE_128", text)
+        # checkTestVector(key1, mode, text)
+        checkTestVector(key, mode, text)
         text = text >> 1
 # }}}
 
 
 # sub{{{
-def format_reg_li(r_li):
+def format_reg_li_128(r_li):
     num = 33
     ll = int(len(r_li) / num) - 1
     r_li = [_128To32(i) for i in r_li]
     t_li = [[r_li[i * num]] +
             r_li[i * num + 14: (i + 1) * num] for i in range(ll)]
     z_li = [r_li[-33]] + r_li[-19:]
+    return t_li, z_li
+
+
+def format_reg_li_192(r_li):
+    l = len(r_li)
+    num = int(l / LEN)
+    ll = int(l / num) - 1
+    r_li = [_128To32(i) for i in r_li]
+    t_li = [r_li[i * num: (i + 1) * num] for i in range(ll)]
+    z_li = r_li[-24:]
     return t_li, z_li
 
 
@@ -468,12 +648,17 @@ def cal_wk(z_li, rk, i):
     return wk
 
 
-def cal_rk():
-    LEN = 129
+def cal_rk(mode):
+    # LEN = 129
     counter = 0
     rk = [[[] for i in range(4)] for j in range(4)]
     wk = [0 for i in range(4)]
-    text_li_li, zero_li = format_reg_li(reg_li)
+    if mode == 'SIZE_128':
+        text_li_li, zero_li = format_reg_li_128(reg_li)
+    elif mode == 'SIZE_192':
+        text_li_li, zero_li = format_reg_li_192(reg_li)
+    elif mode == 'SIZE_256':
+        pass
     for i in range(LEN):
         j = int(i / 32)
         k = int(i / 8) % 4
@@ -494,15 +679,27 @@ def cal_rk():
             rk[j][k] = [t for t in tmp_rk if t in rk[j][k]]
     print(rk)
     print([hex(i) for i in wk])
-    l = [int(rk[i], 16) ^ con128[i + 24] for i in range(4)]
+    if mode == 'SIZE_128':
+        l = [int(rk[i], 16) ^ con128[i + 24] for i in range(4)]
+    elif mode == 'SIZE_192':
+        l = [int(rk[i], 16) ^ con192[i + 40] for i in range(4)]
+    elif mode == 'SIZE_256':
+        l = [int(rk[i], 16) ^ con192[i + 40] for i in range(4)]
     print([hex(i) for i in l])
 
 
 if __name__ == "__main__":
+    # mode = 'SIZE_128'
+    mode = 'SIZE_192'
+    elapsed_time = []
     for _ in range(10):
+        print('start')
+        reg_li = []
         start = time.time()
-        run_circuit()
-        cal_rk()
-        elapsed_time = time.time() - start
-        print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+        run_circuit(mode)
+        cal_rk(mode)
+        elapsed_time.append((time.time() - start) *2)
+    for i in elapsed_time:
+        print(i)
+    print(sum(elapsed_time)/len(elapsed_time))
     sys.exit()
