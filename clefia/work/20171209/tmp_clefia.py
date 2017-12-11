@@ -219,7 +219,8 @@ con192 = [0xc6d61d91, 0xaaf73771, 0x5b6226f8, 0x374383ec,
           0xe3bd5747, 0x8f9c5c54, 0x9dcfaba3, 0xf1ee2e2a,
           0xa2f6d5d1, 0xced71715, 0x697242d8, 0x055393de,
           0x0cb0895c, 0x609151bb, 0x3e51ec9e, 0x5270b089]
- 
+
+
 con256 = [0x0221947e, 0x6e00c0b5, 0xed014a3f, 0x8120e05a,
           0x9a91a51f, 0xf6b0702d, 0xa159d28f, 0xcd78b816,
           0xbcbde947, 0xd09c5c0b, 0xb24ff4a3, 0xde6eae05,
@@ -243,7 +244,7 @@ con256 = [0x0221947e, 0x6e00c0b5, 0xed014a3f, 0x8120e05a,
           0xb888e12d, 0xd4a9690f, 0x644d58a6, 0x086cacd3,
           0xde372c53, 0xb216d669, 0x830a9629, 0xef2beb34,
           0x798c6324, 0x15ad6dce, 0x04cf99a2, 0x68ee2eb3]
- 
+
 # }}}
 # }}}
 
@@ -281,14 +282,17 @@ def _128To32(x128):
     """Convert a 128-bit integer to a 32-bit 4-element list"""
     return [(x128 >> 32 * i) & 0xffffffff for i in reversed(range(4))]
 
+
 def _192To32(x192):
     """Convert a 192-bit integer to a 32-bit 6-element list"""
     return [(x192 >> 32 * i) & 0xffffffff for i in reversed(range(6))]
- 
+
+
 def _256To32(x256):
     """Convert a 256-bit integer to a 32-bit 8-element list"""
     return [(x256 >> 32 * i) & 0xffffffff for i in reversed(range(8))]
- 
+
+
 # }}}
 
 # mult{{{
@@ -364,7 +368,8 @@ def f0(rk, x32):
 
 def inv_f0(x32):
     t8 = _32To8(x32)
-    return _8To32(multm0(multm0(t8)))
+    t8_li = multm0(t8)
+    return t8_li
 
 
 def multm0(t32):
@@ -603,10 +608,12 @@ def checkTestVector(key, keySize, plaintext):
     setKey(key, keySize)
     ctext = encrypt(plaintext)
     reg_li[-1] = ctext
+    return ctext
 
 
 def run_circuit(mode):
     text = 0x80000000000000000000000000000000
+    plain = 0x000102030405060708090a0b0c0d0e0f
     if mode == 'SIZE_128':
         key = 0xffeeddccbbaa99887766554433221100
         # ctext1 = 0xde2bf2fd9b74aacdf1298555459494fd
@@ -616,11 +623,12 @@ def run_circuit(mode):
     elif mode == 'SIZE_256':
         key = 0xffeeddccbbaa99887766554433221100f0e0d0c0b0a090807060504030201000
         # ctext3 = 0xa1397814289de80c10da46d1fa48b38a
+    c = checkTestVector(key, mode, plain)
+    print('{0:x}'.format(c))
     # for i in range(129):
-    for i in range(LEN):
-        # reg_li.append(text)
-        checkTestVector(key, mode, text)
-        text = text >> 1
+    # for i in range(LEN):
+    #     checkTestVector(key, mode, text)
+    #     text = text >> 1
 # }}}
 
 
@@ -628,19 +636,32 @@ def run_circuit(mode):
 def div_reg_li(r_li):
     num = int(len(reg_li) / LEN)
     t_li = [r_li[i * num: (i + 1) * num] for i in range(LEN)]
+    print(t_li)
     return t_li
 
 
 def cal_rk(mode):
-    r_li = div_reg_li(reg_li)
+    # r_li = div_reg_li(reg_li)
     if mode == 'SIZE_128':
         rk_li = []
     elif mode == 'SIZE_192':
         rk_li = []
     elif mode == 'SIZE_256':
         rk_li = []
-    tmp = r_li[0]
-    
+    tmp = reg_li
+    key = cal_k(tmp[0], tmp[1])
+    print('{0:x}'.format(key))
+
+
+def cal_k(p0, p1):
+    p0_li = _128To32(p0)
+    p1_li = _128To32(p1)
+    m8_li = inv_f0(p0_li[1] ^ p1_li[0])
+    s8_li = [inv_s0[m8_li[0]], inv_s1[m8_li[1]],
+             inv_s0[m8_li[2]], inv_s1[m8_li[3]]]
+    s32 = _8To32(s8_li)
+    key0 = s32 ^ p0_li[0]
+    return key0
 
 
 # }}}
@@ -652,7 +673,5 @@ if __name__ == "__main__":
     print('start')
     reg_li = []
     run_circuit(mode)
-    # print(len(reg_li))
-    print(reg_li)
-    # cal_rk(mode)
+    cal_rk(mode)
     sys.exit()

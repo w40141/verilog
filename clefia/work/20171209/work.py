@@ -69,6 +69,156 @@ s1 = [0x6c, 0xda, 0xc3, 0xe9, 0x4e, 0x9d, 0x0a, 0x3d,
 # }}}
 
 
+# divide word{{{
+
+
+def split_str(string, num):
+    return [string[i:i + num] for i in range(0, len(string), num)]
+
+
+def split_str2int(string, num):
+    return [int(string[i:i + num], 2) for i in range(0, len(string), num)]
+
+
+def int2bin(num):
+    return format(num, 'b').zfill(128)
+
+
+def _8To32(x32):
+    """Convert a 4-byte list to a 32-bit integer"""
+    return (((((x32[0] << 8) + x32[1]) << 8) + x32[2]) << 8) + x32[3]
+
+
+def _32To8(x32):
+    """Convert a 32-bit integer to a 4-byte list"""
+    return [(x32 >> 8 * i) & 0xff for i in reversed(range(4))]
+
+
+def _32To128(x32):
+    """Convert a 32-bit 4-element list to a 128-bit integer"""
+    return (((((x32[0] << 32) + x32[1]) << 32) + x32[2]) << 32) + x32[3]
+
+
+def _128To32(x128):
+    """Convert a 128-bit integer to a 32-bit 4-element list"""
+    return [(x128 >> 32 * i) & 0xffffffff for i in reversed(range(4))]
+# }}}
+
+
+# mult{{{
+
+
+def mult(p1, p2):
+    """Multiply two polynomials in GF(2^8)
+       (the irreducible polynomial used in this
+       field is x^8 + x^4 + x^3 + x^2 + 1)"""
+    p = 0
+    while p2:
+        if p2 & 0b1:
+            p ^= p1
+        p1 <<= 1
+        if p1 & 0x100:
+            p1 ^= 0b11101
+        p2 >>= 1
+    return p & 0xff
+
+
+def memoize(f):
+    """Memoization function"""
+    memo = {}
+
+    def helper(x):
+        if x not in memo:
+            memo[x] = f(x)
+        return memo[x]
+    return helper
+
+
+# Auxiliary one-parameter functions defined for memoization
+# (to speed up multiplication in GF(2^8))
+@memoize
+def x2(y):
+    """Multiply by 2 in GF(2^8)"""
+    return mult(2, y)
+
+
+@memoize
+def x4(y):
+    """Multiply by 4 in GF(2^8)"""
+    return mult(4, y)
+
+
+@memoize
+def x6(y):
+    """Multiply by 6 in GF(2^8)"""
+    return mult(6, y)
+
+
+@memoize
+def x8(y):
+    """Multiply by 8 in GF(2^8)"""
+    return mult(8, y)
+
+
+@memoize
+def x10(y):
+    """Multiply by 10 in GF(2^8)"""
+    return mult(10, y)
+# }}}
+
+# function0{{{
+
+
+def f0(rk, x32):
+    """F0 function"""
+    t8 = _32To8(rk ^ x32)
+    t8 = [s0[t8[0]], s1[t8[1]], s0[t8[2]], s1[t8[3]]]
+    return _8To32(multm0(t8))
+
+
+def inv_f0(x32):
+    t8 = _32To8(x32)
+    print(t8)
+    tmp = multm0(t8)
+    print(tmp)
+    return _8To32(multm0(tmp))
+
+
+def multm0(t32):
+    """Multiply the matrix m0 by a 4-element transposed vector in GF(2^8)"""
+    return [   t32[0]  ^ x2(t32[1]) ^ x4(t32[2]) ^ x6(t32[3]),
+            x2(t32[0]) ^    t32[1]  ^ x6(t32[2]) ^ x4(t32[3]),
+            x4(t32[0]) ^ x6(t32[1]) ^    t32[2]  ^ x2(t32[3]),
+            x6(t32[0]) ^ x4(t32[1]) ^ x2(t32[2]) ^    t32[3]]
+# }}}
+
+# function1{{{
+
+
+def f1(rk, x32):
+    """F1 function"""
+    t8 = _32To8(rk ^ x32)
+    t8 = s1[t8[0]], s0[t8[1]], s1[t8[2]], s0[t8[3]]
+    return _8To32(multm1(t8))
+
+
+def inv_f1(x32):
+    t8 = _32To8(x32)
+    print(t8)
+    tmp = multm1(t8)
+    print(tmp)
+    return _8To32(multm1(tmp))
+
+
+def multm1(t32):
+    """Multiply the matrix m1 by a 4-element transposed vector in GF(2^8)"""
+    return [    t32[0]  ^  x8(t32[1]) ^  x2(t32[2]) ^ x10(t32[3]),
+             x8(t32[0]) ^     t32[1]  ^ x10(t32[2]) ^  x2(t32[3]),
+             x2(t32[0]) ^ x10(t32[1]) ^     t32[2]  ^  x8(t32[3]),
+            x10(t32[0]) ^ x2(t32[1])  ^  x8(t32[2]) ^     t32[3]]
+# }}}
+
+
 def tmp(t0):
     li = []
     for i in range(256):
@@ -76,6 +226,6 @@ def tmp(t0):
     return li
 
 
-t0 = tmp(s0)
-print(t0)
-print(tmp(s1))
+a = 0xffe11dcc
+print(hex(inv_f0(a)))
+print(hex(inv_f1(a)))
