@@ -392,7 +392,8 @@ def f1(rk, x32):
 
 def inv_f1(x32):
     t8 = _32To8(x32)
-    return _8To32(multm1(multm1(t8)))
+    t8_li = multm1(t8)
+    return t8_li
 
 
 def multm1(t32):
@@ -636,42 +637,65 @@ def run_circuit(mode):
 def div_reg_li(r_li):
     num = int(len(reg_li) / LEN)
     t_li = [r_li[i * num: (i + 1) * num] for i in range(LEN)]
-    print(t_li)
     return t_li
 
 
-def cal_rk(mode):
-    # r_li = div_reg_li(reg_li)
+def find_rk(mode):
     if mode == 'SIZE_128':
-        rk_li = []
+        n = 18
+        rk_li = [0 for _ in range(n * 2)]
     elif mode == 'SIZE_192':
-        rk_li = []
+        n = 22
+        rk_li = [0 for _ in range(n * 2)]
     elif mode == 'SIZE_256':
-        rk_li = []
+        n = 26
+        rk_li = [0 for _ in range(n * 2)]
     tmp = reg_li
-    key = cal_k(tmp[0], tmp[1])
-    print('{0:x}'.format(key))
+    for i in range(n):
+        key0, key1 = cal_rk(tmp[i], tmp[i + 1])
+        print('{0:x}, {1:x}'.format(key0, key1))
+        rk_li[i * 2] = key0
+        rk_li[(i * 2) + 1] = key1
+    return rk_li
 
 
-def cal_k(p0, p1):
+def cal_rk(p0, p1):
     p0_li = _128To32(p0)
     p1_li = _128To32(p1)
+    key0 = cal_k0(p0_li, p1_li)
+    key1 = cal_k1(p0_li, p1_li)
+    return key0, key1
+
+
+def cal_k0(p0_li, p1_li):
     m8_li = inv_f0(p0_li[1] ^ p1_li[0])
     s8_li = [inv_s0[m8_li[0]], inv_s1[m8_li[1]],
              inv_s0[m8_li[2]], inv_s1[m8_li[3]]]
     s32 = _8To32(s8_li)
-    key0 = s32 ^ p0_li[0]
-    return key0
+    key = s32 ^ p0_li[0]
+    return key
+
+
+def cal_k1(p0_li, p1_li):
+    m8_li = inv_f1(p0_li[3] ^ p1_li[2])
+    s8_li = [inv_s1[m8_li[0]], inv_s0[m8_li[1]],
+             inv_s1[m8_li[2]], inv_s0[m8_li[3]]]
+    s32 = _8To32(s8_li)
+    key = s32 ^ p0_li[2]
+    return key
 
 
 # }}}
 
 
 if __name__ == "__main__":
-    mode = 'SIZE_128'
-    # mode = 'SIZE_192'
+    # mode = 'SIZE_128'
+    mode = 'SIZE_192'
     print('start')
-    reg_li = []
+    # reg_li = []
     run_circuit(mode)
-    cal_rk(mode)
+    for i in reg_li:
+        print(hex(i))
+    rk_li = find_rk(mode)
+    print(rk_li)
     sys.exit()
