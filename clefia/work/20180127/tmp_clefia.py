@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
+import random
 import sys
-import time
 # clefia {{{
 # {{{
 # constant{{{
@@ -35,7 +35,6 @@ rk = [None] * 2 * nrTable[max(nrTable)]
 wk = [None] * 4
 
 reg_li = []
-LEN = 129
 
 # First S-Box{{{
 s0 = [0x57, 0x49, 0xd1, 0xc6, 0x2f, 0x33, 0x74, 0xfb,
@@ -480,13 +479,11 @@ def gfn4_key(x32, n):
     """4-branch Generalized Feistel Network function"""
     t32 = x32[:]
     p128 = _32To128(t32)
-    # reg_li.append(p128)
     for i in range(0, n << 1, 2):
         t32[1] ^= f0(rk[i], t32[0])
         t32[3] ^= f1(rk[i + 1], t32[2])
         t32 = t32[1:] + t32[:1]
         p128 = _32To128(t32)
-        # reg_li.append(p128)
     t32 = t32[3:] + t32[:3]
     return t32
 
@@ -598,10 +595,7 @@ def decrypt(ctext):
     t32[1] ^= wk[0]
     t32[3] ^= wk[1]
     return _32To128(t32)
-
-
 # }}}
-
 # }}}
 
 
@@ -612,95 +606,143 @@ def checkTestVector(key, keySize, plaintext):
     return ctext
 
 
-def run_circuit(mode):
-    text = 0x80000000000000000000000000000000
-    plain = 0x000102030405060708090a0b0c0d0e0f
+def run_circuit(mode, plain):
     if mode == 'SIZE_128':
         key = 0xffeeddccbbaa99887766554433221100
-        # ctext1 = 0xde2bf2fd9b74aacdf1298555459494fd
     elif mode == 'SIZE_192':
         key = 0xffeeddccbbaa99887766554433221100f0e0d0c0b0a09080
-        # ctext2 = 0xe2482f649f028dc480dda184fde181ad
     elif mode == 'SIZE_256':
         key = 0xffeeddccbbaa99887766554433221100f0e0d0c0b0a090807060504030201000
-        # ctext3 = 0xa1397814289de80c10da46d1fa48b38a
-    c = checkTestVector(key, mode, plain)
+    checkTestVector(key, mode, plain)
+
+
+def make_plain(num):
+    li = [x for x in range(2**10)]
+    random.shuffle(li)
+    num_li = li[:128]
+    bin_li = [bin(x)[2:].zfill(num) for x in num_li]
+    mes_li = ['' for _ in range(10)]
+    for b in bin_li:
+        for i in range(10):
+            mes_li[i] += b[i]
+    return [int(x, 2) for x in mes_li]
 # }}}
 
 
 # sub{{{
-def div_reg_li(r_li):
-    num = int(len(reg_li) / LEN)
-    t_li = [r_li[i * num: (i + 1) * num] for i in range(LEN)]
-    return t_li
+# init{{{
+def init_data(num, data_li, message_li):
+    rand_li = make_rand_li(num)
+    data_li = make_scan_li(data_li, rand_li)
+    m_li_li = make_message(message_li)
+    return m_li_li, data_li, rand_li
 
 
-def find_rk(mode):
-    if mode == 'SIZE_128':
-        # n = 18
-        n = 4
-        rk_li = [0 for _ in range(n * 2)]
-    elif mode == 'SIZE_192':
-        # n = 22
-        n = 8
-        rk_li = [0 for _ in range(n * 2)]
-    elif mode == 'SIZE_256':
-        # n = 26
-        n = 8
-        rk_li = [0 for _ in range(n * 2)]
-    tmp = reg_li
-    for i in range(n):
-        key0, key1 = cal_rk(tmp[i], tmp[i + 1])
-        # print('{0:08x}, {1:08x}'.format(key0, key1))
-        rk_li[i * 2] = key0
-        rk_li[(i * 2) + 1] = key1
-    return rk_li
+def make_message(message_li):
+    rand_li = [i for i in range(128)]
+    m_li_li = make_scan_li(message_li, rand_li)
+    return trans_li(m_li_li)
 
 
-def cal_rk(p0, p1):
-    p0_li = _128To32(p0)
-    p1_li = _128To32(p1)
-    key0 = cal_k0(p0_li, p1_li)
-    key1 = cal_k1(p0_li, p1_li)
-    return key0, key1
+def make_scan_li(data_li, rand_li):
+    scan_li_li = [make_scan(data, rand_li) for data in data_li]
+    return scan_li_li
 
 
-def cal_k0(p0_li, p1_li):
-    m8_li = inv_f0(p0_li[1] ^ p1_li[0])
-    s8_li = [inv_s0[m8_li[0]], inv_s1[m8_li[1]],
-             inv_s0[m8_li[2]], inv_s1[m8_li[3]]]
-    s32 = _8To32(s8_li)
-    key = s32 ^ p0_li[0]
-    return key
+def make_scan(data, rand_li):
+    org_li = split_str(int2bin(data), 1)
+    return convert_rand_chain(org_li, rand_li)
 
 
-def cal_k1(p0_li, p1_li):
-    m8_li = inv_f1(p0_li[3] ^ p1_li[2])
-    s8_li = [inv_s1[m8_li[0]], inv_s0[m8_li[1]],
-             inv_s1[m8_li[2]], inv_s0[m8_li[3]]]
-    s32 = _8To32(s8_li)
-    key = s32 ^ p0_li[2]
-    return key
+def convert_rand_chain(reg_li, rand_li):
+    scan_li = []
+    for i in rand_li:
+        if i < len(reg_li):
+            tmp = reg_li[i]
+        else:
+            tmp = random.randint(0, 1)
+        scan_li.append(tmp)
+    return scan_li
 
 
+def trans_li(reg_li):
+    return list(map(list, zip(*reg_li)))
+
+
+def extract_data(data_li, num):
+    return [data_li[i] for i in range(num, len(data_li), 19)]
+
+
+def make_data(data_li, num):
+    txt_li = extract_data(data_li, num)
+    return trans_li(txt_li)
+
+
+def make_dataset(data_li):
+    p0p2_li_li = make_data(data_li, 0)
+    p1p3_li_li = make_data(data_li, 1)
+    return p0p2_li_li, p1p3_li_li
+
+
+def make_rand_li(num):
+    rand_li = [i for i in range(num)]
+    random.shuffle(rand_li)
+    return rand_li
+# }}}
+
+
+# first_step {{{
+def first_step(text_li_li, p0p2_li_li, p1p3_li_li):
+    p0p2 = find_tran(text_li_li, p0p2_li_li)
+    p1p3 = find_tran(text_li_li, p1p3_li_li)
+    return p0p2, p1p3
+
+
+# find_tran {{{
+def find_tran(org_li, scr_li):
+    ans_li = [[] for i in range(128)]
+    for org_c, org in enumerate(org_li):
+        for scr_c, scr in enumerate(scr_li):
+            if org == scr:
+                ans_li[org_c].append(scr_c)
+    return ans_li
+
+
+def combine_li(p0p2, p1p3, rand_li):
+    chin_li = p0p2[0:32] + p1p3[64:96] + p0p2[64:96] + p1p3[0:32]
+    print(chin_li)
+    print(rand_li)
+    ans_li = []
+    for i in chin_li:
+        ans_li.append(rand_li[i[0]])
+    return ans_li
+# }}}
+# }}}
+
+
+def attck(num, data_li, mes_li):
+    m_li_li, data_li, rand_li = init_data(num, data_li, mes_li)
+    # for i in m_li_li:
+    #     print(i)
+    p0p2_li_li, p1p3_li_li = make_dataset(data_li)
+    # print(len(p1p3_li_li))
+    # for i in p1p3_li_li:
+    #     print(i)
+    p0p2, p1p3 = first_step(m_li_li, p0p2_li_li, p1p3_li_li)
+    a = combine_li(p0p2, p1p3, rand_li)
+    print(a)
 # }}}
 
 
 if __name__ == "__main__":
-    mode_li = ['SIZE_128', 'SIZE_192', 'SIZE_256']
-    # mode = 'SIZE_128'
+    # mode_li = ['SIZE_128', 'SIZE_192', 'SIZE_256']
+    mode = 'SIZE_128'
     # mode = 'SIZE_192'
     # mode = 'SIZE_256'
-    for _ in range(10):
-        time_li = []
-        for mode in mode_li:
-            reg_li = []
-            start = time.time()
-            run_circuit(mode)
-            rk_li = find_rk(mode)
-            elapsed_time = time.time() - start
-            time_li.append(elapsed_time)
-            print(reg_li)
-        print('&' + str(_ + 1) + '& {0:8} & {1:8} & {2:8}'.
-              format(time_li[0], time_li[1], time_li[2]))
+    num = 10
+    plain_li = make_plain(num)
+    # reg_li = []
+    for plain in plain_li:
+            run_circuit(mode, plain)
+    attck(128, reg_li, plain_li)
     sys.exit()
