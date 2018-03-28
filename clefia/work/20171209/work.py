@@ -229,3 +229,4 @@ def tmp(t0):
 a = 0xffe11dcc
 print(hex(inv_f0(a)))
 print(hex(inv_f1(a)))
+print()
