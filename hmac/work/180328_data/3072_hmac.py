@@ -7,7 +7,7 @@ import math
 import string
 import time
 import multiprocessing as mp
-import numpy as np
+# import numpy as np
 import os
 
 
@@ -807,17 +807,17 @@ def time_word(tw_li_li, num):
             fn_w.write(str(t) + '\n')
     fn_t.close()
     fn_w.close()
-    t_li = max_min_ave(time_li)
-    fn_st = open(summary_time_fn + '.txt', 'a')
-    for t in t_li:
-        fn_st.write(str(t) + '\n')
-    fn_st.close()
-    w_li = max_min_ave(word_li)
-    fn_sw = open(summary_word_fn + '.txt', 'a')
-    for w in w_li:
-        fn_sw.write(str(w) + '\n')
-    fn_sw.close()
-    return t_li, w_li
+    # t_li = max_min_ave(time_li)
+    # fn_st = open(summary_time_fn + '.txt', 'a')
+    # for t in t_li:
+    #     fn_st.write(str(t) + '\n')
+    # fn_st.close()
+    # w_li = max_min_ave(word_li)
+    # fn_sw = open(summary_word_fn + '.txt', 'a')
+    # for w in w_li:
+    #     fn_sw.write(str(w) + '\n')
+    # fn_sw.close()
+    # return t_li, w_li
 
 
 def make_data(key, message, chain):
@@ -872,15 +872,19 @@ def experience(c):
 
 
 def main():
-    os.remove(./data/*)
+    p = 'data'
+    if os.listdir(p):
+        for f in os.listdir(p):
+            os.remove(p + '/' + f)
     c_num = 10
     pool = mp.Pool(c_num)
     time_li_li = pool.map(experience, range(0, c_num))
     print('finish')
     print(time_li_li)
-    t_li, w_li = time_word(time_li_li, NUMBER_FN)
-    print(t_li)
-    print(w_li)
+    # t_li, w_li = time_word(time_li_li, NUMBER_FN)
+    time_word(time_li_li, NUMBER_FN)
+    # print(t_li)
+    # print(w_li)
 
 
 if __name__=="__main__":
