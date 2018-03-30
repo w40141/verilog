@@ -617,7 +617,7 @@ def run_circuit(mode, plain):
 
 
 def make_plain(num):
-    li = [x for x in range(2**10)]
+    li = [x for x in range(2**num)]
     random.shuffle(li)
     num_li = li[:128]
     bin_li = [bin(x)[2:].zfill(num) for x in num_li]
@@ -626,6 +626,11 @@ def make_plain(num):
         for i in range(10):
             mes_li[i] += b[i]
     return [int(x, 2) for x in mes_li]
+
+
+def tmp_make_plain():
+    text = 0x80000000000000000000000000000000
+    return [text >> x for x in range(128)]
 # }}}
 
 
@@ -710,27 +715,29 @@ def find_tran(org_li, scr_li):
 
 def combine_li(p0p2, p1p3, rand_li):
     chin_li = p0p2[0:32] + p1p3[64:96] + p0p2[64:96] + p1p3[0:32]
-    print(chin_li)
-    print(rand_li)
     ans_li = []
     for i in chin_li:
         ans_li.append(rand_li[i[0]])
     return ans_li
+
+
+def chech_li(ans_li):
+    print(ans_li)
+    for i in range(128):
+        if ans_li[i] != i:
+            return 0
+    else:
+        return 1
 # }}}
 # }}}
 
 
 def attck(num, data_li, mes_li):
     m_li_li, data_li, rand_li = init_data(num, data_li, mes_li)
-    # for i in m_li_li:
-    #     print(i)
     p0p2_li_li, p1p3_li_li = make_dataset(data_li)
-    # print(len(p1p3_li_li))
-    # for i in p1p3_li_li:
-    #     print(i)
     p0p2, p1p3 = first_step(m_li_li, p0p2_li_li, p1p3_li_li)
-    a = combine_li(p0p2, p1p3, rand_li)
-    print(a)
+    ans_li = combine_li(p0p2, p1p3, rand_li)
+    return chech_li(ans_li)
 # }}}
 
 
@@ -739,10 +746,13 @@ if __name__ == "__main__":
     mode = 'SIZE_128'
     # mode = 'SIZE_192'
     # mode = 'SIZE_256'
-    num = 10
+    num = 20
     plain_li = make_plain(num)
+    # plain_li = tmp_make_plain()
+    print(plain_li)
     # reg_li = []
     for plain in plain_li:
             run_circuit(mode, plain)
-    attck(128, reg_li, plain_li)
+    a = attck(128, reg_li, plain_li)
+    print(a)
     sys.exit()
