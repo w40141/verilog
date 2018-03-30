@@ -804,7 +804,7 @@ def time_word(tw_li_li, num):
             time_li.append(t)
             fn_t.write(str(t) + '\n')
             word_li.append(w)
-            fn_w.write(str(t) + '\n')
+            fn_w.write(str(w) + '\n')
     fn_t.close()
     fn_w.close()
     # t_li = max_min_ave(time_li)
