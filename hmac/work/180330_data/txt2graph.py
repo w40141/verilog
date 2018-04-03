@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 def file2data(fn):
     with open(fn, "r") as f:
         raw_data = f.readlines()
-    data = [float(d[:-2]) for d in raw_data]
+    # data = [float(d[:-2]) for d in raw_data]
+    data = [float(d) for d in raw_data]
     return data
 
 
