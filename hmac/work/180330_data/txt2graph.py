@@ -52,7 +52,7 @@ def make_plot(x, summary_li, mode):
     plt.xlabel("Bit length of the scan data [bits]")
     plt.ylabel(yl)
     plt.legend(bbox_to_anchor=(0.5, -0.2), loc='center', borderaxespad=0, ncol=4)
-    plt.subplots_adjust(bottom=0.2)
+    plt.subplots_adjust(bottom=0.2, left=0.2)
     plt.show()
 
 
